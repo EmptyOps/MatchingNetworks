@@ -12,10 +12,10 @@ import torch
 import torch.nn as nn
 import unittest
 import numpy as np
-from BidirectionalLSTM import BidirectionalLSTM
-from Classifier import Classifier
-from DistanceNetwork import DistanceNetwork
-from AttentionalClassify import AttentionalClassify
+from models.BidirectionalLSTM import BidirectionalLSTM
+from models.Classifier import Classifier
+from models.DistanceNetwork import DistanceNetwork
+from models.AttentionalClassify import AttentionalClassify
 import torch.nn.functional as F
 
 class MatchingNetwork(nn.Module):
@@ -50,7 +50,7 @@ class MatchingNetwork(nn.Module):
         self.num_samples_per_class = num_samples_per_class
         self.learning_rate = learning_rate
 
-    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label):
+    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False):
         """
         Builds graph for Matching Networks, produces losses and summary statistics.
         :param support_set_images: A tensor containing the support set images [batch_size, sequence_size, n_channels, 28, 28]
@@ -83,6 +83,11 @@ class MatchingNetwork(nn.Module):
 
             # calculate accuracy and crossentropy loss
             values, indices = preds.max(1)
+            if is_debug:
+                print( "predictions debug mode" )
+                print( values )
+                print( indices )
+            
             if i == 0:
                 accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
                 crossentropy_loss = F.cross_entropy(preds, target_label[:,i].long())
@@ -93,6 +98,9 @@ class MatchingNetwork(nn.Module):
             # delete the last target image encoding of encoded_images
             encoded_images.pop()
 
+        if is_debug:
+            dfsdfsdfsdf
+            
         return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1)
 
 

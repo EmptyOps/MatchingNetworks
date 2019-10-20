@@ -230,6 +230,56 @@ class OneShotBuilder:
             total_test_accuracy = total_test_accuracy / total_test_batches
         return total_test_c_loss, total_test_accuracy
 
+    def run_time_predictions(self, total_test_batches):
+        """
+        Runs one testing epoch
+        :param total_test_batches: Number of batches to train on
+        :param sess: Session object
+        :return: mean_testing_categorical_crossentropy_loss and mean_testing_accuracy
+        """
+        total_test_c_loss = 0.
+        total_test_accuracy = 0.
+        with tqdm.tqdm(total=total_test_batches) as pbar:
+            for i in range(total_test_batches):
+                x_support_set, y_support_set, x_target, y_target = \
+                    self.data.get_batch_custom(str_type='x_to_be_predicted', cls=0, rotate_flag=False)
+
+                x_support_set = Variable(torch.from_numpy(x_support_set), volatile=True).float()
+                y_support_set = Variable(torch.from_numpy(y_support_set), volatile=True).long()
+                x_target = Variable(torch.from_numpy(x_target), volatile=True).float()
+                y_target = Variable(torch.from_numpy(y_target), volatile=True).long()
+
+                # y_support_set: Add extra dimension for the one_hot
+                y_support_set = torch.unsqueeze(y_support_set, 2)
+                sequence_length = y_support_set.size()[1]
+                batch_size = y_support_set.size()[0]
+                y_support_set_one_hot = torch.FloatTensor(batch_size, sequence_length,
+                                                          self.classes_per_set).zero_()
+                y_support_set_one_hot.scatter_(2, y_support_set.data, 1)
+                y_support_set_one_hot = Variable(y_support_set_one_hot)
+
+                # Reshape channels
+                size = x_support_set.size()
+                x_support_set = x_support_set.view(size[0], size[1], size[4], size[2], size[3])
+                size = x_target.size()
+                x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
+                if self.isCudaAvailable:
+                    acc, c_loss_value = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
+                                                         x_target.cuda(), y_target.cuda(), is_debug = False )
+                else:
+                    acc, c_loss_value = self.matchingNet(x_support_set, y_support_set_one_hot,
+                                                         x_target, y_target, is_debug = False )
+
+                iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
+                pbar.set_description(iter_out)
+                pbar.update(1)
+
+                total_test_c_loss += c_loss_value.data[0]
+                total_test_accuracy += acc.data[0]
+            total_test_c_loss = total_test_c_loss / total_test_batches
+            total_test_accuracy = total_test_accuracy / total_test_batches
+        return total_test_c_loss, total_test_accuracy
+        
     def __adjust_learning_rate(self,optimizer):
         """Updates the learning rate given the learning rate decay.
         The routine has been implemented according to the original Lua SGD optimizer
