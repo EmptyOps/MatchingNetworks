@@ -199,12 +199,14 @@ class OmniglotNShotDataset():
         data_cache = []
         for sample in range(self.cache_sample):
         
+            """
             #TODO temp. profiling, comment it when not needed
             import cProfile, pstats
             import io as StringIO
             print( "profiling start" )
             pr = cProfile.Profile()
             pr.enable()
+            """
         
             support_set_x = np.zeros((self.batch_size, n_samples, self.data_pack_shape_2, self.data_pack_shape_3, 1))
             support_set_y = np.zeros((self.batch_size, n_samples))
@@ -247,6 +249,7 @@ class OmniglotNShotDataset():
 
             data_cache.append([support_set_x, support_set_y, target_x, target_y])
             
+            """
             #TODO temp. profiling, comment it when not needed
             pr.disable()
             s = StringIO.StringIO()
@@ -254,8 +257,8 @@ class OmniglotNShotDataset():
             ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
             ps.print_stats()
             print( s.getvalue() )
-            
             sdfkjhskdfhkshdf
+            """
             
         return data_cache
 
