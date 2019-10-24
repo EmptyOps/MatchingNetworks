@@ -130,10 +130,13 @@ class OmniglotNShotDataset():
         np.random.shuffle(shuffle_classes)
         self.x = self.x[shuffle_classes]
         self.cache_sample = 0
+        self.is_rotate = False
         if is_use_sample_data:
+            self.is_rotate = True
             self.cache_sample = 1000
             self.x_train, self.x_test, self.x_val  = self.x[:1200], self.x[1200:1500], self.x[1500:]
         else:
+            self.is_rotate = False
             self.cache_sample = 100
             self.x_train, self.x_test, self.x_val  = self.x[:150], self.x[150:185], self.x[185:215]
         #print( self.x_train[0][0] )
@@ -345,6 +348,9 @@ class OmniglotNShotDataset():
         :param k: integer degree of rotation counter-clockwise
         :return: The rotated batch of images
         """
+        if not self.is_rotate: 
+            return batch_images
+        
         batch_size = len(batch_images)
         for i in np.arange(batch_size):
             batch_images[i] = self.__rotate_data(batch_images[i], k)
