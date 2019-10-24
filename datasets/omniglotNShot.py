@@ -198,7 +198,7 @@ class OmniglotNShotDataset():
         
             #TODO temp. profiling, comment it when not needed
             import cProfile, pstats
-            from io import StringIO
+            import io as StringIO
             print( "profiling start" )
             pr = cProfile.Profile()
             pr.enable()
