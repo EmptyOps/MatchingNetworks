@@ -129,9 +129,12 @@ class OmniglotNShotDataset():
         shuffle_classes = np.arange(self.x.shape[0])
         np.random.shuffle(shuffle_classes)
         self.x = self.x[shuffle_classes]
+        self.cache_sample = 0
         if is_use_sample_data:
+            self.cache_sample = 1000
             self.x_train, self.x_test, self.x_val  = self.x[:1200], self.x[1200:1500], self.x[1500:]
         else:
+            self.cache_sample = 100
             self.x_train, self.x_test, self.x_val  = self.x[:150], self.x[150:185], self.x[185:215]
         #print( self.x_train[0][0] )
         self.normalization()
@@ -194,7 +197,7 @@ class OmniglotNShotDataset():
         
         n_samples = self.samples_per_class * self.classes_per_set
         data_cache = []
-        for sample in range(1000):
+        for sample in range(self.cache_sample):
         
             #TODO temp. profiling, comment it when not needed
             import cProfile, pstats
