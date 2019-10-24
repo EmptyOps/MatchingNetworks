@@ -117,8 +117,8 @@ class OneShotBuilder:
                 pbar.set_description(iter_out)
 
                 pbar.update(1)
-                total_c_loss += c_loss_value.data[0]
-                total_accuracy += acc.data[0]
+                total_c_loss += c_loss_value.data       #c_loss_value.data[0]
+                total_accuracy += acc.data              #acc.data[0]
 
                 self.total_train_iter += 1
                 if self.total_train_iter % 2000 == 0:
