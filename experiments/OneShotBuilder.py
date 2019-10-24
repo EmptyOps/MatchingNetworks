@@ -112,7 +112,8 @@ class OneShotBuilder:
                 # update the optimizer learning rate
                 self.__adjust_learning_rate(optimizer)
 
-                iter_out = "tr_loss: {}, tr_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
+                #iter_out = "tr_loss: {}, tr_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
+                iter_out = "tr_loss: {}, tr_accuracy: {}".format(c_loss_value.data, acc.data)
                 pbar.set_description(iter_out)
 
                 pbar.update(1)
