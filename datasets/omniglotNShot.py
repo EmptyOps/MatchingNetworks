@@ -195,6 +195,13 @@ class OmniglotNShotDataset():
         n_samples = self.samples_per_class * self.classes_per_set
         data_cache = []
         for sample in range(1000):
+        
+            #TODO temp. profiling, comment it when not needed
+            import cProfile, pstats, StringIO
+            print( "profiling start" )
+            pr = cProfile.Profile()
+            pr.enable()
+        
             support_set_x = np.zeros((self.batch_size, n_samples, self.data_pack_shape_2, self.data_pack_shape_3, 1))
             support_set_y = np.zeros((self.batch_size, n_samples))
             target_x = np.zeros((self.batch_size, self.samples_per_class, self.data_pack_shape_2, self.data_pack_shape_3, 1), dtype=np.int)
@@ -235,6 +242,17 @@ class OmniglotNShotDataset():
                         ind_test = ind_test + 1
 
             data_cache.append([support_set_x, support_set_y, target_x, target_y])
+            
+            #TODO temp. profiling, comment it when not needed
+            pr.disable()
+            s = StringIO.StringIO()
+            sortby = 'cumulative'
+            ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+            ps.print_stats()
+            print( s.getvalue() )
+            
+            sdfkjhskdfhkshdf
+            
         return data_cache
 
     def __get_batch(self, dataset_name):
