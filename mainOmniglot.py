@@ -52,7 +52,7 @@ else:
     samples_per_class = 5
     channels = 1
     # Training setup
-    total_epochs = 20 #500
+    total_epochs = 40 #500
     total_train_batches = 50 # 1000
     total_val_batches = 20 # 100
     total_test_batches = 20 # 250
