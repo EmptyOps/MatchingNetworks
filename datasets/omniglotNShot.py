@@ -139,10 +139,10 @@ class OmniglotNShotDataset():
             self.is_rotate = False
             self.cache_sample = 100
             self.x_train, self.x_test, self.x_val  = self.x[:150], self.x[150:185], self.x[185:215]
-        #print( self.x_train[0][0] )
+        print( self.x_train[0][0] )
         self.normalization()
-        #print( self.x_train[0][0] )
-
+        print( self.x_train[0][0] )
+ 
         self.batch_size = batch_size
         self.n_classes = self.x.shape[0]
         self.classes_per_set = classes_per_set
