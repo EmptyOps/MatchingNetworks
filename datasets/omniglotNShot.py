@@ -77,7 +77,7 @@ class OmniglotNShotDataset():
             for i in np.arange(sizei):
                 if input_labels[i] in temp:
                     if len( temp[input_labels[i]] ) >= 20:  #only 20 samples per class
-                        if True or False and (True or input_labels[i] == 6):
+                        if input_labels[i] < 30:    #True or False and (True or input_labels[i] == 6):
                             if input_labels[i] in temp_to_be_predicted:
                                 if len( temp_to_be_predicted[input_labels[i]] ) >= 9:  #only 20 samples per class
                                     continue
@@ -241,13 +241,14 @@ class OmniglotNShotDataset():
                     # meta-test
                     for eind in example_inds[self.samples_per_class:]:
                         """
+                        """
                         print( "eind" )
                         print( eind )
                         print( cur_class )
                         print( i )
                         print( ind_test )
                         print( pinds_test[ind_test] )
-                        """
+                        
                         target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
                         target_y[i, pinds_test[ind_test]] = j
                         ind_test = ind_test + 1
