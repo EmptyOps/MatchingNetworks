@@ -76,10 +76,10 @@ class OmniglotNShotDataset():
             sizei = len(input)
             for i in np.arange(sizei):
                 if input_labels[i] in temp:
-                    if len( temp[input_labels[i]] ) >= 29:  #only 20 samples per class
-                        if False and (True or input_labels[i] == 6):
+                    if len( temp[input_labels[i]] ) >= 20:  #only 20 samples per class
+                        if True or False and (True or input_labels[i] == 6):
                             if input_labels[i] in temp_to_be_predicted:
-                                if len( temp_to_be_predicted[input_labels[i]] ) >= 0:  #only 20 samples per class
+                                if len( temp_to_be_predicted[input_labels[i]] ) >= 9:  #only 20 samples per class
                                     continue
                                 
                                 temp_to_be_predicted[input_labels[i]].append( input[i][:,:,np.newaxis] )
@@ -152,8 +152,8 @@ class OmniglotNShotDataset():
         self.datasets = {"train": self.x_train, "val": self.x_val, "test": self.x_test, "x_to_be_predicted": self.x_to_be_predicted} #original data cached
         self.datasets_cache = {"train": self.load_data_cache(self.datasets["train"]),  #current epoch data cached
                                "val": self.load_data_cache(self.datasets["val"]),
-                               "test": self.load_data_cache(self.datasets["test"])}#,
-                               #"x_to_be_predicted": self.load_data_cache(self.datasets["x_to_be_predicted"])}
+                               "test": self.load_data_cache(self.datasets["test"]),
+                               "x_to_be_predicted": self.load_data_cache(self.datasets["x_to_be_predicted"])}
 
     def normalization(self):
         """

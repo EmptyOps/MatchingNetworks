@@ -108,7 +108,7 @@ with tqdm.tqdm(total=total_epochs) as pbar_e:
             logger.log_value('test_loss', total_test_c_loss)
             logger.log_value('test_acc', total_test_accuracy)
             
-            if False:
+            if True:
                 total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_time_predictions(
                     total_test_batches=total_test_batches)
                 print("Epoch {}: run_time_predictions_loss: {}, run_time_predictions_accuracy: {}".format(e, total_test_c_loss, total_test_accuracy))
