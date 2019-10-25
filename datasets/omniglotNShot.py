@@ -76,7 +76,7 @@ class OmniglotNShotDataset():
             sizei = len(input)
             for i in np.arange(sizei):
                 if input_labels[i] in temp:
-                    if len( temp[input_labels[i]] ) >= 30:  #only 20 samples per class
+                    if len( temp[input_labels[i]] ) >= 29:  #only 20 samples per class
                         if False and (True or input_labels[i] == 6):
                             if input_labels[i] in temp_to_be_predicted:
                                 if len( temp_to_be_predicted[input_labels[i]] ) >= 0:  #only 20 samples per class
