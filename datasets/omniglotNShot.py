@@ -188,9 +188,9 @@ class OmniglotNShotDataset():
         """
         print( "data_pack" )
         print( data_pack_type )        
+        print( data_pack.shape )
         
         """
-        print( data_pack.shape )
         print( data_pack.shape[0] )
         print( data_pack.shape[2] )
         print( data_pack.shape[3] )
