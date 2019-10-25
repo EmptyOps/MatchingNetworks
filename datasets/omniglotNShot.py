@@ -150,10 +150,10 @@ class OmniglotNShotDataset():
 
         self.indexes = {"train": 0, "val": 0, "test": 0, "x_to_be_predicted": 0}
         self.datasets = {"train": self.x_train, "val": self.x_val, "test": self.x_test, "x_to_be_predicted": self.x_to_be_predicted} #original data cached
-        self.datasets_cache = {"train": self.load_data_cache(self.datasets["train"]),  #current epoch data cached
-                               "val": self.load_data_cache(self.datasets["val"]),
-                               "test": self.load_data_cache(self.datasets["test"]),
-                               "x_to_be_predicted": self.load_data_cache(self.datasets["x_to_be_predicted"])}
+        self.datasets_cache = {"train": self.load_data_cache(self.datasets["train"], ""),  #current epoch data cached
+                               "val": self.load_data_cache(self.datasets["val"], ""),
+                               "test": self.load_data_cache(self.datasets["test"], ""),
+                               "x_to_be_predicted": self.load_data_cache(self.datasets["x_to_be_predicted"], "x_to_be_predicted")}
 
     def normalization(self):
         """
@@ -180,14 +180,16 @@ class OmniglotNShotDataset():
         
         print("after_normalization", "mean", self.mean, "max", self.max, "min", self.min, "std", self.std)
 
-    def load_data_cache(self, data_pack):
+    def load_data_cache(self, data_pack, data_pack_type):
         """
         Collects 1000 batches data for N-shot learning
         :param data_pack: Data pack to use (any one of train, val, test)
         :return: A list with [support_set_x, support_set_y, target_x, target_y] ready to be fed to our networks
         """
-        """
         print( "data_pack" )
+        print( data_pack_type )        
+        
+        """
         print( data_pack.shape )
         print( data_pack.shape[0] )
         print( data_pack.shape[2] )
@@ -217,7 +219,7 @@ class OmniglotNShotDataset():
             target_y = np.zeros((self.batch_size, self.samples_per_class), dtype=np.int)
             for i in range(self.batch_size):
                 pinds = np.random.permutation(n_samples)
-                classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False)  #False
+                classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else True)  #False
                 # select 1-shot or 5-shot classes for test with repetition
                 x_hat_class = np.random.choice(classes, self.samples_per_class, True)
                 pinds_test = np.random.permutation(self.samples_per_class)
