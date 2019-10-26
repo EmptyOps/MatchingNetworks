@@ -77,7 +77,7 @@ class OmniglotNShotDataset():
             for i in np.arange(sizei):
                 if input_labels[i] in temp:
                     if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
-                        if True or False and (True or input_labels[i] == 6):
+                        if input_labels[i] < 30:            #True or False and (True or input_labels[i] == 6):
                             if input_labels[i] in temp_to_be_predicted:
                                 if len( temp_to_be_predicted[input_labels[i]] ) >= 10:  #only 20 samples per class
                                     continue
@@ -281,7 +281,7 @@ class OmniglotNShotDataset():
         """
         if self.indexes[dataset_name] >= len(self.datasets_cache[dataset_name]):
             self.indexes[dataset_name] = 0
-            self.datasets_cache[dataset_name] = self.load_data_cache(self.datasets[dataset_name])
+            self.datasets_cache[dataset_name] = self.load_data_cache(self.datasets[dataset_name], dataset_name)
         next_batch = self.datasets_cache[dataset_name][self.indexes[dataset_name]]
         self.indexes[dataset_name] += 1
         x_support_set, y_support_set, x_target, y_target = next_batch
