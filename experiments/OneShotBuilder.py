@@ -273,12 +273,13 @@ class OneShotBuilder:
                     acc, c_loss_value = self.matchingNet(x_support_set, y_support_set_one_hot,
                                                          x_target, y_target, is_debug = False )
 
+                #iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
                 iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data, acc.data)
                 pbar.set_description(iter_out)
                 pbar.update(1)
 
-                total_test_c_loss += c_loss_value.data[0]
-                total_test_accuracy += acc.data[0]
+                total_test_c_loss += c_loss_value.data   #c_loss_value.data[0]
+                total_test_accuracy += acc.data          #acc.data[0]
             total_test_c_loss = total_test_c_loss / total_test_batches
             total_test_accuracy = total_test_accuracy / total_test_batches
         return total_test_c_loss, total_test_accuracy
