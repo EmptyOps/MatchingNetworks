@@ -226,17 +226,17 @@ class OmniglotNShotDataset():
                 ind = 0
                 ind_test = 0
                 for j, cur_class in enumerate(classes):  # each class
-                    print( "example_inds" )
+                    #print( "example_inds" )
                     if cur_class in x_hat_class:
                         # Count number of times this class is inside the meta-test
                         n_test_samples = np.sum(cur_class == x_hat_class)
                         example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + n_test_samples, False)
-                        print( "example_inds here 1 " + str(n_test_samples) )
+                        #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
-                        print( "example_inds here 2 " )
+                        #print( "example_inds here 2 " )
                         example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
 
-                    print( example_inds )
+                    #print( example_inds )
                         
                     # meta-training
                     for eind in example_inds[:self.samples_per_class]:
@@ -246,13 +246,13 @@ class OmniglotNShotDataset():
                     # meta-test
                     for eind in example_inds[self.samples_per_class:]:
                         """
-                        """
                         print( "eind" )
                         print( eind )
                         print( cur_class )
                         print( i )
                         print( ind_test )
                         print( pinds_test[ind_test] )
+                        """
                         
                         target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
                         target_y[i, pinds_test[ind_test]] = j
