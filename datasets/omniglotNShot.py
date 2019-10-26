@@ -221,7 +221,7 @@ class OmniglotNShotDataset():
                 pinds = np.random.permutation(n_samples)
                 classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else True)  #False
                 # select 1-shot or 5-shot classes for test with repetition
-                x_hat_class = np.random.choice(classes, self.samples_per_class, True)
+                x_hat_class = np.random.choice(classes, self.samples_per_class, False)
                 pinds_test = np.random.permutation(self.samples_per_class)
                 ind = 0
                 ind_test = 0
