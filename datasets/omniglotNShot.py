@@ -78,11 +78,11 @@ class OmniglotNShotDataset():
                 if input_labels[i] in temp:
                     if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
                         if input_labels[i] < 9 or np.mod( input_labels[i] - 9, 30 ) == 0 or np.mod( input_labels[i] - 10, 30 ) == 0:            #True or False and (True or input_labels[i] == 6):
-							lbl_val = input_labels[i]
-							if np.mod( input_labels[i] - 9, 30 ) == 0:
-								lbl_val = 9 + int( (input_labels[i] - 9) / 30 )
-							if np.mod( input_labels[i] - 10, 30 ) == 0:
-								lbl_val = 18 + int( (input_labels[i] - 10) / 30 )								
+                            lbl_val = input_labels[i]
+                            if np.mod( input_labels[i] - 9, 30 ) == 0:
+                                lbl_val = 9 + int( (input_labels[i] - 9) / 30 )
+                            if np.mod( input_labels[i] - 10, 30 ) == 0:
+                                lbl_val = 18 + int( (input_labels[i] - 10) / 30 )								
 								
                             if lbl_val in temp_to_be_predicted:
                                 if len( temp_to_be_predicted[lbl_val] ) >= 10:  #only 20 samples per class
@@ -344,11 +344,17 @@ class OmniglotNShotDataset():
         return x_support_set_tmp, y_support_set_tmp, x_target_tmp, y_target_tmp
         """
         
-		for i in np.arange( len(y_support_set) ):
-				if y_support_set[i] >= 9 and y_support_set[i] <18:
-					y_support_set[i] = 9 + ( (y_support_set[i] - 9) * 30 )
-				if y_support_set[i]  >= 18:
-					y_support_set[i] = 10 + ( (y_support_set[i] - 10) * 30 )
+        for i in np.arange( len(y_support_set) ):
+            if y_support_set[i] >= 9 and y_support_set[i] <18:
+                y_support_set[i] = 9 + ( (y_support_set[i] - 9) * 30 )
+            if y_support_set[i]  >= 18:
+                y_support_set[i] = 10 + ( (y_support_set[i] - 10) * 30 )
+                
+        for i in np.arange( len(y_target) ):
+            if y_target[i] >= 9 and y_target[i] <18:
+                y_target[i] = 9 + ( (y_target[i] - 9) * 30 )
+            if y_target[i]  >= 18:
+                y_target[i] = 10 + ( (y_target[i] - 10) * 30 )
 					
         return x_support_set, y_support_set, x_target, y_target
 
