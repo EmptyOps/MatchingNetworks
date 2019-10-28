@@ -345,18 +345,18 @@ class OmniglotNShotDataset():
         """
         
         for i in np.arange( len(y_support_set) ):
-			for j in np.arange( len(y_support_set[i]) ):
-				if y_support_set[i][j] >= 9 and y_support_set[i][j] < 18:
-					y_support_set[i][j] = 9 + ( (y_support_set[i][j] - 9) * 30 )
-				if y_support_set[i][j] >= 18:
-					y_support_set[i][j] = 10 + ( (y_support_set[i][j] - 10) * 30 )
+            for j in np.arange( len(y_support_set[i]) ):
+                if y_support_set[i][j] >= 9 and y_support_set[i][j] < 18:
+                    y_support_set[i][j] = 9 + ( (y_support_set[i][j] - 9) * 30 )
+                if y_support_set[i][j] >= 18:
+                    y_support_set[i][j] = 10 + ( (y_support_set[i][j] - 10) * 30 )
                 
         for i in np.arange( len(y_target) ):
-			for j in np.arange( len(y_target[i]) ):
-				if y_target[i][j] >= 9 and y_target[i][j] < 18:
-					y_target[i][j] = 9 + ( (y_target[i][j] - 9) * 30 )
-				if y_target[i][j] >= 18:
-					y_target[i][j] = 10 + ( (y_target[i][j] - 10) * 30 )
+            for j in np.arange( len(y_target[i]) ):
+                if y_target[i][j] >= 9 and y_target[i][j] < 18:
+                    y_target[i][j] = 9 + ( (y_target[i][j] - 9) * 30 )
+                if y_target[i][j] >= 18:
+                    y_target[i][j] = 10 + ( (y_target[i][j] - 10) * 30 )
 					
         return x_support_set, y_support_set, x_target, y_target
 
