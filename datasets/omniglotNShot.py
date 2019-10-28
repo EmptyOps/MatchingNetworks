@@ -339,7 +339,7 @@ class OmniglotNShotDataset():
         print( x_support_set_tmp.shape )
         print( y_support_set_tmp )
         print( x_target_tmp.shape )
-        print( y_target_tmp )
+        print( y_target_tmp )   
                 
         return x_support_set_tmp, y_support_set_tmp, x_target_tmp, y_target_tmp
         """
