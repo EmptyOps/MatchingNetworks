@@ -55,9 +55,9 @@ class OmniglotNShotDataset():
             self.x = [] 
             self.x_to_be_predicted = [] 
             self.x_to_be_predicted_cls_indexes = {} 
-			
-			self.total_base_classes = 44
-        
+            
+            self.total_base_classes = 44
+            
             #
             print( "(!) Merging inputs, should only be executed in training mode." )
             input = []
