@@ -76,6 +76,8 @@ class OmniglotNShotDataset():
             temp = dict()
             temp_to_be_predicted = dict()
             sizei = len(input)
+			print("sizei")
+            print(sizei)
             for i in np.arange(sizei):
                 if input_labels[i] in temp:
                     if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
