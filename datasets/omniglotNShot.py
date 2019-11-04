@@ -345,10 +345,11 @@ class OmniglotNShotDataset():
         """
         
         for i in np.arange( len(y_support_set) ):
-            if y_support_set[i] >= 9 and y_support_set[i] <18:
-                y_support_set[i] = 9 + ( (y_support_set[i] - 9) * 30 )
-            if y_support_set[i]  >= 18:
-                y_support_set[i] = 10 + ( (y_support_set[i] - 10) * 30 )
+            for i in np.arange( len(y_support_set) ):
+                if y_support_set[i] >= 9 and y_support_set[i] <18:
+                    y_support_set[i] = 9 + ( (y_support_set[i] - 9) * 30 )
+                if y_support_set[i]  >= 18:
+                    y_support_set[i] = 10 + ( (y_support_set[i] - 10) * 30 )
                 
         for i in np.arange( len(y_target) ):
             if y_target[i] >= 9 and y_target[i] <18:
