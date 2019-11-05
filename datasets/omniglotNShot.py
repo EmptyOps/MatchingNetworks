@@ -55,7 +55,9 @@ class OmniglotNShotDataset():
             self.x = [] 
             self.x_to_be_predicted = [] 
             self.x_to_be_predicted_cls_indexes = {} 
-        
+            
+            self.total_base_classes = 44
+            
             #
             print( "(!) Merging inputs, should only be executed in training mode." )
             input = []
@@ -74,15 +76,17 @@ class OmniglotNShotDataset():
             temp = dict()
             temp_to_be_predicted = dict()
             sizei = len(input)
+            print("sizei")
+            print(sizei)
             for i in np.arange(sizei):
                 if input_labels[i] in temp:
                     if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
-                        if input_labels[i] < 9 or np.mod( input_labels[i] - 9, 30 ) == 0 or np.mod( input_labels[i] - 10, 30 ) == 0:            #True or False and (True or input_labels[i] == 6):
+                        if input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:            #True or False and (True or input_labels[i] == 6):
                             lbl_val = input_labels[i]
-                            if np.mod( input_labels[i] - 9, 30 ) == 0:
-                                lbl_val = 9 + int( (input_labels[i] - 9) / 30 )
-                            if np.mod( input_labels[i] - 10, 30 ) == 0:
-                                lbl_val = 18 + int( (input_labels[i] - 10) / 30 )								
+                            if np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
+                                lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
+                            if np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
+                                lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
 								
                             if lbl_val in temp_to_be_predicted:
                                 if len( temp_to_be_predicted[lbl_val] ) >= 10:  #only 20 samples per class
@@ -102,7 +106,9 @@ class OmniglotNShotDataset():
             self.x = [] # Free memory
 
             print( "temp.keys()" )
-            print( temp.keys() )
+            #print( temp.keys() )
+            for key, value in temp.items(): 
+                print("key " + str(key) + " len " + len(value))
             for classes in temp.keys():
                 self.x.append(np.array(temp[ list(temp.keys())[classes]]))
             self.x = np.array(self.x)
@@ -143,8 +149,8 @@ class OmniglotNShotDataset():
             self.x_train, self.x_test, self.x_val  = self.x[:1200], self.x[1200:1500], self.x[1500:]
         else:
             self.is_rotate = False
-            self.cache_sample = 100
-            self.x_train, self.x_test, self.x_val  = self.x[:150], self.x[150:185], self.x[185:215]
+            self.cache_sample = 300
+            self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
         #print( self.x_train[0][0] )
         self.normalization()
         #print( self.x_train[0][0] )
@@ -339,23 +345,24 @@ class OmniglotNShotDataset():
         print( x_support_set_tmp.shape )
         print( y_support_set_tmp )
         print( x_target_tmp.shape )
-        print( y_target_tmp )
+        print( y_target_tmp )   
                 
         return x_support_set_tmp, y_support_set_tmp, x_target_tmp, y_target_tmp
         """
         
         for i in np.arange( len(y_support_set) ):
-            for i in np.arange( len(y_support_set) ):
-                if y_support_set[i] >= 9 and y_support_set[i] <18:
-                    y_support_set[i] = 9 + ( (y_support_set[i] - 9) * 30 )
-                if y_support_set[i]  >= 18:
-                    y_support_set[i] = 10 + ( (y_support_set[i] - 10) * 30 )
+            for j in np.arange( len(y_support_set[i]) ):
+                if y_support_set[i][j] >= self.total_base_classes and y_support_set[i][j] < (self.total_base_classes*2):
+                    y_support_set[i][j] = self.total_base_classes + ( (y_support_set[i][j] - self.total_base_classes) * 30 )
+                if y_support_set[i][j] >= (self.total_base_classes*2):
+                    y_support_set[i][j] = (self.total_base_classes+1) + ( (y_support_set[i][j] - (self.total_base_classes+1)) * 30 )
                 
         for i in np.arange( len(y_target) ):
-            if y_target[i] >= 9 and y_target[i] <18:
-                y_target[i] = 9 + ( (y_target[i] - 9) * 30 )
-            if y_target[i]  >= 18:
-                y_target[i] = 10 + ( (y_target[i] - 10) * 30 )
+            for j in np.arange( len(y_target[i]) ):
+                if y_target[i][j] >= self.total_base_classes and y_target[i][j] < (self.total_base_classes*2):
+                    y_target[i][j] = self.total_base_classes + ( (y_target[i][j] - self.total_base_classes) * 30 )
+                if y_target[i][j] >= (self.total_base_classes*2):
+                    y_target[i][j] = (self.total_base_classes+1) + ( (y_target[i][j] - (self.total_base_classes+1)) * 30 )
 					
         return x_support_set, y_support_set, x_target, y_target
 
