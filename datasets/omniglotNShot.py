@@ -108,7 +108,7 @@ class OmniglotNShotDataset():
             print( "temp.keys()" )
             #print( temp.keys() )
             for key, value in temp.items(): 
-                print("key " + str(key) + " len " + len(value))
+                print("key " + str(key) + " len " + str(len(value)))
             for classes in temp.keys():
                 self.x.append(np.array(temp[ list(temp.keys())[classes]]))
             self.x = np.array(self.x)
