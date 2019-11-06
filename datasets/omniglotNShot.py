@@ -101,9 +101,6 @@ class OmniglotNShotDataset():
                     temp[input_labels[i]].append( input[i][:,:,np.newaxis] )
                 else:
                     temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
-            input = []  # Free memory
-            input_labels = []  # Free memory
-            self.x = [] # Free memory
 
             print( "temp.keys()" )
             #print( temp.keys() )
@@ -114,6 +111,11 @@ class OmniglotNShotDataset():
             print( input_labels.count(13) )
             print( input_labels.count(14) )
             print( input_labels.count(15) )
+            
+            input = []  # Free memory
+            input_labels = []  # Free memory
+            self.x = [] # Free memory
+
                     
             for classes in temp.keys():
                 self.x.append(np.array(temp[ list(temp.keys())[classes]]))
