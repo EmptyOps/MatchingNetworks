@@ -108,7 +108,7 @@ class OmniglotNShotDataset():
             print( "temp.keys()" )
             #print( temp.keys() )
             for key, value in temp.items(): 
-                if len(value) < 19:
+                if True or len(value) < 19:
                     print("key " + str(key) + " len " + str(len(value)))
             for classes in temp.keys():
                 self.x.append(np.array(temp[ list(temp.keys())[classes]]))
