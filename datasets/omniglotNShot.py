@@ -107,10 +107,8 @@ class OmniglotNShotDataset():
             #for key, value in temp.items(): 
             #    if True or len(value) < 19:
             #        print("key " + str(key) + " len " + str(len(value)))
-            from collections import Counter
-            print( input_labels.count(13) )
-            print( input_labels.count(14) )
-            print( input_labels.count(15) )
+            unique, counts = numpy.unique(input_labels, return_counts=True)
+            print( dict(zip(unique, counts)) )
             
             input = []  # Free memory
             input_labels = []  # Free memory
