@@ -111,7 +111,9 @@ class OmniglotNShotDataset():
             #    if True or len(value) < 19:
             #        print("key " + str(key) + " len " + str(len(value)))
             from collections import Counter
-            print( Counter(input_labels) )
+            print( input_labels.count(13) )
+            print( input_labels.count(14) )
+            print( input_labels.count(15) )
                     
             for classes in temp.keys():
                 self.x.append(np.array(temp[ list(temp.keys())[classes]]))
