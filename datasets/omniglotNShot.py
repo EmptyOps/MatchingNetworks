@@ -83,9 +83,9 @@ class OmniglotNShotDataset():
                     if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
                         if input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:            #True or False and (True or input_labels[i] == 6):
                             lbl_val = input_labels[i]
-                            if np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
+                            if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
                                 lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
-                            if np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
+                            if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
                                 lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
 								
                             if lbl_val in temp_to_be_predicted:
