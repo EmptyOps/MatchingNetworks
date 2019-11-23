@@ -115,16 +115,17 @@ if is_evaluation_only == False:
                 logger.log_value('test_loss', total_test_c_loss)
                 logger.log_value('test_acc', total_test_accuracy)
                 
-                if True:
-                    total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_time_predictions(
-                        total_test_batches=total_test_batches)
-                    print("Epoch {}: run_time_predictions_loss: {}, run_time_predictions_accuracy: {}".format(e, total_test_c_loss, total_test_accuracy))
-                    logger.log_value('run_time_predictions_loss', total_test_c_loss)
-                    logger.log_value('run_time_predictions_acc', total_test_accuracy)
             else:
                 total_test_c_loss = -1
                 total_test_accuracy = -1
 
+            if True:
+                total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_time_predictions(
+                    total_test_batches=total_test_batches)
+                print("Epoch {}: run_time_predictions_loss: {}, run_time_predictions_accuracy: {}".format(e, total_test_c_loss, total_test_accuracy))
+                logger.log_value('run_time_predictions_loss', total_test_c_loss)
+                logger.log_value('run_time_predictions_acc', total_test_accuracy)
+                
             pbar_e.update(1)
             logger.step()
             
