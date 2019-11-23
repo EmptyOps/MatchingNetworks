@@ -141,5 +141,5 @@ else:
     #save result
     import json
     if not outfile_path_prob == None:
-    with open( outfile_path_prob, 'w') as outfile:
-        json.dump(results.tolist(), outfile)                      
+        with open( outfile_path_prob, 'w') as outfile:
+            json.dump(results.tolist(), outfile)                      
