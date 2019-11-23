@@ -24,7 +24,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False):
 
         if is_use_sample_data:
             if not os.path.isfile(os.path.join(dataroot,'data.npy')):
@@ -56,6 +56,7 @@ class OmniglotNShotDataset():
             self.x_to_be_predicted = [] 
             self.x_to_be_predicted_cls_indexes = {} 
             
+            self.prediction_classes = 9
             self.total_base_classes = 44
             
             #
@@ -81,7 +82,7 @@ class OmniglotNShotDataset():
             for i in np.arange(sizei):
                 if input_labels[i] in temp:
                     if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
-                        if input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:            #True or False and (True or input_labels[i] == 6):
+                        if is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
                             lbl_val = input_labels[i]
                             if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
                                 lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
@@ -121,16 +122,17 @@ class OmniglotNShotDataset():
             temp = [] # Free memory
             #np.save(os.path.join(dataroot,'data.npy'),self.x)
 
-            print( "temp_to_be_predicted.keys()" )
-            print( temp_to_be_predicted.keys() )
-            cls_index = 0
-            for classes in temp_to_be_predicted.keys():
-                self.x_to_be_predicted_cls_indexes[classes] = cls_index
-                self.x_to_be_predicted.append(np.array(temp_to_be_predicted[ list(temp_to_be_predicted.keys())[classes]]))
-                cls_index = cls_index + 1
-            self.x_to_be_predicted = np.array(self.x_to_be_predicted)
-            temp_to_be_predicted = [] # Free memory
-            #np.save(os.path.join(dataroot,'data.npy'),self.x)
+            if is_evaluation_only == False:
+                print( "temp_to_be_predicted.keys()" )
+                print( temp_to_be_predicted.keys() )
+                cls_index = 0
+                for classes in temp_to_be_predicted.keys():
+                    self.x_to_be_predicted_cls_indexes[classes] = cls_index
+                    self.x_to_be_predicted.append(np.array(temp_to_be_predicted[ list(temp_to_be_predicted.keys())[classes]]))
+                    cls_index = cls_index + 1
+                self.x_to_be_predicted = np.array(self.x_to_be_predicted)
+                temp_to_be_predicted = [] # Free memory
+                #np.save(os.path.join(dataroot,'data.npy'),self.x)
             
         self.data_pack_shape_2 = None
         self.data_pack_shape_3 = None
@@ -148,15 +150,21 @@ class OmniglotNShotDataset():
         np.random.shuffle(shuffle_classes)
         self.x = self.x[shuffle_classes]
         self.cache_sample = 0
+        self.cache_sample_prediction = 0
         self.is_rotate = False
         if is_use_sample_data:
             self.is_rotate = True
             self.cache_sample = 1000
+            self.cache_sample_prediction = 10
             self.x_train, self.x_test, self.x_val  = self.x[:1200], self.x[1200:1500], self.x[1500:]
         else:
             self.is_rotate = False
             self.cache_sample = 300
-            self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
+            self.cache_sample_prediction = 10
+            if is_evaluation_only == False:
+                self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
+            else:
+                self.x_train  = self.x[:]
         #print( self.x_train[0][0] )
         self.normalization()
         #print( self.x_train[0][0] )
@@ -166,13 +174,18 @@ class OmniglotNShotDataset():
         self.classes_per_set = classes_per_set
         self.samples_per_class = samples_per_class
 
-        self.indexes = {"train": 0, "val": 0, "test": 0, "x_to_be_predicted": 0}
-        self.datasets = {"train": self.x_train, "val": self.x_val, "test": self.x_test, "x_to_be_predicted": self.x_to_be_predicted} #original data cached
-        self.datasets_cache = {"train": self.load_data_cache(self.datasets["train"], ""),  #current epoch data cached
-                               "val": self.load_data_cache(self.datasets["val"], ""),
-                               "test": self.load_data_cache(self.datasets["test"], ""),
-                               "x_to_be_predicted": self.load_data_cache(self.datasets["x_to_be_predicted"], "x_to_be_predicted")}
-
+        if is_evaluation_only == False:
+            self.indexes = {"train": 0, "val": 0, "test": 0, "x_to_be_predicted": 0}
+            self.datasets = {"train": self.x_train, "val": self.x_val, "test": self.x_test, "x_to_be_predicted": self.x_to_be_predicted} #original data cached
+            self.datasets_cache = {"train": self.load_data_cache(self.datasets["train"], ""),  #current epoch data cached
+                                   "val": self.load_data_cache(self.datasets["val"], ""),
+                                   "test": self.load_data_cache(self.datasets["test"], ""),
+                                   "x_to_be_predicted": self.load_data_cache(self.datasets["x_to_be_predicted"], "x_to_be_predicted")}
+        else:
+            self.indexes = {"evaluation": 0}
+            self.datasets = {"evaluation": self.x_train} #original data cached
+            self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation")}
+                                   
     def normalization(self):
         """
         Normalizes our data, to have a mean of 0 and sdt of 1
@@ -291,6 +304,100 @@ class OmniglotNShotDataset():
             
         return data_cache
 
+    def load_data_cache_for_evaluation(self, data_pack, data_pack_type):
+        """
+        Collects 1000 batches data for N-shot learning
+        :param data_pack: Data pack to use (any one of train, val, test)
+        :return: A list with [support_set_x, support_set_y, target_x, target_y] ready to be fed to our networks
+        """
+        print( "data_pack" )
+        print( data_pack_type )        
+        print( data_pack.shape )
+        
+        """
+        print( data_pack.shape[0] )
+        print( data_pack.shape[2] )
+        print( data_pack.shape[3] )
+        """
+        if self.data_pack_shape_2 == None:
+            self.data_pack_shape_2 = data_pack.shape[2]
+        if self.data_pack_shape_3 == None:
+            self.data_pack_shape_3 = data_pack.shape[3]            
+        
+        n_samples = self.samples_per_class * self.classes_per_set
+        data_cache = []
+        for sample in range(self.cache_sample_prediction):
+        
+            """
+            #TODO temp. profiling, comment it when not needed
+            import cProfile, pstats
+            import io as StringIO
+            print( "profiling start" )
+            pr = cProfile.Profile()
+            pr.enable()
+            """
+        
+            support_set_x = np.zeros((self.batch_size, n_samples, self.data_pack_shape_2, self.data_pack_shape_3, 1))
+            support_set_y = np.zeros((self.batch_size, n_samples))
+            target_x = np.zeros((self.batch_size, self.samples_per_class, self.data_pack_shape_2, self.data_pack_shape_3, 1), dtype=np.int)
+            target_y = np.zeros((self.batch_size, self.samples_per_class), dtype=np.int)
+            for i in range(self.batch_size):
+                pinds = np.random.permutation(n_samples)
+                #classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  #False
+                classes = np.random.choice(self.prediction_classes, self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
+                # select 1-shot or 5-shot classes for test with repetition
+                x_hat_class = np.random.choice(classes, self.samples_per_class, True)
+                pinds_test = np.random.permutation(self.samples_per_class)
+                ind = 0
+                ind_test = 0
+                for j, cur_class in enumerate(classes):  # each class
+                    #print( "example_inds" )
+                    if cur_class in x_hat_class:
+                        # Count number of times this class is inside the meta-test
+                        n_test_samples = np.sum(cur_class == x_hat_class)
+                        example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + n_test_samples, False)
+                        #print( "example_inds here 1 " + str(n_test_samples) )
+                    else:
+                        #print( "example_inds here 2 " )
+                        example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
+
+                    #print( example_inds )
+                         
+                    # meta-training
+                    for eind in example_inds[:self.samples_per_class]:
+                        support_set_x[i, pinds[ind], :, :, :] = data_pack[cur_class][eind]
+                        support_set_y[i, pinds[ind]] = j
+                        ind = ind + 1
+                    # meta-test
+                    for eind in example_inds[self.samples_per_class:]:
+                        """
+                        print( "eind" )
+                        print( eind )
+                        print( cur_class )
+                        print( i )
+                        print( ind_test )
+                        print( pinds_test[ind_test] )
+                        """
+                        
+                        target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
+                        target_y[i, pinds_test[ind_test]] = j
+                        ind_test = ind_test + 1
+
+            data_cache.append([support_set_x, support_set_y, target_x, target_y])
+            
+            """
+            #TODO temp. profiling, comment it when not needed
+            pr.disable()
+            s = StringIO.StringIO()
+            sortby = 'cumulative'
+            ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+            ps.print_stats()
+            print( s.getvalue() )
+            sdfkjhskdfhkshdf
+            """
+            
+        return data_cache
+        
     def __get_batch(self, dataset_name):
         """
         Gets next batch from the dataset with name.
@@ -371,6 +478,38 @@ class OmniglotNShotDataset():
                     y_target[i][j] = (self.total_base_classes+1) + ( (y_target[i][j] - (self.total_base_classes+1)) * 30 )
 					
         return x_support_set, y_support_set, x_target, y_target
+        
+    def get_batch_evaluation(self,str_type, cls, rotate_flag = False):
+        """
+        Get next batch
+        :return: Next batch
+        """
+        x_support_set, y_support_set, x_target, y_target = self.__get_batch(str_type)
+        if rotate_flag:
+            k = int(np.random.uniform(low=0, high=4))
+            # Iterate over the sequence. Extract batches.
+            for i in np.arange(x_support_set.shape[0]):
+                x_support_set[i,:,:,:,:] = self.__rotate_batch(x_support_set[i,:,:,:,:],k)
+            # Rotate all the batch of the target images
+            for i in np.arange(x_target.shape[0]):
+                x_target[i,:,:,:,:] = self.__rotate_batch(x_target[i,:,:,:,:], k)
+        """
+        for i in np.arange( len(y_support_set) ):
+            for j in np.arange( len(y_support_set[i]) ):
+                if y_support_set[i][j] >= self.total_base_classes and y_support_set[i][j] < (self.total_base_classes*2):
+                    y_support_set[i][j] = self.total_base_classes + ( (y_support_set[i][j] - self.total_base_classes) * 30 )
+                if y_support_set[i][j] >= (self.total_base_classes*2):
+                    y_support_set[i][j] = (self.total_base_classes+1) + ( (y_support_set[i][j] - (self.total_base_classes+1)) * 30 )
+                
+        for i in np.arange( len(y_target) ):
+            for j in np.arange( len(y_target[i]) ):
+                if y_target[i][j] >= self.total_base_classes and y_target[i][j] < (self.total_base_classes*2):
+                    y_target[i][j] = self.total_base_classes + ( (y_target[i][j] - self.total_base_classes) * 30 )
+                if y_target[i][j] >= (self.total_base_classes*2):
+                    y_target[i][j] = (self.total_base_classes+1) + ( (y_target[i][j] - (self.total_base_classes+1)) * 30 )
+        """                    
+					
+        return x_support_set, y_support_set, x_target, y_target        
 
     def __rotate_data(self, image, k):
         """

@@ -74,49 +74,72 @@ LOG_DIR = log_dir + '/1_run-batchSize_{}-fce_{}-classes_per_set{}-samples_per_cl
 # create logger
 logger = Logger(LOG_DIR)
 
+model_path = sys.argv[18] if len(sys.argv) >= 19 else 0
+outfile_path_prob = sys.argv[19] if len(sys.argv) >= 20 else 0
 total_input_files = int(sys.argv[21]) if len(sys.argv) >= 22 else 0
+
+is_evaluation_only = False
+if os.path.exists(model_path):
+    is_evaluation_only = True
 
 data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
                                           classes_per_set=classes_per_set,
                                           samples_per_class=samples_per_class, 
                                           is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
-                                          total_input_files = total_input_files)
+                                          total_input_files = total_input_files, is_evaluation_only = is_evaluation_only)
 
-obj_oneShotBuilder = OneShotBuilder(data)
+obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
 obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce)
 
-best_val = 0.
-with tqdm.tqdm(total=total_epochs) as pbar_e:
-    for e in range(0, total_epochs):
-        total_c_loss, total_accuracy = obj_oneShotBuilder.run_training_epoch(total_train_batches=total_train_batches)
-        print("Epoch {}: train_loss: {}, train_accuracy: {}".format(e, total_c_loss, total_accuracy))
+if is_evaluation_only == False:
+    best_val = 0.
+    with tqdm.tqdm(total=total_epochs) as pbar_e:
+        for e in range(0, total_epochs):
+            total_c_loss, total_accuracy = obj_oneShotBuilder.run_training_epoch(total_train_batches=total_train_batches)
+            print("Epoch {}: train_loss: {}, train_accuracy: {}".format(e, total_c_loss, total_accuracy))
 
-        total_val_c_loss, total_val_accuracy = obj_oneShotBuilder.run_validation_epoch(
-            total_val_batches=total_val_batches)
-        print("Epoch {}: val_loss: {}, val_accuracy: {}".format(e, total_val_c_loss, total_val_accuracy))
+            total_val_c_loss, total_val_accuracy = obj_oneShotBuilder.run_validation_epoch(
+                total_val_batches=total_val_batches)
+            print("Epoch {}: val_loss: {}, val_accuracy: {}".format(e, total_val_c_loss, total_val_accuracy))
 
-        logger.log_value('train_loss', total_c_loss)
-        logger.log_value('train_acc', total_accuracy)
-        logger.log_value('val_loss', total_val_c_loss)
-        logger.log_value('val_acc', total_val_accuracy)
+            logger.log_value('train_loss', total_c_loss)
+            logger.log_value('train_acc', total_accuracy)
+            logger.log_value('val_loss', total_val_c_loss)
+            logger.log_value('val_acc', total_val_accuracy)
 
-        if total_val_accuracy >= best_val:  # if new best val accuracy -> produce test statistics
-            best_val = total_val_accuracy
-            total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_testing_epoch(
-                total_test_batches=total_test_batches)
-            print("Epoch {}: test_loss: {}, test_accuracy: {}".format(e, total_test_c_loss, total_test_accuracy))
-            logger.log_value('test_loss', total_test_c_loss)
-            logger.log_value('test_acc', total_test_accuracy)
-            
-            if True:
-                total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_time_predictions(
+            if total_val_accuracy >= best_val:  # if new best val accuracy -> produce test statistics
+                best_val = total_val_accuracy
+                total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_testing_epoch(
                     total_test_batches=total_test_batches)
-                print("Epoch {}: run_time_predictions_loss: {}, run_time_predictions_accuracy: {}".format(e, total_test_c_loss, total_test_accuracy))
-                logger.log_value('run_time_predictions_loss', total_test_c_loss)
-                logger.log_value('run_time_predictions_acc', total_test_accuracy)
-        else:
-            total_test_c_loss = -1
-            total_test_accuracy = -1
+                print("Epoch {}: test_loss: {}, test_accuracy: {}".format(e, total_test_c_loss, total_test_accuracy))
+                logger.log_value('test_loss', total_test_c_loss)
+                logger.log_value('test_acc', total_test_accuracy)
+                
+                if True:
+                    total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_time_predictions(
+                        total_test_batches=total_test_batches)
+                    print("Epoch {}: run_time_predictions_loss: {}, run_time_predictions_accuracy: {}".format(e, total_test_c_loss, total_test_accuracy))
+                    logger.log_value('run_time_predictions_loss', total_test_c_loss)
+                    logger.log_value('run_time_predictions_acc', total_test_accuracy)
+            else:
+                total_test_c_loss = -1
+                total_test_accuracy = -1
 
-        pbar_e.update(1)
-        logger.step()
+            pbar_e.update(1)
+            logger.step()
+            
+    #save model 
+    obj_oneShotBuilder.save_model()
+else: 
+    #TODO what if we set support set to empty since its evaluation
+    total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_evaluation(
+        total_test_batches=1)
+    print("Epoch {}: run_time_predictions_loss: {}, run_time_predictions_accuracy: {}".format(e, total_test_c_loss, total_test_accuracy))
+    #logger.log_value('run_time_predictions_loss', total_test_c_loss)
+    #logger.log_value('run_time_predictions_acc', total_test_accuracy)
+
+    #save result
+    import json
+    if not outfile_path_prob == None:
+    with open( outfile_path_prob, 'w') as outfile:
+        json.dump(results.tolist(), outfile)                      

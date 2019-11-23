@@ -13,10 +13,11 @@ import torch.backends.cudnn as cudnn
 import tqdm
 from models.MatchingNetwork import MatchingNetwork
 from torch.autograd import Variable
+import os
 
 class OneShotBuilder:
 
-    def __init__(self, data):
+    def __init__(self, data, model_path=""):
         """
         Initializes an OneShotBuilder object. The OneShotBuilder object takes care of setting up our experiment
         and provides helper functions such as run_training_epoch and run_validation_epoch to simplify out training
@@ -24,6 +25,7 @@ class OneShotBuilder:
         :param data: A data provider class
         """
         self.data = data
+        self.model_path = model_path
 
     def build_experiment(self, batch_size, classes_per_set, samples_per_class, channels, fce):
 
@@ -38,12 +40,16 @@ class OneShotBuilder:
         self.classes_per_set = classes_per_set
         self.samples_per_class = samples_per_class
         self.keep_prob = torch.FloatTensor(1)
-        self.matchingNet = MatchingNetwork(batch_size=batch_size,
-                                         keep_prob=self.keep_prob, num_channels=channels,
-                                         fce=fce,
-                                         num_classes_per_set=classes_per_set,
-                                         num_samples_per_class=samples_per_class,
-                                         nClasses = 0, image_size = 28)
+        if not os.path.exists(self.model_path):
+            self.matchingNet = MatchingNetwork(batch_size=batch_size,
+                                             keep_prob=self.keep_prob, num_channels=channels,
+                                             fce=fce,
+                                             num_classes_per_set=classes_per_set,
+                                             num_samples_per_class=samples_per_class,
+                                             nClasses = 0, image_size = 28)
+        else: 
+            self.matchingNet = torch.load(self.model_path)
+                                             
         self.optimizer = 'adam'
         self.lr = 1e-03
         self.current_lr = 1e-03
@@ -56,6 +62,9 @@ class OneShotBuilder:
             torch.cuda.manual_seed_all(0)
             self.matchingNet.cuda()
 
+    def save_model(self):
+        torch.save(self.matchingNet, self.model_path)
+            
     def run_training_epoch(self, total_train_batches):
         """
         Runs one training epoch
@@ -283,6 +292,57 @@ class OneShotBuilder:
             total_test_c_loss = total_test_c_loss / total_test_batches
             total_test_accuracy = total_test_accuracy / total_test_batches
         return total_test_c_loss, total_test_accuracy
+        
+    def run_evaluation(self, total_test_batches):
+        """
+        Runs one testing epoch
+        :param total_test_batches: Number of batches to train on
+        :param sess: Session object
+        :return: mean_testing_categorical_crossentropy_loss and mean_testing_accuracy
+        """
+        total_test_c_loss = 0.
+        total_test_accuracy = 0.
+        with tqdm.tqdm(total=total_test_batches) as pbar:
+            for i in range(total_test_batches):
+                x_support_set, y_support_set, x_target, y_target = \
+                    self.data.get_batch_evaluation(str_type='evaluation', cls=0, rotate_flag=False)
+
+                x_support_set = Variable(torch.from_numpy(x_support_set), volatile=True).float()
+                y_support_set = Variable(torch.from_numpy(y_support_set), volatile=True).long()
+                x_target = Variable(torch.from_numpy(x_target), volatile=True).float()
+                y_target = Variable(torch.from_numpy(y_target), volatile=True).long()
+
+                # y_support_set: Add extra dimension for the one_hot
+                y_support_set = torch.unsqueeze(y_support_set, 2)
+                sequence_length = y_support_set.size()[1]
+                batch_size = y_support_set.size()[0]
+                y_support_set_one_hot = torch.FloatTensor(batch_size, sequence_length,
+                                                          self.classes_per_set).zero_()
+                y_support_set_one_hot.scatter_(2, y_support_set.data, 1)
+                y_support_set_one_hot = Variable(y_support_set_one_hot)
+
+                # Reshape channels
+                size = x_support_set.size()
+                x_support_set = x_support_set.view(size[0], size[1], size[4], size[2], size[3])
+                size = x_target.size()
+                x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
+                if self.isCudaAvailable:
+                    acc, c_loss_value = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
+                                                         x_target.cuda(), y_target.cuda(), is_debug = False )
+                else:
+                    acc, c_loss_value = self.matchingNet(x_support_set, y_support_set_one_hot,
+                                                         x_target, y_target, is_debug = False )
+
+                #iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
+                iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data, acc.data)
+                pbar.set_description(iter_out)
+                pbar.update(1)
+
+                total_test_c_loss += c_loss_value.data   #c_loss_value.data[0]
+                total_test_accuracy += acc.data          #acc.data[0]
+            total_test_c_loss = total_test_c_loss / total_test_batches
+            total_test_accuracy = total_test_accuracy / total_test_batches
+        return total_test_c_loss, total_test_accuracy        
         
     def __adjust_learning_rate(self,optimizer):
         """Updates the learning rate given the learning rate decay.
