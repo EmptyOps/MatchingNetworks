@@ -87,6 +87,8 @@ class MatchingNetwork(nn.Module):
                 print( "predictions debug mode" )
                 print( values )
                 print( indices )
+                print( "target label" )
+                print( target_label[:,i] )
             
             if i == 0:
                 accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())

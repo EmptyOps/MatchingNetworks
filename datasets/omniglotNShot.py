@@ -165,6 +165,7 @@ class OmniglotNShotDataset():
                 self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
             else:
                 self.x_train  = self.x[:]
+         
         #print( self.x_train[0][0] )
         self.normalization()
         #print( self.x_train[0][0] )
@@ -190,6 +191,8 @@ class OmniglotNShotDataset():
         """
         Normalizes our data, to have a mean of 0 and sdt of 1
         """
+        return 
+        
         self.mean = np.mean(self.x_train)
         self.std = np.std(self.x_train)
         self.max = np.max(self.x_train)
@@ -197,6 +200,7 @@ class OmniglotNShotDataset():
         print("train_shape", self.x_train.shape, "test_shape", self.x_test.shape, "val_shape", self.x_val.shape, "x_to_be_predicted", self.x_to_be_predicted.shape)
         print("before_normalization", "mean", self.mean, "max", self.max, "min", self.min, "std", self.std)
         
+        #if required for your data enable normatlization by uncommenting below code 
         """
         self.x_train = (self.x_train - self.mean) / self.std
         self.x_val = (self.x_val - self.mean) / self.std
@@ -338,8 +342,8 @@ class OmniglotNShotDataset():
             """
         
             support_set_x = np.zeros((self.batch_size, n_samples, self.data_pack_shape_2, self.data_pack_shape_3, 1))
-            support_set_y = np.zeros((self.batch_size, n_samples))
-            target_x = np.zeros((self.batch_size, self.samples_per_class, self.data_pack_shape_2, self.data_pack_shape_3, 1), dtype=np.int)
+            support_set_y = np.zeros((self.batch_size, n_samples), dtype=np.int)#)
+            target_x = np.zeros((self.batch_size, self.samples_per_class, self.data_pack_shape_2, self.data_pack_shape_3, 1))#, dtype=np.int)
             target_y = np.zeros((self.batch_size, self.samples_per_class), dtype=np.int)
             for i in range(self.batch_size):
                 pinds = np.random.permutation(n_samples)
