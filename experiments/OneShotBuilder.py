@@ -304,6 +304,9 @@ class OneShotBuilder:
             x_support_set, y_support_set, x_target, y_target = \
                 self.data.get_batch_evaluation(str_type='evaluation', cls=0, rotate_flag=False)
 
+            y_support_set[:] = 0
+            y_target[:] = 1
+                
             x_support_set = Variable(torch.from_numpy(x_support_set), volatile=True).float()
             y_support_set = Variable(torch.from_numpy(y_support_set), volatile=True).long()
             x_target = Variable(torch.from_numpy(x_target), volatile=True).float()
@@ -328,7 +331,7 @@ class OneShotBuilder:
                                                      x_target.cuda(), y_target.cuda(), is_debug = False )
             else:
                 acc, c_loss_value = self.matchingNet(x_support_set, y_support_set_one_hot,
-                                                     x_target, y_target, is_debug = True )
+                                                     x_target, y_target, is_debug = True, is_evaluation_only = True )
 
             #iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
             print( "test_loss: {}, test_accuracy: {}".format(c_loss_value.data, acc.data) )

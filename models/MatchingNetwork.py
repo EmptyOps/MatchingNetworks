@@ -50,7 +50,7 @@ class MatchingNetwork(nn.Module):
         self.num_samples_per_class = num_samples_per_class
         self.learning_rate = learning_rate
 
-    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False):
+    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False):
         """
         Builds graph for Matching Networks, produces losses and summary statistics.
         :param support_set_images: A tensor containing the support set images [batch_size, sequence_size, n_channels, 28, 28]
@@ -61,9 +61,10 @@ class MatchingNetwork(nn.Module):
         """
         # produce embeddings for support set images
         encoded_images = []
-        for i in np.arange(support_set_images.size(1)):
-            gen_encode = self.g(support_set_images[:,i,:,:,:])
-            encoded_images.append(gen_encode)
+        if is_evaluation_only == False:
+            for i in np.arange(support_set_images.size(1)):
+                gen_encode = self.g(support_set_images[:,i,:,:,:])
+                encoded_images.append(gen_encode)
 
         # produce embeddings for target images
         for i in np.arange(target_image.size(1)):
@@ -75,11 +76,17 @@ class MatchingNetwork(nn.Module):
                 outputs, hn, cn = self.lstm(outputs)
 
             # get similarity between support set embeddings and target
-            similarities = self.dn(support_set=outputs[:-1], input_image=outputs[-1])
+            if is_evaluation_only == False:
+                similarities = self.dn(support_set=outputs[:-1], input_image=outputs[-1])
+            else:
+                similarities = self.dn(input_image=outputs[:])
             similarities = similarities.t()
 
             # produce predictions for target probabilities
-            preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)
+            if is_evaluation_only == False:
+                preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)
+            else:
+                preds = self.classify(similarities)
 
             # calculate accuracy and crossentropy loss
             values, indices = preds.max(1)

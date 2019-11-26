@@ -24,7 +24,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = ""):
 
         if is_use_sample_data:
             if not os.path.isfile(os.path.join(dataroot,'data.npy')):
@@ -133,7 +133,60 @@ class OmniglotNShotDataset():
                 self.x_to_be_predicted = np.array(self.x_to_be_predicted)
                 temp_to_be_predicted = [] # Free memory
                 #np.save(os.path.join(dataroot,'data.npy'),self.x)
-            
+
+
+            #
+            if is_evaluation_only == True:
+                input = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) ) ) ) 
+                input_labels = array( json.load( open( evaluation_labels_file.replace('{i}', str(0)) ) ) ) 
+                
+                temp = dict()
+                temp_to_be_predicted = dict()
+                sizei = len(input)
+                print("sizei")
+                print(sizei)
+                for i in np.arange(sizei):
+                    if input_labels[i] in temp:
+                        if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
+                            if is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
+                                lbl_val = input_labels[i]
+                                if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
+                                    lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
+                                if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
+                                    lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
+                                    
+                                if lbl_val in temp_to_be_predicted:
+                                    if len( temp_to_be_predicted[lbl_val] ) >= 10:  #only 20 samples per class
+                                        continue
+                                    
+                                    temp_to_be_predicted[lbl_val].append( input[i][:,:,np.newaxis] )
+                                else:     
+                                    temp_to_be_predicted[lbl_val]=[input[i][:,:,np.newaxis]]
+                        
+                            continue
+                        
+                        temp[input_labels[i]].append( input[i][:,:,np.newaxis] )
+                    else:
+                        temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
+
+                print( "temp.keys()" )
+                #print( temp.keys() )
+                #for key, value in temp.items(): 
+                #    if True or len(value) < 19:
+                #        print("key " + str(key) + " len " + str(len(value)))
+                unique, counts = np.unique(input_labels, return_counts=True)
+                print( dict(zip(unique, counts)) )
+                
+                input = []  # Free memory
+                input_labels = []  # Free memory
+                
+                self.evaluation = [] 
+                for classes in temp.keys():
+                    self.evaluation.append(np.array(temp[ list(temp.keys())[classes]]))
+                self.evaluation = np.array(self.evaluation)
+                temp = [] # Free memory
+
+                
         self.data_pack_shape_2 = None
         self.data_pack_shape_3 = None
             
@@ -185,7 +238,7 @@ class OmniglotNShotDataset():
         else:
             self.indexes = {"evaluation": 0}
             self.datasets = {"evaluation": self.x_train} #original data cached
-            self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation")}
+            self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation", self.evaluation)}
                                    
     def normalization(self):
         """
@@ -308,7 +361,7 @@ class OmniglotNShotDataset():
             
         return data_cache
 
-    def load_data_cache_for_evaluation(self, data_pack, data_pack_type):
+    def load_data_cache_for_evaluation(self, data_pack, data_pack_type, data_pack_evaluation):
         """
         Collects 1000 batches data for N-shot learning
         :param data_pack: Data pack to use (any one of train, val, test)
@@ -355,11 +408,13 @@ class OmniglotNShotDataset():
                 ind = 0
                 ind_test = 0
                 for j, cur_class in enumerate(classes):  # each class
+                    example_inds_test = None
                     #print( "example_inds" )
                     if cur_class in x_hat_class:
                         # Count number of times this class is inside the meta-test
                         n_test_samples = np.sum(cur_class == x_hat_class)
-                        example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + n_test_samples, False)
+                        example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
+                        example_inds_test = np.random.choice(data_pack_evaluation.shape[1], n_test_samples, False)
                         #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
                         #print( "example_inds here 2 " )
@@ -373,19 +428,20 @@ class OmniglotNShotDataset():
                         support_set_y[i, pinds[ind]] = j
                         ind = ind + 1
                     # meta-test
-                    for eind in example_inds[self.samples_per_class:]:
-                        """
-                        print( "eind" )
-                        print( eind )
-                        print( cur_class )
-                        print( i )
-                        print( ind_test )
-                        print( pinds_test[ind_test] )
-                        """
-                        
-                        target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
-                        target_y[i, pinds_test[ind_test]] = j
-                        ind_test = ind_test + 1
+                    if not example_inds_test == None:
+                        for eind in example_inds_test[:]:
+                            """
+                            print( "eind" )
+                            print( eind )
+                            print( cur_class )
+                            print( i )
+                            print( ind_test )
+                            print( pinds_test[ind_test] )
+                            """
+                            
+                            target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
+                            target_y[i, pinds_test[ind_test]] = j
+                            ind_test = ind_test + 1
 
             data_cache.append([support_set_x, support_set_y, target_x, target_y])
             
