@@ -439,7 +439,7 @@ class OmniglotNShotDataset():
                             print( pinds_test[ind_test] )
                             """
                             
-                            target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
+                            target_x[i, pinds_test[ind_test], :, :, :] = data_pack_evaluation[cur_class][eind]
                             target_y[i, pinds_test[ind_test]] = j
                             ind_test = ind_test + 1
 

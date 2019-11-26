@@ -94,6 +94,7 @@ class MatchingNetwork(nn.Module):
                 print( "predictions debug mode" )
                 print( values )
                 print( indices )
+                print( indices.squeeze() )
                 print( "target label" )
                 print( target_label[:,i] )
             
