@@ -303,9 +303,6 @@ class OneShotBuilder:
         for i in range(total_test_batches):
             x_support_set, y_support_set, x_target, y_target = \
                 self.data.get_batch_evaluation(str_type='evaluation', cls=0, rotate_flag=False)
-
-            y_support_set[:] = 0
-            y_target[:] = 1
                 
             x_support_set = Variable(torch.from_numpy(x_support_set), volatile=True).float()
             y_support_set = Variable(torch.from_numpy(y_support_set), volatile=True).long()
