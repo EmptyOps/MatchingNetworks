@@ -408,7 +408,7 @@ class OmniglotNShotDataset():
                 ind = 0
                 ind_test = 0
                 for j, cur_class in enumerate(classes):  # each class
-                    example_inds_test = None
+                    example_inds_test = []
                     #print( "example_inds" )
                     if cur_class in x_hat_class:
                         # Count number of times this class is inside the meta-test
@@ -428,7 +428,7 @@ class OmniglotNShotDataset():
                         support_set_y[i, pinds[ind]] = j
                         ind = ind + 1
                     # meta-test
-                    if not example_inds_test == None:
+                    if len(example_inds_test) > 0:
                         for eind in example_inds_test[:]:
                             """
                             print( "eind" )
