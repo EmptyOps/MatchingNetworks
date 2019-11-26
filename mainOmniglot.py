@@ -121,7 +121,7 @@ if is_evaluation_only == False:
 
             if True:
                 total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_time_predictions(
-                    total_test_batches=total_test_batches)
+                    total_test_batches=total_test_batches, is_debug = (True if e >= 1 else False) )
                 print("Epoch {}: run_time_predictions_loss: {}, run_time_predictions_accuracy: {}".format(e, total_test_c_loss, total_test_accuracy))
                 logger.log_value('run_time_predictions_loss', total_test_c_loss)
                 logger.log_value('run_time_predictions_acc', total_test_accuracy)
