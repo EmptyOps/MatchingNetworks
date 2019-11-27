@@ -80,6 +80,9 @@ class OmniglotNShotDataset():
             print("sizei")
             print(sizei)
             for i in np.arange(sizei):
+                if is_evaluation_only == True and input_labels[i] >= self.prediction_classes:
+                    continue
+
                 if input_labels[i] in temp:
                     if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
                         if is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
@@ -146,9 +149,6 @@ class OmniglotNShotDataset():
                 print("sizei")
                 print(sizei)
                 for i in np.arange(sizei):
-                    if is_evaluation_only == True and input_labels[i] >= self.prediction_classes:
-                        continue
-                
                     if input_labels[i] in temp:
                         if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
                             if is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
