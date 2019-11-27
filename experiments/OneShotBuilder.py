@@ -293,7 +293,7 @@ class OneShotBuilder:
             total_test_accuracy = total_test_accuracy / total_test_batches
         return total_test_c_loss, total_test_accuracy
         
-    def run_evaluation(self, total_test_batches):
+    def run_evaluation(self, total_test_batches, is_debug = False):
         """
         Runs one testing epoch
         :param total_test_batches: Number of batches to train on
@@ -328,7 +328,7 @@ class OneShotBuilder:
                                                      x_target.cuda(), y_target.cuda(), is_debug = False )
             else:
                 acc, c_loss_value = self.matchingNet(x_support_set, y_support_set_one_hot,
-                                                     x_target, y_target, is_debug = False, is_evaluation_only = False, y_support_set_org = y_support_set )
+                                                     x_target, y_target, is_debug = is_debug, is_evaluation_only = False, y_support_set_org = y_support_set )
 
             #iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
             print( "test_loss: {}, test_accuracy: {}".format(c_loss_value.data, acc.data) )
