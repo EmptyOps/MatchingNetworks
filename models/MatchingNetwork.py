@@ -110,8 +110,8 @@ class MatchingNetwork(nn.Module):
             # delete the last target image encoding of encoded_images
             encoded_images.pop()
 
-        if is_debug:
-            dfsdfsdfsdf
+        #if is_debug:
+        #    dfsdfsdfsdf
             
         return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1)
 
