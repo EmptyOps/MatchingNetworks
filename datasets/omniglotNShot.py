@@ -439,8 +439,10 @@ class OmniglotNShotDataset():
                         if is_eval_with_train_data == True:
                             example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, False)
                         else:
-                            example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
-                            example_inds_test = np.random.choice(data_pack_evaluation.shape[1], n_test_samples, False)
+                            example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - self.evaluate_classes), False)
+                            print(type(example_inds))
+                            print(example_inds)
+                            example_inds_test = np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
                             #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
                         #print( "example_inds here 2 " )
@@ -468,6 +470,19 @@ class OmniglotNShotDataset():
                             target_y[i, pinds_test[ind_test]] = j
                             ind_test = ind_test + 1
                     else:
+                        for eind in example_inds[self.samples_per_class:]:
+                            """
+                            print( "eind" )
+                            print( eind )
+                            print( cur_class )
+                            print( i )
+                            print( ind_test )
+                            print( pinds_test[ind_test] )
+                            """
+                            target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
+                            target_y[i, pinds_test[ind_test]] = j
+                            ind_test = ind_test + 1
+                    
                         if len(example_inds_test) > 0:
                             for eind in example_inds_test[:]:
                                 """
