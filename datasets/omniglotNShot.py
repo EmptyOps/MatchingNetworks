@@ -221,7 +221,8 @@ class OmniglotNShotDataset():
             self.cache_sample = 300
             self.cache_sample_prediction = 10
             if is_evaluation_only == False:
-                self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
+                #self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
+                self.x_train, self.x_test, self.x_val  = self.x[:30], self.x[30:43], self.x[43:]
             else:
                 self.x_train  = self.x[:]
          
