@@ -59,75 +59,81 @@ class OmniglotNShotDataset():
             self.prediction_classes = 9
             self.total_base_classes = 56
             
-            #
-            print( "(!) Merging inputs, should only be executed in training mode." )
-            input = []
-            input_labels = []
-            print("total_input_files")
-            print(total_input_files)
-            for i in range(0, total_input_files):
-                print("total_input_files i " + str(i))
-                if i == 0:
-                    input = array( json.load( open( input_file.replace('{i}', str(i)) ) ) ) 
-                    input_labels = array( json.load( open( input_labels_file.replace('{i}', str(i)) ) ) ) 
-                else:
-                    input = np.concatenate( ( input, array( json.load( open( input_file.replace('{i}', str(i)) ) ) ) ), axis=0 )
-                    input_labels = np.concatenate( ( input_labels, array( json.load( open( input_labels_file.replace('{i}', str(i)) ) ) ) ), axis=0 )
+            base_classes_file = input_file+"_base_classes.json"
             
-            temp = dict()
-            temp_to_be_predicted = dict()
-            sizei = len(input)
-            print("sizei")
-            print(sizei)
-            for i in np.arange(sizei):
-                #if is_evaluation_only == True and input_labels[i] >= self.prediction_classes:
-                #    continue
-
-                if input_labels[i] >= self.total_base_classes:
-                    continue
+            #
+            if is_evaluation_only == False or not os.path.exists( base_classes_file ):
+                print( "(!) Merging inputs, should only be executed in training mode." )
+                input = []
+                input_labels = []
+                print("total_input_files")
+                print(total_input_files)
+                for i in range(0, total_input_files):
+                    print("total_input_files i " + str(i))
+                    if i == 0:
+                        input = array( json.load( open( input_file.replace('{i}', str(i)) ) ) ) 
+                        input_labels = array( json.load( open( input_labels_file.replace('{i}', str(i)) ) ) ) 
+                    else:
+                        input = np.concatenate( ( input, array( json.load( open( input_file.replace('{i}', str(i)) ) ) ) ), axis=0 )
+                        input_labels = np.concatenate( ( input_labels, array( json.load( open( input_labels_file.replace('{i}', str(i)) ) ) ) ), axis=0 )
                 
-                if input_labels[i] in temp:
-                    if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
-                        if is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
-                            lbl_val = input_labels[i]
-                            if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
-                                lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
-                            if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
-                                lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
-								
-                            if lbl_val in temp_to_be_predicted:
-                                if len( temp_to_be_predicted[lbl_val] ) >= 10:  #only 20 samples per class
-                                    continue
-                                
-                                temp_to_be_predicted[lbl_val].append( input[i][:,:,np.newaxis] )
-                            else:     
-                                temp_to_be_predicted[lbl_val]=[input[i][:,:,np.newaxis]]
-                    
+                temp = dict()
+                temp_to_be_predicted = dict()
+                sizei = len(input)
+                print("sizei")
+                print(sizei)
+                for i in np.arange(sizei):
+                    #if is_evaluation_only == True and input_labels[i] >= self.prediction_classes:
+                    #    continue
+
+                    if input_labels[i] >= self.total_base_classes:
                         continue
                     
-                    temp[input_labels[i]].append( input[i][:,:,np.newaxis] )
-                else:
-                    temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
+                    if input_labels[i] in temp:
+                        if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
+                            if is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
+                                lbl_val = input_labels[i]
+                                if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
+                                    lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
+                                if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
+                                    lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
+                                    
+                                if lbl_val in temp_to_be_predicted:
+                                    if len( temp_to_be_predicted[lbl_val] ) >= 10:  #only 20 samples per class
+                                        continue
+                                    
+                                    temp_to_be_predicted[lbl_val].append( input[i][:,:,np.newaxis] )
+                                else:     
+                                    temp_to_be_predicted[lbl_val]=[input[i][:,:,np.newaxis]]
+                        
+                            continue
+                        
+                        temp[input_labels[i]].append( input[i][:,:,np.newaxis] )
+                    else:
+                        temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
 
-            print( "temp.keys()" )
-            #print( temp.keys() )
-            #for key, value in temp.items(): 
-            #    if True or len(value) < 19:
-            #        print("key " + str(key) + " len " + str(len(value)))
-            unique, counts = np.unique(input_labels, return_counts=True)
-            print( dict(zip(unique, counts)) )
-            
-            input = []  # Free memory
-            input_labels = []  # Free memory
-            self.x = [] # Free memory
+                print( "temp.keys()" )
+                #print( temp.keys() )
+                #for key, value in temp.items(): 
+                #    if True or len(value) < 19:
+                #        print("key " + str(key) + " len " + str(len(value)))
+                unique, counts = np.unique(input_labels, return_counts=True)
+                print( dict(zip(unique, counts)) )
+                
+                input = []  # Free memory
+                input_labels = []  # Free memory
+                self.x = [] # Free memory
 
-                    
-            for classes in temp.keys():
-                self.x.append(np.array(temp[ list(temp.keys())[classes]]))
-            self.x = np.array(self.x)
-            temp = [] # Free memory
-            #np.save(os.path.join(dataroot,'data.npy'),self.x)
-
+                        
+                for classes in temp.keys():
+                    self.x.append(np.array(temp[ list(temp.keys())[classes]]))
+                self.x = np.array(self.x)
+                temp = [] # Free memory
+                #np.save(os.path.join(dataroot,'data.npy'),self.x)
+            else:
+                self.x = array( json.load( open( base_classes_file ) ) ) 
+                
+                
             if is_evaluation_only == False:
                 print( "temp_to_be_predicted.keys()" )
                 print( temp_to_be_predicted.keys() )
@@ -411,8 +417,9 @@ class OmniglotNShotDataset():
             for i in range(self.batch_size):
                 pinds = np.random.permutation(n_samples)
                 #classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  #False
-                #classes = np.random.choice(self.prediction_classes, self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
-                classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
+                classes = np.random.choice(self.prediction_classes, self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
+                #classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
+                
                 # select 1-shot or 5-shot classes for test with repetition
                 x_hat_class = np.random.choice(classes, self.samples_per_class, True)
                 pinds_test = np.random.permutation(self.samples_per_class)
