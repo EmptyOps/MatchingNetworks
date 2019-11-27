@@ -127,9 +127,13 @@ class OmniglotNShotDataset():
                         
                 for classes in temp.keys():
                     self.x.append(np.array(temp[ list(temp.keys())[classes]]))
+
+                #np.save(os.path.join(dataroot,'data.npy'),self.x)
+                with open( base_classes_file, 'w') as outfile:
+                    json.dump(self.x, outfile)                      
+                    
                 self.x = np.array(self.x)
                 temp = [] # Free memory
-                #np.save(os.path.join(dataroot,'data.npy'),self.x)
             else:
                 self.x = array( json.load( open( base_classes_file ) ) ) 
                 
