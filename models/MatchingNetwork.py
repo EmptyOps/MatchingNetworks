@@ -91,8 +91,8 @@ class MatchingNetwork(nn.Module):
             # calculate accuracy and crossentropy loss
             values, indices = preds.max(1)
             if is_debug:
-                print( "support set while in predictions debug mode" )
-                print( y_support_set_org )
+                #print( "support set while in predictions debug mode" )
+                #print( y_support_set_org )
                 print( "predictions debug mode" )
                 print( values )
                 print( indices )
