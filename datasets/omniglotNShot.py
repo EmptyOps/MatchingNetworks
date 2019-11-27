@@ -400,7 +400,7 @@ class OmniglotNShotDataset():
             self.data_pack_shape_3 = data_pack.shape[3]            
         
         #TODO temp. eval with train data
-        is_eval_with_train_data = True
+        is_eval_with_train_data = False
         
         n_samples = self.samples_per_class * self.classes_per_set
         data_cache = []
@@ -440,8 +440,6 @@ class OmniglotNShotDataset():
                             example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, False)
                         else:
                             example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - self.evaluate_classes), False)
-                            print(type(example_inds))
-                            print(example_inds)
                             example_inds_test = np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
                             #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
