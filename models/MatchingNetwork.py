@@ -50,7 +50,7 @@ class MatchingNetwork(nn.Module):
         self.num_samples_per_class = num_samples_per_class
         self.learning_rate = learning_rate
 
-    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False):
+    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None):
         """
         Builds graph for Matching Networks, produces losses and summary statistics.
         :param support_set_images: A tensor containing the support set images [batch_size, sequence_size, n_channels, 28, 28]
@@ -91,6 +91,8 @@ class MatchingNetwork(nn.Module):
             # calculate accuracy and crossentropy loss
             values, indices = preds.max(1)
             if is_debug:
+                print( "support set while in predictions debug mode" )
+                print( y_support_set_org )
                 print( "predictions debug mode" )
                 print( values )
                 print( indices )
