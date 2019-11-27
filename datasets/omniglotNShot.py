@@ -384,6 +384,9 @@ class OmniglotNShotDataset():
         if self.data_pack_shape_3 == None:
             self.data_pack_shape_3 = data_pack.shape[3]            
         
+        #TODO temp. eval with train data
+        is_eval_with_train_data = True
+        
         n_samples = self.samples_per_class * self.classes_per_set
         data_cache = []
         for sample in range(self.cache_sample_prediction):
@@ -416,9 +419,12 @@ class OmniglotNShotDataset():
                     if cur_class in x_hat_class:
                         # Count number of times this class is inside the meta-test
                         n_test_samples = np.sum(cur_class == x_hat_class)
-                        example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
-                        example_inds_test = np.random.choice(data_pack_evaluation.shape[1], n_test_samples, False)
-                        #print( "example_inds here 1 " + str(n_test_samples) )
+                        if is_eval_with_train_data == True:
+                            example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, False)
+                        else:
+                            example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
+                            example_inds_test = np.random.choice(data_pack_evaluation.shape[1], n_test_samples, False)
+                            #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
                         #print( "example_inds here 2 " )
                         example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
@@ -431,8 +437,8 @@ class OmniglotNShotDataset():
                         support_set_y[i, pinds[ind]] = j
                         ind = ind + 1
                     # meta-test
-                    if len(example_inds_test) > 0:
-                        for eind in example_inds_test[:]:
+                    if is_eval_with_train_data == True:
+                        for eind in example_inds[self.samples_per_class:]:
                             """
                             print( "eind" )
                             print( eind )
@@ -441,10 +447,24 @@ class OmniglotNShotDataset():
                             print( ind_test )
                             print( pinds_test[ind_test] )
                             """
-                            
-                            target_x[i, pinds_test[ind_test], :, :, :] = data_pack_evaluation[cur_class][eind]
+                            target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
                             target_y[i, pinds_test[ind_test]] = j
                             ind_test = ind_test + 1
+                    else:
+                        if len(example_inds_test) > 0:
+                            for eind in example_inds_test[:]:
+                                """
+                                print( "eind" )
+                                print( eind )
+                                print( cur_class )
+                                print( i )
+                                print( ind_test )
+                                print( pinds_test[ind_test] )
+                                """
+                                
+                                target_x[i, pinds_test[ind_test], :, :, :] = data_pack_evaluation[cur_class][eind]
+                                target_y[i, pinds_test[ind_test]] = j
+                                ind_test = ind_test + 1
 
             data_cache.append([support_set_x, support_set_y, target_x, target_y])
             
