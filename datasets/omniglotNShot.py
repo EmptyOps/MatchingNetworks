@@ -153,61 +153,62 @@ class OmniglotNShotDataset():
                 with open( base_classes_file+"_x_to_be_predicted.json", 'w') as outfile:
                     json.dump(self.x_to_be_predicted.tolist(), outfile)                      
                     
-                sdfsdfsdfsdhfksdh
-
 
             #
             if is_evaluation_only == True:
             
-                input = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) ) ) ) 
-                input_labels = array( json.load( open( evaluation_labels_file.replace('{i}', str(0)) ) ) ) 
-                
-                temp = dict()
-                temp_to_be_predicted = dict()
-                sizei = len(input)
-                print("sizei")
-                print(sizei)
-                for i in np.arange(sizei):
-                    if input_labels[i] in temp:
-                        if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
-                            if is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
-                                lbl_val = input_labels[i]
-                                if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
-                                    lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
-                                if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
-                                    lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
-                                    
-                                if lbl_val in temp_to_be_predicted:
-                                    if len( temp_to_be_predicted[lbl_val] ) >= 10:  #only 20 samples per class
-                                        continue
-                                    
-                                    temp_to_be_predicted[lbl_val].append( input[i][:,:,np.newaxis] )
-                                else:     
-                                    temp_to_be_predicted[lbl_val]=[input[i][:,:,np.newaxis]]
-                        
-                            continue
-                        
-                        temp[input_labels[i]].append( input[i][:,:,np.newaxis] )
-                    else:
-                        temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
+                if not os.path.exists(evaluation_input_file + "_prepared.json"):
+                    input = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) ) ) ) 
+                    input_labels = array( json.load( open( evaluation_labels_file.replace('{i}', str(0)) ) ) ) 
+                    
+                    temp = dict()
+                    temp_to_be_predicted = dict()
+                    sizei = len(input)
+                    print("sizei")
+                    print(sizei)
+                    for i in np.arange(sizei):
+                        if input_labels[i] in temp:
+                            if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
+                                if is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
+                                    lbl_val = input_labels[i]
+                                    if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
+                                        lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
+                                    if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
+                                        lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
+                                        
+                                    if lbl_val in temp_to_be_predicted:
+                                        if len( temp_to_be_predicted[lbl_val] ) >= 10:  #only 20 samples per class
+                                            continue
+                                        
+                                        temp_to_be_predicted[lbl_val].append( input[i][:,:,np.newaxis] )
+                                    else:     
+                                        temp_to_be_predicted[lbl_val]=[input[i][:,:,np.newaxis]]
+                            
+                                continue
+                            
+                            temp[input_labels[i]].append( input[i][:,:,np.newaxis] )
+                        else:
+                            temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
 
-                print( "temp.keys()" )
-                #print( temp.keys() )
-                #for key, value in temp.items(): 
-                #    if True or len(value) < 19:
-                #        print("key " + str(key) + " len " + str(len(value)))
-                unique, counts = np.unique(input_labels, return_counts=True)
-                print( dict(zip(unique, counts)) )
-                
-                input = []  # Free memory
-                input_labels = []  # Free memory
-                
-                self.evaluation = [] 
-                for classes in temp.keys():
-                    self.evaluation.append(np.array(temp[ list(temp.keys())[classes]]))
-                self.evaluation = np.array(self.evaluation)
-                temp = [] # Free memory
-
+                    print( "temp.keys()" )
+                    #print( temp.keys() )
+                    #for key, value in temp.items(): 
+                    #    if True or len(value) < 19:
+                    #        print("key " + str(key) + " len " + str(len(value)))
+                    unique, counts = np.unique(input_labels, return_counts=True)
+                    print( dict(zip(unique, counts)) )
+                    
+                    input = []  # Free memory
+                    input_labels = []  # Free memory
+                    
+                    self.evaluation = [] 
+                    for classes in temp.keys():
+                        self.evaluation.append(np.array(temp[ list(temp.keys())[classes]]))
+                    self.evaluation = np.array(self.evaluation)
+                    temp = [] # Free memory
+                else:
+                    self.evaluation = array( json.load( open( evaluation_input_file + "_prepared.json" ) ) ) 
+                    
                 
         self.data_pack_shape_2 = None
         self.data_pack_shape_3 = None
