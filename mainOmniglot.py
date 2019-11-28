@@ -135,6 +135,7 @@ if is_evaluation_only == False:
 else: 
     tot_acc = 0.0
     cnt = 0
+    evaluation_cnt = 0
     for i in range(10):
         print( "evaluation i " + str(i) )
         #TODO what if we set support set to empty since its evaluation
@@ -143,6 +144,7 @@ else:
         
         tot_acc = tot_acc + acc
         cnt = cnt + 1
+        evaluation_cnt = evaluation_cnt + ( (target_y_actuals < 0).sum() )
         
         #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
         print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
@@ -150,6 +152,7 @@ else:
         #logger.log_value('run_time_predictions_loss', total_test_c_loss)
         #logger.log_value('run_time_predictions_acc', total_test_accuracy)
     
+    print( "evaluation_cnt " + str( evaluation_cnt ) )
     print( "avg acc " + str( (tot_acc / cnt) ) )
     
     #save result
