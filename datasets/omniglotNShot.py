@@ -148,7 +148,12 @@ class OmniglotNShotDataset():
                     cls_index = cls_index + 1
                 self.x_to_be_predicted = np.array(self.x_to_be_predicted)
                 temp_to_be_predicted = [] # Free memory
+                
                 #np.save(os.path.join(dataroot,'data.npy'),self.x)
+                with open( base_classes_file+"_x_to_be_predicted.json", 'w') as outfile:
+                    json.dump(self.x_to_be_predicted.tolist(), outfile)                      
+                    
+                sdfsdfsdfsdhfksdh
 
 
             #
