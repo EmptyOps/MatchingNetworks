@@ -301,7 +301,7 @@ class OneShotBuilder:
         :return: mean_testing_categorical_crossentropy_loss and mean_testing_accuracy
         """
         for i in range(total_test_batches):
-            x_support_set, y_support_set, x_target, y_target = \
+            x_support_set, y_support_set, x_target, y_target, target_y_actuals = \
                 self.data.get_batch_evaluation(str_type='evaluation', cls=0, rotate_flag=False)
                 
             x_support_set = Variable(torch.from_numpy(x_support_set), volatile=True).float()
@@ -333,7 +333,7 @@ class OneShotBuilder:
             #iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
             print( "test_loss: {}, test_accuracy: {}".format(c_loss_value.data, acc.data) )
             
-            return c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target
+            return c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals
         
     def __adjust_learning_rate(self,optimizer):
         """Updates the learning rate given the learning rate decay.

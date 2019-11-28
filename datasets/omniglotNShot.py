@@ -419,6 +419,7 @@ class OmniglotNShotDataset():
             support_set_y = np.zeros((self.batch_size, n_samples), dtype=np.int)#)
             target_x = np.zeros((self.batch_size, self.samples_per_class, self.data_pack_shape_2, self.data_pack_shape_3, 1))#, dtype=np.int)
             target_y = np.zeros((self.batch_size, self.samples_per_class), dtype=np.int)
+            target_y_actuals = np.zeros((self.batch_size, self.samples_per_class), dtype=np.int)
             for i in range(self.batch_size):
                 pinds = np.random.permutation(n_samples)
                 #classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  #False
@@ -499,9 +500,10 @@ class OmniglotNShotDataset():
                                 
                                 target_x[i, pinds_test[ind_test], :, :, :] = data_pack_evaluation[cur_class][eind]
                                 target_y[i, pinds_test[ind_test]] = j
+                                target_y_actuals[i, pinds_test[ind_test]] = cur_class
                                 ind_test = ind_test + 1
 
-            data_cache.append([support_set_x, support_set_y, target_x, target_y])
+            data_cache.append([support_set_x, support_set_y, target_x, target_y, target_y_actuals])
             
             """
             #TODO temp. profiling, comment it when not needed
@@ -596,13 +598,27 @@ class OmniglotNShotDataset():
                     y_target[i][j] = (self.total_base_classes+1) + ( (y_target[i][j] - (self.total_base_classes+1)) * 30 )
 					
         return x_support_set, y_support_set, x_target, y_target
+
+    def __get_batch_evaluation(self, dataset_name):
+        """
+        Gets next batch from the dataset with name.
+        :param dataset_name: The name of the dataset (one of "train", "val", "test")
+        :return:
+        """
+        if self.indexes[dataset_name] >= len(self.datasets_cache[dataset_name]):
+            self.indexes[dataset_name] = 0
+            self.datasets_cache[dataset_name] = self.load_data_cache(self.datasets[dataset_name], dataset_name)
+        next_batch = self.datasets_cache[dataset_name][self.indexes[dataset_name]]
+        self.indexes[dataset_name] += 1
+        x_support_set, y_support_set, x_target, y_target, target_y_actuals = next_batch
+        return x_support_set, y_support_set, x_target, y_target, target_y_actuals
         
     def get_batch_evaluation(self,str_type, cls, rotate_flag = False):
         """
         Get next batch
         :return: Next batch
         """
-        x_support_set, y_support_set, x_target, y_target = self.__get_batch(str_type)
+        x_support_set, y_support_set, x_target, y_target, target_y_actuals = self.__get_batch_evaluation(str_type)
         if rotate_flag:
             k = int(np.random.uniform(low=0, high=4))
             # Iterate over the sequence. Extract batches.
@@ -627,7 +643,7 @@ class OmniglotNShotDataset():
                     y_target[i][j] = (self.total_base_classes+1) + ( (y_target[i][j] - (self.total_base_classes+1)) * 30 )
         """                    
 					
-        return x_support_set, y_support_set, x_target, y_target        
+        return x_support_set, y_support_set, x_target, y_target, target_y_actuals        
 
     def __rotate_data(self, image, k):
         """
