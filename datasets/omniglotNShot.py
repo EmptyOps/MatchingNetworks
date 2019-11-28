@@ -500,7 +500,7 @@ class OmniglotNShotDataset():
                                 
                                 target_x[i, pinds_test[ind_test], :, :, :] = data_pack_evaluation[cur_class][eind]
                                 target_y[i, pinds_test[ind_test]] = j
-                                target_y_actuals[i, pinds_test[ind_test]] = cur_class
+                                target_y_actuals[i, pinds_test[ind_test]] = (cur_class+1) * -1
                                 ind_test = ind_test + 1
 
             data_cache.append([support_set_x, support_set_y, target_x, target_y, target_y_actuals])
