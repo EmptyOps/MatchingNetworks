@@ -151,6 +151,7 @@ else:
         for j in range(lenta):
             lentai = len(target_y_actuals[j])
             for k in range(lentai):
+                print( "j " + str(j) + " k " + str(k) )
                 print(target_y_actuals[j][k])
                 print(pred_indices[j][k])
                 print(y_target[k][j])
