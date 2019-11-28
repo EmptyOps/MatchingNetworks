@@ -207,6 +207,7 @@ class OmniglotNShotDataset():
                     self.evaluation = np.array(self.evaluation)
                     temp = [] # Free memory
                 else:
+                    print("loaded prepared evaluation_input_file")
                     self.evaluation = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) + "_prepared.json" ) ) ) 
                     
                 

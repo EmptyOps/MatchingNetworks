@@ -133,16 +133,24 @@ if is_evaluation_only == False:
     #save model 
     obj_oneShotBuilder.save_model()
 else: 
+    tot_acc = 0.0
+    cnt = 0
     for i in range(10):
         print( "evaluation i " + str(i) )
         #TODO what if we set support set to empty since its evaluation
         #total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_evaluation(total_test_batches=1)
         c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals = obj_oneShotBuilder.run_evaluation(total_test_batches=1, is_debug = True)
+        
+        tot_acc = tot_acc + acc
+        cnt = cnt + 1
+        
         #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
         print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
         print(target_y_actuals)
         #logger.log_value('run_time_predictions_loss', total_test_c_loss)
         #logger.log_value('run_time_predictions_acc', total_test_accuracy)
+    
+    print( "avg acc " + str( (tot_acc / cnt) ) )
     
     #save result
     import json
