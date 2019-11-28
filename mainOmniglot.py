@@ -147,9 +147,9 @@ else:
         cnt = cnt + 1
         evaluation_cnt = evaluation_cnt + ( (target_y_actuals < 0).sum() )
         
-        lenta = len(target_y_actuals)
+        lenta = len(target_y_actuals[0])
         for j in range(0, lenta):
-            lentai = len(target_y_actuals[j])
+            lentai = len(target_y_actuals)
             for k in range(0, lentai):
                 print( "j " + str(j) + " k " + str(k) )
                 print(target_y_actuals[j][k])
