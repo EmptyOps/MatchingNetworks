@@ -87,7 +87,7 @@ data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_
                                           samples_per_class=samples_per_class, 
                                           is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
                                           total_input_files = total_input_files, is_evaluation_only = is_evaluation_only, 
-                                          evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14])
+                                          evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], evaluate_classes = int(sys.argv[25]))
 
 obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
 obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce)

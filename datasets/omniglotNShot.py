@@ -431,22 +431,22 @@ class OmniglotNShotDataset():
                 pinds_test = np.random.permutation(self.samples_per_class)
                 ind = 0
                 ind_test = 0
-                print( "x_hat_class" )
-                print(classes)
-                print(x_hat_class)
-                
                 for j, cur_class in enumerate(classes):  # each class
                     example_inds_test = []
                     #print( "example_inds j " + str(j) )
                     if cur_class in x_hat_class:
                         # Count number of times this class is inside the meta-test
                         n_test_samples = np.sum(cur_class == x_hat_class)
-                        if is_eval_with_train_data == True or cur_class >= self.evaluate_classes:
+                        if is_eval_with_train_data == True or not cur_class == self.evaluate_classes:
                             example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, False)
                         else:
                             print( "example_inds_test here 1 " )
-                            example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - self.evaluate_classes), False)
-                            example_inds_test = np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
+                            example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), False)
+                            example_inds_test = np.array( [0] ) #np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
+                            print(type(example_inds))
+                            print(example_inds)
+                            print(type(example_inds_test))
+                            print(example_inds_test)
                             #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
                         #print( "example_inds here 2 " )
@@ -460,7 +460,7 @@ class OmniglotNShotDataset():
                         support_set_y[i, pinds[ind]] = j
                         ind = ind + 1
                     # meta-test
-                    if is_eval_with_train_data == True or cur_class >= self.evaluate_classes:
+                    if is_eval_with_train_data == True or cur_class == (self.evaluate_classes+1):
                         for eind in example_inds[self.samples_per_class:]:
                             """
                             print( "eind" )
