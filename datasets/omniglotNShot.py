@@ -60,6 +60,7 @@ class OmniglotNShotDataset():
             self.total_base_classes = 56
             
             base_classes_file = input_file+"_base_classes.json"
+            self.evaluate_classes = evaluate_classes
                         
             #
             if is_evaluation_only == False or not os.path.exists( base_classes_file ):
@@ -152,7 +153,6 @@ class OmniglotNShotDataset():
 
             #
             if is_evaluation_only == True:
-                self.evaluate_classes = evaluate_classes
             
                 input = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) ) ) ) 
                 input_labels = array( json.load( open( evaluation_labels_file.replace('{i}', str(0)) ) ) ) 
@@ -443,10 +443,6 @@ class OmniglotNShotDataset():
                             print( "example_inds_test here 1 " )
                             example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), False)
                             example_inds_test = np.array( [0] ) #np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
-                            print(type(example_inds))
-                            print(example_inds)
-                            print(type(example_inds_test))
-                            print(example_inds_test)
                             #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
                         #print( "example_inds here 2 " )
@@ -460,7 +456,7 @@ class OmniglotNShotDataset():
                         support_set_y[i, pinds[ind]] = j
                         ind = ind + 1
                     # meta-test
-                    if is_eval_with_train_data == True or cur_class == (self.evaluate_classes+1):
+                    if is_eval_with_train_data == True or not cur_class == self.evaluate_classes:
                         for eind in example_inds[self.samples_per_class:]:
                             """
                             print( "eind" )

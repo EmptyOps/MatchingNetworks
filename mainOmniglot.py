@@ -137,7 +137,7 @@ else:
         print( "evaluation i " + str(i) )
         #TODO what if we set support set to empty since its evaluation
         #total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_evaluation(total_test_batches=1)
-        c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals = obj_oneShotBuilder.run_evaluation(total_test_batches=1, is_debug = False)
+        c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals = obj_oneShotBuilder.run_evaluation(total_test_batches=1, is_debug = True)
         #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
         print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
         print(target_y_actuals)
