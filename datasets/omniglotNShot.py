@@ -211,7 +211,8 @@ class OmniglotNShotDataset():
                     print("loaded prepared evaluation_input_file")
                     self.evaluation = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) + "_prepared.json" ) ) ) 
                     
-                
+            
+        """
         #TODO tmp. compare 
         print(self.x.shape)
         print(self.evaluation.shape)
@@ -219,6 +220,7 @@ class OmniglotNShotDataset():
         print ('the difference')
         print (result)
         sdfhsdhfkjhd
+        """
                 
         self.data_pack_shape_2 = None
         self.data_pack_shape_3 = None
@@ -232,9 +234,9 @@ class OmniglotNShotDataset():
              For a 5-way, 10-shot learning task, use classes_per_set=5 and samples_per_class=10
         """
 
-        shuffle_classes = np.arange(self.x.shape[0])
-        np.random.shuffle(shuffle_classes)
-        self.x = self.x[shuffle_classes]
+        #shuffle_classes = np.arange(self.x.shape[0])
+        #np.random.shuffle(shuffle_classes)
+        #self.x = self.x[shuffle_classes]
         self.cache_sample = 0
         self.cache_sample_prediction = 0
         self.is_rotate = False
