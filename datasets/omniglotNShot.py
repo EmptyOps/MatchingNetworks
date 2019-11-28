@@ -443,6 +443,7 @@ class OmniglotNShotDataset():
                         if is_eval_with_train_data == True or cur_class >= self.evaluate_classes:
                             example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, False)
                         else:
+                            print( "example_inds_test here 1 " )
                             example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - self.evaluate_classes), False)
                             example_inds_test = np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
                             #print( "example_inds here 1 " + str(n_test_samples) )
