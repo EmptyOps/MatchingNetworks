@@ -152,10 +152,10 @@ else:
             lentai = len(target_y_actuals)
             for k in range(0, lentai):
                 print( "j " + str(j) + " k " + str(k) )
-                print(target_y_actuals[j][k])
+                print(target_y_actuals[k][j])
                 print(pred_indices[j][k])
                 print(y_target[k][j])
-                if target_y_actuals[j][k] < 0 and pred_indices[j][k] == y_target[k][j]:
+                if target_y_actuals[k][j] < 0 and pred_indices[j][k] == y_target[k][j]:
                     evaluation_matched_cnt = evaluation_matched_cnt + 1
         
         #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
