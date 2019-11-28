@@ -148,9 +148,9 @@ else:
         evaluation_cnt = evaluation_cnt + ( (target_y_actuals < 0).sum() )
         
         lenta = len(target_y_actuals)
-        for j in range(lenta):
+        for j in range(0, lenta):
             lentai = len(target_y_actuals[j])
-            for k in range(lentai):
+            for k in range(0, lentai):
                 print( "j " + str(j) + " k " + str(k) )
                 print(target_y_actuals[j][k])
                 print(pred_indices[j][k])
