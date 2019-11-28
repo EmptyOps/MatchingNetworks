@@ -151,6 +151,9 @@ else:
         for j in range(lenta):
             lentai = len(target_y_actuals[j])
             for k in range(lentai):
+                print(target_y_actuals[j][k])
+                print(pred_indices[j][k])
+                print(y_target[k][j])
                 if target_y_actuals[j][k] < 0 and pred_indices[j][k] == y_target[k][j]:
                     evaluation_matched_cnt = evaluation_matched_cnt + 1
         
