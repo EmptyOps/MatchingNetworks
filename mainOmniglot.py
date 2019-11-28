@@ -136,15 +136,23 @@ else:
     tot_acc = 0.0
     cnt = 0
     evaluation_cnt = 0
+    evaluation_matched_cnt = 0
     for i in range(10):
         print( "evaluation i " + str(i) )
         #TODO what if we set support set to empty since its evaluation
         #total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_evaluation(total_test_batches=1)
-        c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals = obj_oneShotBuilder.run_evaluation(total_test_batches=1, is_debug = True)
+        c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices = obj_oneShotBuilder.run_evaluation(total_test_batches=1, is_debug = True)
         
         tot_acc = tot_acc + acc
         cnt = cnt + 1
         evaluation_cnt = evaluation_cnt + ( (target_y_actuals < 0).sum() )
+        
+        lenta = len(target_y_actuals)
+        for j in range(lenta):
+            lentai = len(target_y_actuals[j])
+            for k in range(lentai):
+                if target_y_actuals[j][k] < 0 and pred_indices[j][k] == y_target[k][j]:
+                    evaluation_matched_cnt = evaluation_matched_cnt + 1
         
         #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
         print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
@@ -153,6 +161,7 @@ else:
         #logger.log_value('run_time_predictions_acc', total_test_accuracy)
     
     print( "evaluation_cnt " + str( evaluation_cnt ) )
+    print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
     print( "avg acc " + str( (tot_acc / cnt) ) )
     
     #save result

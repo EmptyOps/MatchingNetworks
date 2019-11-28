@@ -66,6 +66,7 @@ class MatchingNetwork(nn.Module):
                 gen_encode = self.g(support_set_images[:,i,:,:,:])
                 encoded_images.append(gen_encode)
 
+        pred_indices = []
         # produce embeddings for target images
         for i in np.arange(target_image.size(1)):
             gen_encode = self.g(target_image[:,i,:,:,:])
@@ -90,6 +91,7 @@ class MatchingNetwork(nn.Module):
 
             # calculate accuracy and crossentropy loss
             values, indices = preds.max(1)
+            pred_indices.append( indices )
             if is_debug:
                 #print( "support set while in predictions debug mode" )
                 #print( y_support_set_org )
@@ -113,7 +115,7 @@ class MatchingNetwork(nn.Module):
         #if is_debug:
         #    dfsdfsdfsdf
             
-        return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1)
+        return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices
 
 
 class MatchingNetworkTest(unittest.TestCase):

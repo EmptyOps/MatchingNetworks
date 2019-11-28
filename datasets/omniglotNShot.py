@@ -135,6 +135,7 @@ class OmniglotNShotDataset():
                 with open( base_classes_file, 'w') as outfile:
                     json.dump(self.x.tolist(), outfile)                      
             else:
+                print("loaded prepared base_classes_file")
                 self.x = array( json.load( open( base_classes_file ) ) ) 
                 
                 
