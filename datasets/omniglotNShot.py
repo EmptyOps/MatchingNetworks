@@ -157,7 +157,7 @@ class OmniglotNShotDataset():
             #
             if is_evaluation_only == True:
             
-                if not os.path.exists(evaluation_input_file + "_prepared.json"):
+                if not os.path.exists(evaluation_input_file.replace('{i}', str(0)) + "_prepared.json"):
                     input = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) ) ) ) 
                     input_labels = array( json.load( open( evaluation_labels_file.replace('{i}', str(0)) ) ) ) 
                     
@@ -207,7 +207,7 @@ class OmniglotNShotDataset():
                     self.evaluation = np.array(self.evaluation)
                     temp = [] # Free memory
                 else:
-                    self.evaluation = array( json.load( open( evaluation_input_file + "_prepared.json" ) ) ) 
+                    self.evaluation = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) + "_prepared.json" ) ) ) 
                     
                 
         self.data_pack_shape_2 = None
