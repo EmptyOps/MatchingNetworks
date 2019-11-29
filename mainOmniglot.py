@@ -137,13 +137,14 @@ if is_evaluation_only == False:
             obj_oneShotBuilder.save_model(e)
 else: 
     results = []
-    tot_acc = 0.0
-    cnt = 0
-    tot_matches = 0
-    matched_cnt = 0
-    evaluation_cnt = 0
-    evaluation_matched_cnt = 0
     for c in range(0, 9):
+        tot_acc = 0.0
+        cnt = 0
+        tot_matches = 0
+        matched_cnt = 0
+        evaluation_cnt = 0
+        evaluation_matched_cnt = 0
+
         for i in range(10):
             print( "evaluation i " + str(i) )
             #TODO what if we set support set to empty since its evaluation
@@ -186,4 +187,4 @@ else:
     import json
     if not outfile_path_prob == None:
         with open( outfile_path_prob, 'w') as outfile:
-            json.dump(results.tolist(), outfile)                      
+            json.dump(results, outfile)                      
