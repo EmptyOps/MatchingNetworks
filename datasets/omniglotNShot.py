@@ -128,9 +128,7 @@ class OmniglotNShotDataset():
                 self.x = [] # Free memory
 
                         
-                print(temp.keys())
                 for classes in temp.keys():
-                    print(classes)
                     self.x.append(np.array(temp[ list(temp.keys())[classes]]))
                 self.x = np.array(self.x)
                 temp = [] # Free memory
@@ -158,10 +156,7 @@ class OmniglotNShotDataset():
                 with open( base_classes_file+"_x_to_be_predicted.json", 'w') as outfile:
                     json.dump(self.x_to_be_predicted.tolist(), outfile)                      
                     
-                print(self.x_to_be_predicted_cls_indexes)
 
-            sedfjlsdjflsjdfljk
-                
             #
             if is_evaluation_only == True:
             
@@ -210,6 +205,7 @@ class OmniglotNShotDataset():
                     input_labels = []  # Free memory
                     
                     self.evaluation = [] 
+                    print(temp.keys())
                     for classes in temp.keys():
                         self.evaluation.append(np.array(temp[ list(temp.keys())[classes]]))
                     self.evaluation = np.array(self.evaluation)
@@ -221,6 +217,7 @@ class OmniglotNShotDataset():
             
         
         #TODO tmp. compare 
+        """
         print(self.x.shape)
         print(self.evaluation.shape)
         is_found = False
@@ -260,6 +257,34 @@ class OmniglotNShotDataset():
                     break
                     
             if is_found == True:
+                break
+            
+        if is_found == False:
+            sdfhsdhfkjhd
+        """
+        
+        is_found = False
+        for i in range(0, self.x.shape[1]):
+            xt = np.copy(self.x[self.evaluate_classes,i,:,:,:])
+            xt[27,99,0] = 0
+            xt[27,103,0] = 0
+            xt[27,107,0] = 0
+            et = np.copy(self.evaluation[self.evaluate_classes,0,:,:,:])
+            et[27,99,0] = 0
+            et[27,103,0] = 0
+            et[27,107,0] = 0
+
+            result = np.subtract( xt, et)
+            if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
+                continue
+            print ('the difference i ' + str(i))
+            print (result)
+            if (result > 0.0).sum() == 0 and (result < 0.0).sum() == 0:
+                is_found = True
+                self.evaluation[self.evaluate_classes,:,27,99,0] = self.x[self.evaluate_classes,i,27,99,0]
+                self.evaluation[self.evaluate_classes,:,27,103,0] = self.x[self.evaluate_classes,i,27,103,0]
+                self.evaluation[self.evaluate_classes,:,27,107,0] = self.x[self.evaluate_classes,i,27,107,0]
+                print("fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
                 break
             
         if is_found == False:
