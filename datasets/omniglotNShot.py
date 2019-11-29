@@ -214,15 +214,18 @@ class OmniglotNShotDataset():
                     self.evaluation = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) + "_prepared.json" ) ) ) 
                     
             
-        """
+        
         #TODO tmp. compare 
         print(self.x.shape)
         print(self.evaluation.shape)
-        result = np.subtract( self.x[0,0,:,:,:], self.evaluation[0,0,:,:,:])
-        print ('the difference')
-        print (result)
+        for i in range(0, self.x.shape[1]):
+            result = np.subtract( self.x[self.evaluate_classes,i,:,:,:], self.evaluation[self.evaluate_classes,0,:,:,:])
+            if (result.any() > 1.0):
+                continue
+            print ('the difference')
+            print (result)
         sdfhsdhfkjhd
-        """
+        
                 
         self.data_pack_shape_2 = None
         self.data_pack_shape_3 = None
