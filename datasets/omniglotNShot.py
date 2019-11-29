@@ -418,7 +418,7 @@ class OmniglotNShotDataset():
             self.data_pack_shape_3 = data_pack.shape[3]            
         
         #TODO temp. eval with train data
-        is_eval_with_train_data = False
+        is_eval_with_train_data = True
         
         n_samples = self.samples_per_class * self.classes_per_set
         data_cache = []
@@ -441,8 +441,8 @@ class OmniglotNShotDataset():
             for i in range(self.batch_size):
                 pinds = np.random.permutation(n_samples)
                 #classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  #False
-                #classes = np.random.choice(self.prediction_classes, self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
-                classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
+                classes = np.random.choice( 30 """self.prediction_classes""", self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
+                #classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
                 
                 # select 1-shot or 5-shot classes for test with repetition
                 x_hat_class = np.random.choice(classes, self.samples_per_class, True)
