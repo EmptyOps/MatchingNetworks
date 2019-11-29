@@ -166,7 +166,7 @@ else:
             
             #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
             print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
-            print(target_y_actuals)
+            #print(target_y_actuals)
             #logger.log_value('run_time_predictions_loss', total_test_c_loss)
             #logger.log_value('run_time_predictions_acc', total_test_accuracy)
         
@@ -179,6 +179,8 @@ else:
         print( "avg acc " + str( (tot_acc / cnt) ) )
     
         results.append( str( (evaluation_matched_cnt / evaluation_cnt) ) )
+    
+    print(results)
     
     #save result
     import json
