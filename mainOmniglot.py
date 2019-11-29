@@ -93,6 +93,9 @@ obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
 obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce)
 
 if is_evaluation_only == False:
+    if not 'EPOCH' in model_path:
+        print("Please define model path file name properly with a -EPOCH- key inside so that model can be saved for each epoch")
+        
     best_val = 0.
     with tqdm.tqdm(total=total_epochs) as pbar_e:
         for e in range(0, total_epochs):
@@ -130,8 +133,8 @@ if is_evaluation_only == False:
             pbar_e.update(1)
             logger.step()
             
-    #save model 
-    obj_oneShotBuilder.save_model()
+            #save model 
+            obj_oneShotBuilder.save_model(e)
 else: 
     tot_acc = 0.0
     cnt = 0

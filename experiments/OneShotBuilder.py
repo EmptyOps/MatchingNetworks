@@ -62,8 +62,8 @@ class OneShotBuilder:
             torch.cuda.manual_seed_all(0)
             self.matchingNet.cuda()
 
-    def save_model(self):
-        torch.save(self.matchingNet, self.model_path)
+    def save_model(self, epoch):
+        torch.save(self.matchingNet, self.model_path.replace('EPOCH', str(epoch)))
             
     def run_training_epoch(self, total_train_batches):
         """
