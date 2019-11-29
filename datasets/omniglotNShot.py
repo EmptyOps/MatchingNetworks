@@ -218,19 +218,25 @@ class OmniglotNShotDataset():
         #TODO tmp. compare 
         print(self.x.shape)
         print(self.evaluation.shape)
-        for i in range(0, self.x.shape[1]):
-            result = np.subtract( self.x[self.evaluate_classes,i,:,:,:], self.evaluation[self.evaluate_classes,0,:,:,:])
-            print( result.shape )
-            print( "positive diff i " + str(i) )
-            print( np.where( result >= 2.0 ) )
-            print( "negative diff i " + str(i) )
-            print( np.where( result <= -2.0 ) )
-            print( "x indices val " + str(self.x[self.evaluate_classes,i,27,99,0]) + " " + str(self.x[self.evaluate_classes,i,27,103,0]) + " " + str(self.x[self.evaluate_classes,i,27,107,0]) )
-            print( "evaluation indices val " + str(self.evaluation[self.evaluate_classes,i,27,99,0]) + " " + str(self.evaluation[self.evaluate_classes,i,27,103,0]) + " " + str(self.evaluation[self.evaluate_classes,i,27,107,0]) )
-            if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
-                continue
-            print ('the difference')
-            print (result)
+        for h in range(0, self.x.shape[0]):
+            print("classssssssssssssssssssssssssssssssssssssssssssssssssssssssssss " + str(h))
+            for i in range(0, self.x.shape[1]):
+                """
+                result = np.subtract( self.x[self.evaluate_classes,i,:,:,:], self.evaluation[self.evaluate_classes,0,:,:,:])
+                print( result.shape )
+                print( "positive diff i " + str(i) )
+                print( np.where( result >= 2.0 ) )
+                print( "negative diff i " + str(i) )
+                print( np.where( result <= -2.0 ) )
+                """
+                print( "x indices val " + str(self.x[h,i,27,99,0]) + " " + str(self.x[h,i,27,103,0]) + " " + str(self.x[h,i,27,107,0]) )
+                """
+                print( "evaluation indices val " + str(self.evaluation[self.evaluate_classes,i,27,99,0]) + " " + str(self.evaluation[self.evaluate_classes,i,27,103,0]) + " " + str(self.evaluation[self.evaluate_classes,i,27,107,0]) )
+                if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
+                    continue
+                print ('the difference')
+                print (result)
+                """
         sdfhsdhfkjhd
         
                 
