@@ -224,14 +224,6 @@ class OmniglotNShotDataset():
         for h in range(0, self.x.shape[0]):
             print("classssssssssssssssssssssssssssssssssssssssssssssssssssssssssss " + str(h))
             for i in range(0, self.x.shape[1]):
-                """
-                result = np.subtract( self.x[self.evaluate_classes,i,:,:,:], self.evaluation[self.evaluate_classes,0,:,:,:])
-                print( result.shape )
-                print( "positive diff i " + str(i) )
-                print( np.where( result >= 2.0 ) )
-                print( "negative diff i " + str(i) )
-                print( np.where( result <= -2.0 ) )
-                """
                 #print( "x indices val " + str(self.x[h,i,27,99,0]) + " " + str(self.x[h,i,27,103,0]) + " " + str(self.x[h,i,27,107,0]) )
                 xt = np.copy(self.x[h,i,:,:,:])
                 xt[27,99,0] = 0
