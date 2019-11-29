@@ -101,10 +101,10 @@ class OneShotBuilder:
                 size = x_target.size()
                 x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
                 if self.isCudaAvailable:
-                    acc, c_loss_value = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
+                    acc, c_loss_value, _ = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
                                                          x_target.cuda(), y_target.cuda())
                 else:
-                    acc, c_loss_value = self.matchingNet(x_support_set, y_support_set_one_hot,
+                    acc, c_loss_value, _ = self.matchingNet(x_support_set, y_support_set_one_hot,
                                                          x_target, y_target)
 
                 # Before the backward pass, use the optimizer object to zero all of the
@@ -172,10 +172,10 @@ class OneShotBuilder:
                 size = x_target.size()
                 x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
                 if self.isCudaAvailable:
-                    acc, c_loss_value = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
+                    acc, c_loss_value, _ = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
                                                          x_target.cuda(), y_target.cuda())
                 else:
-                    acc, c_loss_value = self.matchingNet(x_support_set, y_support_set_one_hot,
+                    acc, c_loss_value, _ = self.matchingNet(x_support_set, y_support_set_one_hot,
                                                          x_target, y_target)
 
                 #iter_out = "val_loss: {}, val_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
@@ -225,10 +225,10 @@ class OneShotBuilder:
                 size = x_target.size()
                 x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
                 if self.isCudaAvailable:
-                    acc, c_loss_value = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
+                    acc, c_loss_value, _ = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
                                                          x_target.cuda(), y_target.cuda())
                 else:
-                    acc, c_loss_value = self.matchingNet(x_support_set, y_support_set_one_hot,
+                    acc, c_loss_value, _ = self.matchingNet(x_support_set, y_support_set_one_hot,
                                                          x_target, y_target)
 
                 #iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
@@ -276,10 +276,10 @@ class OneShotBuilder:
                 size = x_target.size()
                 x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
                 if self.isCudaAvailable:
-                    acc, c_loss_value = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
+                    acc, c_loss_value, _ = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
                                                          x_target.cuda(), y_target.cuda(), is_debug )
                 else:
-                    acc, c_loss_value = self.matchingNet(x_support_set, y_support_set_one_hot,
+                    acc, c_loss_value, _ = self.matchingNet(x_support_set, y_support_set_one_hot,
                                                          x_target, y_target, is_debug )
 
                 #iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])

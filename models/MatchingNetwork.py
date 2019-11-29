@@ -115,7 +115,7 @@ class MatchingNetwork(nn.Module):
         #if is_debug:
         #    dfsdfsdfsdf
             
-        return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1)#, pred_indices
+        return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices
 
 
 class MatchingNetworkTest(unittest.TestCase):
