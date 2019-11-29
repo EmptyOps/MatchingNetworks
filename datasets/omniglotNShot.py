@@ -218,6 +218,7 @@ class OmniglotNShotDataset():
         #TODO tmp. compare 
         print(self.x.shape)
         print(self.evaluation.shape)
+        is_found = False
         for h in range(0, self.x.shape[0]):
             print("classssssssssssssssssssssssssssssssssssssssssssssssssssssssssss " + str(h))
             for i in range(0, self.x.shape[1]):
@@ -231,7 +232,6 @@ class OmniglotNShotDataset():
                 """
                 #print( "x indices val " + str(self.x[h,i,27,99,0]) + " " + str(self.x[h,i,27,103,0]) + " " + str(self.x[h,i,27,107,0]) )
                 xt = np.copy(self.x[h,i,:,:,:])
-                print(xt.shape)
                 xt[27,99,0] = 0
                 xt[27,103,0] = 0
                 xt[27,107,0] = 0
@@ -246,13 +246,19 @@ class OmniglotNShotDataset():
                 print ('the difference h ' + str(h) + ' i ' + str(i))
                 print (result)
                 if (result > 0.0).sum() == 0 and (result < 0.0).sum() == 0:
+                    is_found = True
                     self.evaluate_classes = h
                     self.evaluation[self.evaluate_classes,:,27,99,0] = self.x[h,i,27,99,0]
                     self.evaluation[self.evaluate_classes,:,27,103,0] = self.x[h,i,27,103,0]
                     self.evaluation[self.evaluate_classes,:,27,107,0] = self.x[h,i,27,107,0]
-                    matchfounbddddddddddddddddddddddd
-                
-        sdfhsdhfkjhd
+                    print("fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+                    break
+                    
+            if is_found == True:
+                break
+            
+        if is_found == False:
+            sdfhsdhfkjhd
         
                 
         self.data_pack_shape_2 = None
