@@ -138,6 +138,11 @@ if is_evaluation_only == False:
 else: 
     results = []
     for c in range(0, 9):
+    
+        #reset model
+        if c > 0:
+            obj_oneShotBuilder.load_model()
+    
         tot_acc = 0.0
         cnt = 0
         tot_matches = 0
