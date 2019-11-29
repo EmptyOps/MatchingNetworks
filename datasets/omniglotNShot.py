@@ -227,7 +227,6 @@ class OmniglotNShotDataset():
             print( np.where( result <= -2.0 ) )
             print( "x indices val " + str(self.x[self.evaluate_classes,i,27,99,0]) + " " + str(self.x[self.evaluate_classes,i,27,103,0]) + " " + str(self.x[self.evaluate_classes,i,27,107,0]) )
             print( "evaluation indices val " + str(self.evaluation[self.evaluate_classes,i,27,99,0]) + " " + str(self.evaluation[self.evaluate_classes,i,27,103,0]) + " " + str(self.evaluation[self.evaluate_classes,i,27,107,0]) )
-            breakkkkkkkkkkkkkkk
             if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
                 continue
             print ('the difference')
