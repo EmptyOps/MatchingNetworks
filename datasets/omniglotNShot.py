@@ -13,6 +13,7 @@ import torchvision.transforms as transforms
 from PIL import Image
 import os.path
 import json
+import math
 
 from numpy import array
 import numpy as np
@@ -494,7 +495,7 @@ class OmniglotNShotDataset():
             pr.enable()
             """
             
-            self.evaluate_classes = floor(sample / 10)
+            self.evaluate_classes = math.floor(sample / 10)
         
             support_set_x = np.zeros((self.batch_size, n_samples, self.data_pack_shape_2, self.data_pack_shape_3, 1))
             support_set_y = np.zeros((self.batch_size, n_samples), dtype=np.int)#)
