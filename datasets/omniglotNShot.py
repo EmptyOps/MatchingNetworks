@@ -24,7 +24,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0):
 
         if is_use_sample_data:
             if not os.path.isfile(os.path.join(dataroot,'data.npy')):
@@ -62,6 +62,7 @@ class OmniglotNShotDataset():
             base_classes_file = input_file+"_base_classes.json"
             self.evaluate_classes = evaluate_classes
             self.is_eval_with_train_data = True if is_eval_with_train_data == 1 else False
+            self.negative_test_offset = negative_test_offset
                         
             #
             if is_evaluation_only == False or not os.path.exists( base_classes_file ):
@@ -519,11 +520,11 @@ class OmniglotNShotDataset():
                                 """
                                 
                                 if is_eval_with_train_data == True:
-                                    target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
+                                    target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class+self.negative_test_offset][eind]
                                 else:
-                                    target_x[i, pinds_test[ind_test], :, :, :] = data_pack_evaluation[cur_class][eind]
+                                    target_x[i, pinds_test[ind_test], :, :, :] = data_pack_evaluation[cur_class+self.negative_test_offset][eind]
                                 target_y[i, pinds_test[ind_test]] = j
-                                target_y_actuals[i, pinds_test[ind_test]] = (cur_class+1) * -1
+                                target_y_actuals[i, pinds_test[ind_test]] = (cur_class+1+self.negative_test_offset) * -1
                                 ind_test = ind_test + 1
 
             data_cache.append([support_set_x, support_set_y, target_x, target_y, target_y_actuals])
