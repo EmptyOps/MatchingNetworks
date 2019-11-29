@@ -273,9 +273,9 @@ class OmniglotNShotDataset():
             print (result)
             if (result > 0.0).sum() == 0 and (result < 0.0).sum() == 0:
                 is_found = True
-                self.evaluation[self.evaluate_classes,:,27,99,0] = self.x[self.evaluate_classes,i,27,99,0]
-                self.evaluation[self.evaluate_classes,:,27,103,0] = self.x[self.evaluate_classes,i,27,103,0]
-                self.evaluation[self.evaluate_classes,:,27,107,0] = self.x[self.evaluate_classes,i,27,107,0]
+                self.evaluation[:,:,27,99,0] = self.x[self.evaluate_classes,i,27,99,0]
+                self.evaluation[:,:,27,103,0] = self.x[self.evaluate_classes,i,27,103,0]
+                self.evaluation[:,:,27,107,0] = self.x[self.evaluate_classes,i,27,107,0]
                 print("fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
                 break
             
@@ -309,7 +309,7 @@ class OmniglotNShotDataset():
         else:
             self.is_rotate = False
             self.cache_sample = 300
-            self.cache_sample_prediction = 10
+            self.cache_sample_prediction = 90
             if is_evaluation_only == False:
                 #self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
                 self.x_train, self.x_test, self.x_val  = self.x[:30], self.x[30:43], self.x[43:]
@@ -483,7 +483,7 @@ class OmniglotNShotDataset():
         
         n_samples = self.samples_per_class * self.classes_per_set
         data_cache = []
-        for sample in range(self.cache_sample_prediction):
+        for sample in range(0, self.cache_sample_prediction):
         
             """
             #TODO temp. profiling, comment it when not needed
@@ -493,6 +493,8 @@ class OmniglotNShotDataset():
             pr = cProfile.Profile()
             pr.enable()
             """
+            
+            self.evaluate_classes = floor(sample / 10)
         
             support_set_x = np.zeros((self.batch_size, n_samples, self.data_pack_shape_2, self.data_pack_shape_3, 1))
             support_set_y = np.zeros((self.batch_size, n_samples), dtype=np.int)#)
