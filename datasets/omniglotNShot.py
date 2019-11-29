@@ -220,7 +220,7 @@ class OmniglotNShotDataset():
         print(self.evaluation.shape)
         for i in range(0, self.x.shape[1]):
             result = np.subtract( self.x[self.evaluate_classes,i,:,:,:], self.evaluation[self.evaluate_classes,0,:,:,:])
-            if (result.any() > 1.0):
+            if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
                 continue
             print ('the difference')
             print (result)
