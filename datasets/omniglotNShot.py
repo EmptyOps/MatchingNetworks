@@ -418,7 +418,7 @@ class OmniglotNShotDataset():
             self.data_pack_shape_3 = data_pack.shape[3]            
         
         #TODO temp. eval with train data
-        is_eval_with_train_data = True
+        is_eval_with_train_data = False
         
         n_samples = self.samples_per_class * self.classes_per_set
         data_cache = []
