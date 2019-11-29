@@ -457,7 +457,12 @@ class OmniglotNShotDataset():
                         # Count number of times this class is inside the meta-test
                         n_test_samples = np.sum(cur_class == x_hat_class)
                         if is_eval_with_train_data == True or not cur_class == self.evaluate_classes:
-                            example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, False)
+                            if not cur_class == self.evaluate_classes:
+                                example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, False)
+                            else:
+                                print( "example_inds_test here 1 in train mode" )
+                                example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), False)
+                                example_inds_test = np.array( [0] ) #np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
                         else:
                             print( "example_inds_test here 1 " )
                             example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), False)
@@ -475,7 +480,7 @@ class OmniglotNShotDataset():
                         support_set_y[i, pinds[ind]] = j
                         ind = ind + 1
                     # meta-test
-                    if is_eval_with_train_data == True or not cur_class == self.evaluate_classes:
+                    if is_eval_with_train_data == True and not cur_class == self.evaluate_classes:
                         for eind in example_inds[self.samples_per_class:]:
                             """
                             print( "eind" )
@@ -513,7 +518,10 @@ class OmniglotNShotDataset():
                                 print( pinds_test[ind_test] )
                                 """
                                 
-                                target_x[i, pinds_test[ind_test], :, :, :] = data_pack_evaluation[cur_class][eind]
+                                if is_eval_with_train_data == True:
+                                    target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
+                                else:
+                                    target_x[i, pinds_test[ind_test], :, :, :] = data_pack_evaluation[cur_class][eind]
                                 target_y[i, pinds_test[ind_test]] = j
                                 target_y_actuals[i, pinds_test[ind_test]] = (cur_class+1) * -1
                                 ind_test = ind_test + 1
