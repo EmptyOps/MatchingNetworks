@@ -87,7 +87,7 @@ data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_
                                           samples_per_class=samples_per_class, 
                                           is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
                                           total_input_files = total_input_files, is_evaluation_only = is_evaluation_only, 
-                                          evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], evaluate_classes = int(sys.argv[25]))
+                                          evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], evaluate_classes = int(sys.argv[25]), is_eval_with_train_data = int(sys.argv[20]))
 
 obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
 obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce)
@@ -135,6 +135,8 @@ if is_evaluation_only == False:
 else: 
     tot_acc = 0.0
     cnt = 0
+    tot_matches = 0
+    matched_cnt = 0
     evaluation_cnt = 0
     evaluation_matched_cnt = 0
     for i in range(10):
@@ -151,8 +153,11 @@ else:
         for j in range(0, lenta):
             lentai = len(target_y_actuals)
             for k in range(0, lentai):
-                if target_y_actuals[k][j] < 0 and pred_indices[j][k] == y_target[k][j]:
-                    evaluation_matched_cnt = evaluation_matched_cnt + 1
+                tot_matches = tot_matches + 1
+                if pred_indices[j][k] == y_target[k][j]:
+                    matched_cnt = matched_cnt + 1
+                    if target_y_actuals[k][j] < 0:
+                        evaluation_matched_cnt = evaluation_matched_cnt + 1
         
         #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
         print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
@@ -160,6 +165,8 @@ else:
         #logger.log_value('run_time_predictions_loss', total_test_c_loss)
         #logger.log_value('run_time_predictions_acc', total_test_accuracy)
     
+    print( "tot_matches " + str( tot_matches ) )
+    print( "matched_cnt " + str( matched_cnt ) )
     print( "evaluation_cnt " + str( evaluation_cnt ) )
     print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
     print( "avg acc " + str( (tot_acc / cnt) ) )

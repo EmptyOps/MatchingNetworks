@@ -24,7 +24,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0):
 
         if is_use_sample_data:
             if not os.path.isfile(os.path.join(dataroot,'data.npy')):
@@ -61,6 +61,7 @@ class OmniglotNShotDataset():
             
             base_classes_file = input_file+"_base_classes.json"
             self.evaluate_classes = evaluate_classes
+            self.is_eval_with_train_data = True if is_eval_with_train_data == 1 else False
                         
             #
             if is_evaluation_only == False or not os.path.exists( base_classes_file ):
@@ -418,7 +419,7 @@ class OmniglotNShotDataset():
             self.data_pack_shape_3 = data_pack.shape[3]            
         
         #TODO temp. eval with train data
-        is_eval_with_train_data = False
+        is_eval_with_train_data = self.is_eval_with_train_data
         
         n_samples = self.samples_per_class * self.classes_per_set
         data_cache = []
