@@ -125,7 +125,7 @@ if is_evaluation_only == False:
 
             if True:
                 total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_time_predictions(
-                    total_test_batches=total_test_batches, is_debug = (False if e >= 1 else False) )
+                    total_test_batches=total_test_batches, is_debug = is_debug )
                 print("Epoch {}: run_time_predictions_loss: {}, run_time_predictions_accuracy: {}".format(e, total_test_c_loss, total_test_accuracy))
                 logger.log_value('run_time_predictions_loss', total_test_c_loss)
                 logger.log_value('run_time_predictions_acc', total_test_accuracy)
@@ -150,7 +150,7 @@ else:
                 print( "evaluation i " + str(i) )
             #TODO what if we set support set to empty since its evaluation
             #total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_evaluation(total_test_batches=1)
-            c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices = obj_oneShotBuilder.run_evaluation(total_test_batches=1, is_debug = False)
+            c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices = obj_oneShotBuilder.run_evaluation(total_test_batches=1, is_debug = is_debug)
             
             tot_acc = tot_acc + acc
             cnt = cnt + 1
