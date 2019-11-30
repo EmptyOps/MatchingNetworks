@@ -256,32 +256,35 @@ class OmniglotNShotDataset():
             sdfhsdhfkjhd
         """
         
-        is_found = False
-        for i in range(0, self.x.shape[1]):
-            xt = np.copy(self.x[self.evaluate_classes,i,:,:,:])
-            xt[27,99,0] = 0
-            xt[27,103,0] = 0
-            xt[27,107,0] = 0
-            et = np.copy(self.evaluation[self.evaluate_classes,0,:,:,:])
-            et[27,99,0] = 0
-            et[27,103,0] = 0
-            et[27,107,0] = 0
+        if is_evaluation_only == True:
+            is_found = False
+            for i in range(0, self.x.shape[1]):
+                xt = np.copy(self.x[self.evaluate_classes,i,:,:,:])
+                xt[27,99,0] = 0
+                xt[27,103,0] = 0
+                xt[27,107,0] = 0
+                et = np.copy(self.evaluation[self.evaluate_classes,0,:,:,:])
+                et[27,99,0] = 0
+                et[27,103,0] = 0
+                et[27,107,0] = 0
 
-            result = np.subtract( xt, et)
-            if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
-                continue
-            print ('the difference i ' + str(i))
-            print (result)
-            if (result > 0.0).sum() == 0 and (result < 0.0).sum() == 0:
-                is_found = True
-                self.evaluation[:,:,27,99,0] = self.x[self.evaluate_classes,i,27,99,0]
-                self.evaluation[:,:,27,103,0] = self.x[self.evaluate_classes,i,27,103,0]
-                self.evaluation[:,:,27,107,0] = self.x[self.evaluate_classes,i,27,107,0]
-                print("fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
-                break
-            
-        if is_found == False:
-            sdfhsdhfkjhd
+                result = np.subtract( xt, et)
+                if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
+                    continue
+                
+                #print ('the difference i ' + str(i))
+                #print (result)
+                
+                if (result > 0.0).sum() == 0 and (result < 0.0).sum() == 0:
+                    is_found = True
+                    self.evaluation[:,:,27,99,0] = self.x[self.evaluate_classes,i,27,99,0]
+                    self.evaluation[:,:,27,103,0] = self.x[self.evaluate_classes,i,27,103,0]
+                    self.evaluation[:,:,27,107,0] = self.x[self.evaluate_classes,i,27,107,0]
+                    print("fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+                    break
+                
+            if is_found == False:
+                sdfhsdhfkjhd
         
                 
         self.data_pack_shape_2 = None
@@ -523,11 +526,11 @@ class OmniglotNShotDataset():
                             if not cur_class == self.evaluate_classes:
                                 example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, False)
                             else:
-                                print( "example_inds_test here 1 in train mode" )
+                                #print( "example_inds_test here 1 in train mode" )
                                 example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), False)
                                 example_inds_test = np.array( [0] ) #np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
                         else:
-                            print( "example_inds_test here 1 " )
+                            #print( "example_inds_test here 1 " )
                             example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), False)
                             example_inds_test = np.array( [0] ) #np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
                             #print( "example_inds here 1 " + str(n_test_samples) )

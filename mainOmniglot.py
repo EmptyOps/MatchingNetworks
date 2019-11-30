@@ -23,7 +23,7 @@ import os, sys
              For a 5-way, 10-shot learning task, use classes_per_set=5 and samples_per_class=10
 '''
 
-is_debug = True
+is_debug = False
 
 ENV = int(sys.argv[1]) if len(sys.argv) >= 2 else 0
 
@@ -138,11 +138,6 @@ if is_evaluation_only == False:
 else: 
     results = []
     for c in range(0, 9):
-    
-        #reset model
-        if c > 0:
-            obj_oneShotBuilder.load_model()
-    
         tot_acc = 0.0
         cnt = 0
         tot_matches = 0
@@ -151,7 +146,8 @@ else:
         evaluation_matched_cnt = 0
 
         for i in range(10):
-            print( "evaluation i " + str(i) )
+            if is_debug == True:
+                print( "evaluation i " + str(i) )
             #TODO what if we set support set to empty since its evaluation
             #total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_evaluation(total_test_batches=1)
             c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices = obj_oneShotBuilder.run_evaluation(total_test_batches=1, is_debug = False)
@@ -170,19 +166,20 @@ else:
                         if target_y_actuals[k][j] < 0:
                             evaluation_matched_cnt = evaluation_matched_cnt + 1
             
-            #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
-            print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
-            #print(target_y_actuals)
-            #logger.log_value('run_time_predictions_loss', total_test_c_loss)
-            #logger.log_value('run_time_predictions_acc', total_test_accuracy)
+            if is_debug == True:
+                #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
+                print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
+                #print(target_y_actuals)
+                #logger.log_value('run_time_predictions_loss', total_test_c_loss)
+                #logger.log_value('run_time_predictions_acc', total_test_accuracy)
         
-        
-        print( "class " + str(c) )
-        print( "tot_matches " + str( tot_matches ) )
-        print( "matched_cnt " + str( matched_cnt ) )
-        print( "evaluation_cnt " + str( evaluation_cnt ) )
-        print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
-        print( "avg acc " + str( (tot_acc / cnt) ) )
+        if is_debug == True:        
+            print( "class " + str(c) )
+            print( "tot_matches " + str( tot_matches ) )
+            print( "matched_cnt " + str( matched_cnt ) )
+            print( "evaluation_cnt " + str( evaluation_cnt ) )
+            print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
+            print( "avg acc " + str( (tot_acc / cnt) ) )
     
         results.append( str( (evaluation_matched_cnt / evaluation_cnt) ) )
     
