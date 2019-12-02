@@ -250,7 +250,6 @@ class OmniglotNShotDataset():
             
         if is_found == False:
             sdfhsdhfkjhd
-        """
         
         if is_evaluation_only == True:
             is_found = False
@@ -281,6 +280,7 @@ class OmniglotNShotDataset():
                 
             if is_found == False:
                 sdfhsdhfkjhd
+        """
         
                 
         self.data_pack_shape_2 = None
