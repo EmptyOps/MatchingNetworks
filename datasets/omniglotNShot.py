@@ -292,6 +292,8 @@ class OmniglotNShotDataset():
         self.evaluation[:,:,27,103,0] = 0
         self.evaluation[:,:,27,107,0] = 0
         shuffle_classes = np.arange(self.x.shape[0])
+        print("shuffle_classes")
+        print(shuffle_classes)
         np.random.shuffle(shuffle_classes)
         self.x = self.x[shuffle_classes]
         self.evaluation = self.evaluation[shuffle_classes]
@@ -323,7 +325,7 @@ class OmniglotNShotDataset():
         else:
             self.is_rotate = False
             self.cache_sample = 300
-            self.cache_sample_prediction = 90
+            self.cache_sample_prediction = 300  #90
             if is_evaluation_only == False:
                 #self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
                 self.x_train, self.x_test, self.x_val  = self.x[:30], self.x[30:43], self.x[43:]

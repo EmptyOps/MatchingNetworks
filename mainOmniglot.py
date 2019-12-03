@@ -137,7 +137,7 @@ if is_evaluation_only == False:
             obj_oneShotBuilder.save_model(e)
 else: 
     results = []
-    for c in range(0, 9):
+    for c in range(0, 30):  #9):
         tot_acc = 0.0
         cnt = 0
         tot_matches = 0
