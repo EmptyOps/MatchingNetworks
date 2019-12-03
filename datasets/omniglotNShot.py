@@ -309,6 +309,7 @@ class OmniglotNShotDataset():
             #print("pca matlab")
             #from matplotlib.mlab import PCA
             #print( PCA(data) )
+            
 
             #
             print( "pca custom from so https://stackoverflow.com/a/13224592" )
@@ -360,7 +361,8 @@ class OmniglotNShotDataset():
                 ax1.plot(data_resc[:, 0], data_resc[:, 1], '.', mfc=clr1, mec=clr1)
                 MPL.show()
 
-            print( plot_pca(data) )
+            #print( plot_pca(data) )
+            print(data.shape)
             
         """
         #TODO temp
