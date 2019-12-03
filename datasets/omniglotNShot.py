@@ -140,12 +140,8 @@ class OmniglotNShotDataset():
                 #np.save(os.path.join(dataroot,'data.npy'),self.x)
                 with open( base_classes_file, 'w') as outfile:
                     json.dump(self.x.tolist(), outfile)                      
-            else:
-                print("loaded prepared base_classes_file")
-                self.x = array( json.load( open( base_classes_file ) ) ) 
-                
-                
-            if is_evaluation_only == False:
+                    
+                    
                 print( "temp_to_be_predicted.keys()" )
                 print( temp_to_be_predicted.keys() )
                 cls_index = 0
@@ -159,6 +155,13 @@ class OmniglotNShotDataset():
                 #np.save(os.path.join(dataroot,'data.npy'),self.x)
                 with open( base_classes_file+"_x_to_be_predicted.json", 'w') as outfile:
                     json.dump(self.x_to_be_predicted.tolist(), outfile)                      
+                    
+            else:
+                print("loaded prepared base_classes_file")
+                self.x = array( json.load( open( base_classes_file ) ) ) 
+                
+                print("loaded prepared x_to_be_predicted file")
+                self.x_to_be_predicted = array( json.load( open( base_classes_file+"_x_to_be_predicted.json" ) ) ) 
                     
 
             #
