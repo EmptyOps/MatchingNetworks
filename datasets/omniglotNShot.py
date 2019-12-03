@@ -338,10 +338,10 @@ class OmniglotNShotDataset():
             #
             print( "pca custom from so https://stackoverflow.com/a/13224592" )
             def PCA(data, dims_rescaled_data=2):
-                """
+                """"""
                 returns: data transformed in 2 dims/columns + regenerated original data
                 pass in: data as 2D NumPy array
-                """
+                """"""
                 import numpy as NP
                 from scipy import linalg as LA
                 m, n = data.shape
