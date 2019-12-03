@@ -308,7 +308,9 @@ class OmniglotNShotDataset():
             ##
             print("pca matlab")
             from matplotlib.mlab import PCA
-            print( PCA(data) )
+            p = PCA(data)
+            print( p.Wt )
+            print( type(p.Wt) )
             
 
             #
