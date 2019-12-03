@@ -306,11 +306,11 @@ class OmniglotNShotDataset():
             data = self.x.reshape(self.x.shape[0]*self.x.shape[1], self.x.shape[2]*self.x.shape[3]).swapaxes(0,1)
         
             ##
-            print("pca matlab")
-            from matplotlib.mlab import PCA
-            p = PCA(data)
-            print( p.Wt )
-            print( p.Wt.shape )
+            #print("pca matlab")
+            #from matplotlib.mlab import PCA
+            #p = PCA(data)
+            #print( p.Wt )
+            #print( p.Wt.shape )
             
 
             #
@@ -365,6 +365,13 @@ class OmniglotNShotDataset():
 
             #print( plot_pca(data) )
             print(data.shape)
+            
+            
+            from sklearn.decomposition import PCA
+            p = PCA(n_components = 728).fit_transform(data)
+            print( type(p) )
+            print( p )
+            
             
         """
         #TODO temp
