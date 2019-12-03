@@ -398,13 +398,13 @@ class OmniglotNShotDataset():
             print( p.shape )
             
             ind = 0
-            self.x = np.zeros( xcsize, xssize, 40, 40, 1 )
+            self.x = np.zeros( ( xcsize, xssize, 40, 40, 1 ) )
             for c in range(0, xcsize):
                 for s in range(0, xssize):
                     self.x[c, s, :, :, :] = p[ind].reshape( 40, 40 ) 
                     ind = ind + 1
                     
-            self.x_to_be_predicted = np.zeros( xtpcsize, xtpssize, 40, 40, 1 )
+            self.x_to_be_predicted = np.zeros( ( xtpcsize, xtpssize, 40, 40, 1 ) )
             for c in range(0, xtpcsize):
                 for s in range(0, xtpssize):
                     self.x_to_be_predicted[c, s, :, :, :] = p[ind].reshape( 40, 40 ) 
