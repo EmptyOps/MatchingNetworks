@@ -297,6 +297,8 @@ class OmniglotNShotDataset():
         print(shuffle_classes)
         self.x = self.x[shuffle_classes]
         self.evaluation = self.evaluation[shuffle_classes]
+        #for variational testing 
+        np.random.seed( np.random.randint(0, 1000)  )  
         
                 
         self.data_pack_shape_2 = None
