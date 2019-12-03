@@ -371,6 +371,7 @@ class OmniglotNShotDataset():
             p = PCA(n_components = 728).fit_transform(data)
             print( type(p) )
             print( p )
+            print( p.shape )
             
             
         """
