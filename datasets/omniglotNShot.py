@@ -297,6 +297,7 @@ class OmniglotNShotDataset():
         np.random.shuffle(shuffle_classes)
         print("shuffle_classes")
         print(shuffle_classes)
+        self.shuffle_classes = shuffle_classes
         self.x = self.x[shuffle_classes]
         self.evaluation = self.evaluation[shuffle_classes]
         

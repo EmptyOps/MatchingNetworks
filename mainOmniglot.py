@@ -137,6 +137,7 @@ if is_evaluation_only == False:
             obj_oneShotBuilder.save_model(e)
 else: 
     results = []
+    resdict = {}
     for c in range(0, 30):  #9):
         tot_acc = 0.0
         cnt = 0
@@ -180,9 +181,12 @@ else:
             print( "evaluation_cnt " + str( evaluation_cnt ) )
             print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
             print( "avg acc " + str( (tot_acc / cnt) ) )
+            resdict[data.shuffle_classes[c]] = str( (evaluation_matched_cnt / evaluation_cnt) )
     
         results.append( str( (evaluation_matched_cnt / evaluation_cnt) ) )
     
+    if is_debug == True:
+        print(resdict)
     print(results)
     
     #save result
