@@ -310,7 +310,7 @@ class OmniglotNShotDataset():
             from matplotlib.mlab import PCA
             p = PCA(data)
             print( p.Wt )
-            print( type(p.Wt) )
+            print( p.Wt.shape )
             
 
             #
