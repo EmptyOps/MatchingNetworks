@@ -17,7 +17,8 @@ import math
 
 from numpy import array
 import numpy as np
-np.random.seed(2191)  # for reproducibility
+#moved inside constructor
+#np.random.seed(2191)  # for reproducibility
 
 # LAMBDA FUNCTIONS
 filenameToPILImage = lambda x: Image.open(x).convert('L')
@@ -27,6 +28,9 @@ np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 class OmniglotNShotDataset():
     def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0):
 
+        if is_evaluation_only == False:
+            np.random.seed(2191)  # for reproducibility
+    
         if is_use_sample_data:
             if not os.path.isfile(os.path.join(dataroot,'data.npy')):
                 self.x = omniglot.OMNIGLOT(dataroot, download=True,

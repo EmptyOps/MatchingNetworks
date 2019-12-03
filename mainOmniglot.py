@@ -187,6 +187,7 @@ else:
     
     if is_debug == True:
         print(resdict)
+        
     print(results)
     
     #save result
