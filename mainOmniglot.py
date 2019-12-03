@@ -181,13 +181,12 @@ else:
             print( "evaluation_cnt " + str( evaluation_cnt ) )
             print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
             print( "avg acc " + str( (tot_acc / cnt) ) )
+
+        if not data.shuffle_classes == None:
             resdict[data.shuffle_classes[c]] = str( (evaluation_matched_cnt / evaluation_cnt) )
-    
         results.append( str( (evaluation_matched_cnt / evaluation_cnt) ) )
     
-    if is_debug == True:
-        print(resdict)
-        
+    print(resdict)
     print(results)
     
     #save result
