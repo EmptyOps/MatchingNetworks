@@ -282,6 +282,14 @@ class OmniglotNShotDataset():
                 sdfhsdhfkjhd
         """
         
+        #TODO temp
+        self.x[:,:,27,99,0] = 0
+        self.x[:,:,27,103,0] = 0
+        self.x[:,:,27,107,0] = 0
+        self.evaluation[:,:,27,99,0] = 0
+        self.evaluation[:,:,27,103,0] = 0
+        self.evaluation[:,:,27,107,0] = 0
+        
                 
         self.data_pack_shape_2 = None
         self.data_pack_shape_3 = None
