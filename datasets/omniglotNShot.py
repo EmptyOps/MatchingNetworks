@@ -283,12 +283,18 @@ class OmniglotNShotDataset():
         """
         
         #TODO temp
+        self.x = self.x[:30]
+        self.evaluation = self.evaluation[0:30]
         self.x[:,:,27,99,0] = 0
         self.x[:,:,27,103,0] = 0
         self.x[:,:,27,107,0] = 0
         self.evaluation[:,:,27,99,0] = 0
         self.evaluation[:,:,27,103,0] = 0
         self.evaluation[:,:,27,107,0] = 0
+        shuffle_classes = np.arange(self.x.shape[0])
+        np.random.shuffle(shuffle_classes)
+        self.x = self.x[shuffle_classes]
+        self.evaluation = self.evaluation[shuffle_classes]
         
                 
         self.data_pack_shape_2 = None
