@@ -303,12 +303,13 @@ class OmniglotNShotDataset():
         
         #pca 
         if self.is_apply_pca_first == 1:
+            data = self.x.reshape(self.shape[0]*self.x.shape[1], self.shape[2]*self.x.shape[3])
+        
             #
             print("pca matlab")
             from matplotlib.mlab import PCA
 
-            data = np.array(np.random.randint(10,size=(10,3)))
-            print( PCA(self.x) )
+            print( PCA(data) )
 
             #
             print( "pca custom from so https://stackoverflow.com/a/13224592" )
@@ -351,7 +352,6 @@ class OmniglotNShotDataset():
                 data_recovered += data_recovered.mean(axis=0)
                 assert NP.allclose(data, data_recovered)
 
-
             def plot_pca(data):
                 from matplotlib import pyplot as MPL
                 clr1 =  '#2026B2'
@@ -361,7 +361,7 @@ class OmniglotNShotDataset():
                 ax1.plot(data_resc[:, 0], data_resc[:, 1], '.', mfc=clr1, mec=clr1)
                 MPL.show()
 
-            print( plot_pca(self.x) )
+            print( plot_pca(data) )
             
         """
         #TODO temp
