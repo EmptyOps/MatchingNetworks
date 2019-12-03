@@ -305,11 +305,10 @@ class OmniglotNShotDataset():
         if self.is_apply_pca_first == 1:
             data = self.x.reshape(self.x.shape[0]*self.x.shape[1], self.x.shape[2]*self.x.shape[3])
         
-            #
-            print("pca matlab")
-            from matplotlib.mlab import PCA
-
-            print( PCA(data) )
+            ##
+            #print("pca matlab")
+            #from matplotlib.mlab import PCA
+            #print( PCA(data) )
 
             #
             print( "pca custom from so https://stackoverflow.com/a/13224592" )
