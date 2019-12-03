@@ -286,7 +286,7 @@ class OmniglotNShotDataset():
                 sdfhsdhfkjhd
         """
         
-        self.shuffle_classes = None
+        self.shuffle_classes = []
         
         #TODO temp
         #for variational testing 
