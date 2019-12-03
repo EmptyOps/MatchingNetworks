@@ -138,7 +138,8 @@ if is_evaluation_only == False:
 else: 
     results = []
     resdict = {}
-    for c in range(0, 30):  #9):
+    sloop = int( int(sys.argv[30])/10 )
+    for c in range(0, sloop):  #9):
         tot_acc = 0.0
         cnt = 0
         tot_matches = 0

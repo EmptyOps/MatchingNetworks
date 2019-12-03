@@ -286,6 +286,15 @@ class OmniglotNShotDataset():
                 sdfhsdhfkjhd
         """
         
+        #TODO temp
+        self.x[:,:,27,99,0] = 0
+        self.x[:,:,27,103,0] = 0
+        self.x[:,:,27,107,0] = 0
+        self.evaluation[:,:,27,99,0] = 0
+        self.evaluation[:,:,27,103,0] = 0
+        self.evaluation[:,:,27,107,0] = 0
+
+        #
         self.shuffle_classes = []
         self.is_apply_pca_first = is_apply_pca_first
         
@@ -357,12 +366,6 @@ class OmniglotNShotDataset():
         np.random.seed( np.random.randint(0, 1000)  )  
         self.x = self.x[:30]
         self.evaluation = self.evaluation[0:30]
-        self.x[:,:,27,99,0] = 0
-        self.x[:,:,27,103,0] = 0
-        self.x[:,:,27,107,0] = 0
-        self.evaluation[:,:,27,99,0] = 0
-        self.evaluation[:,:,27,103,0] = 0
-        self.evaluation[:,:,27,107,0] = 0
         shuffle_classes = np.arange(self.x.shape[0])
         np.random.shuffle(shuffle_classes)
         print("shuffle_classes")
