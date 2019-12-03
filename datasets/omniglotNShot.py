@@ -30,7 +30,10 @@ class OmniglotNShotDataset():
 
         if is_evaluation_only == False:
             np.random.seed(2191)  # for reproducibility
-    
+        else:
+            #for variational testing 
+            np.random.seed( np.random.randint(0, 1000)  )  
+            
         if is_use_sample_data:
             if not os.path.isfile(os.path.join(dataroot,'data.npy')):
                 self.x = omniglot.OMNIGLOT(dataroot, download=True,
@@ -295,7 +298,7 @@ class OmniglotNShotDataset():
         self.evaluation[:,:,27,107,0] = 0
 
         #
-        self.shuffle_classes = []
+        self.shuffle_classes = np.arange(self.x.shape[0])
         self.is_apply_pca_first = is_apply_pca_first
         
         #pca 
@@ -360,10 +363,8 @@ class OmniglotNShotDataset():
 
             print( plot_pca(self.x) )
             
-        
+        """
         #TODO temp
-        #for variational testing 
-        np.random.seed( np.random.randint(0, 1000)  )  
         self.x = self.x[:30]
         self.evaluation = self.evaluation[0:30]
         shuffle_classes = np.arange(self.x.shape[0])
@@ -373,11 +374,12 @@ class OmniglotNShotDataset():
         self.shuffle_classes = shuffle_classes
         self.x = self.x[shuffle_classes]
         self.evaluation = self.evaluation[shuffle_classes]
-        
-                
+        """
+                        
         self.data_pack_shape_2 = None
         self.data_pack_shape_3 = None
-            
+        
+        
         """
         Constructs an N-Shot omniglot Dataset
         :param batch_size: Experiment batch_size
