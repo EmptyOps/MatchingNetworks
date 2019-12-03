@@ -293,9 +293,14 @@ class OmniglotNShotDataset():
         self.x[:,:,27,99,0] = 0
         self.x[:,:,27,103,0] = 0
         self.x[:,:,27,107,0] = 0
-        self.evaluation[:,:,27,99,0] = 0
-        self.evaluation[:,:,27,103,0] = 0
-        self.evaluation[:,:,27,107,0] = 0
+        if is_evaluation_only == False:
+            self.x_to_be_predicted[:,:,27,99,0] = 0
+            self.x_to_be_predicted[:,:,27,103,0] = 0
+            self.x_to_be_predicted[:,:,27,107,0] = 0
+        else:
+            self.evaluation[:,:,27,99,0] = 0
+            self.evaluation[:,:,27,103,0] = 0
+            self.evaluation[:,:,27,107,0] = 0
 
         #
         self.shuffle_classes = np.arange(self.x.shape[0])
@@ -303,8 +308,25 @@ class OmniglotNShotDataset():
         
         #pca 
         if self.is_apply_pca_first == 1:
-            data = self.x.reshape(self.x.shape[0]*self.x.shape[1], self.x.shape[2]*self.x.shape[3])
         
+            #data = self.x.reshape(self.x.shape[0]*self.x.shape[1], self.x.shape[2]*self.x.shape[3])
+            data = []
+            xcsize = self.x.shape[0]
+            xssize = self.x.shape[1]
+            xtpcsize = self.x_to_be_predicted.shape[0]
+            xtpssize = self.x_to_be_predicted.shape[1]
+            for c in range(0, xcsize):
+                for s in range(0, xssize):
+                    data.append( self.x[c, s, :, :, :].reshape( self.x.shape[2]*self.x.shape[3] ) ) 
+                    
+            for c in range(0, xtpcsize):
+                for s in range(0, xtpssize):
+                    data.append( self.x_to_be_predicted[c, s, :, :, :].reshape( self.x.shape[2]*self.x.shape[3] ) )                     
+            
+            data = np.array(data)
+            print(data.shape)
+            
+            """
             ##
             #print("pca matlab")
             #from matplotlib.mlab import PCA
@@ -364,15 +386,29 @@ class OmniglotNShotDataset():
                 MPL.show()
 
             #print( plot_pca(data) )
-            print(data.shape)
-            
+            """
             
             from sklearn.decomposition import PCA
-            p = PCA(n_components = 728).fit_transform(data)
+            p = PCA(n_components = 1600).fit_transform(data)
             print( type(p) )
             print( p )
             print( p.shape )
             
+            ind = 0
+            self.x = np.zeros( xcsize, xssize, 40, 40, 1 )
+            for c in range(0, xcsize):
+                for s in range(0, xssize):
+                    self.x[c, s, :, :, :] = p[ind].reshape( 40, 40 ) 
+                    ind = ind + 1
+                    
+            self.x_to_be_predicted = np.zeros( xtpcsize, xtpssize, 40, 40, 1 )
+            for c in range(0, xtpcsize):
+                for s in range(0, xtpssize):
+                    self.x_to_be_predicted[c, s, :, :, :] = p[ind].reshape( 40, 40 ) 
+                    ind = ind + 1
+                    
+            data = []
+            p = []
             
         """
         #TODO temp
