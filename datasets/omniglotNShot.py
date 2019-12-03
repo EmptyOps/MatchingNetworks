@@ -303,7 +303,7 @@ class OmniglotNShotDataset():
         
         #pca 
         if self.is_apply_pca_first == 1:
-            data = self.x.reshape(self.x.shape[0]*self.x.shape[1], self.x.shape[2]*self.x.shape[3]).swapaxes(0,1)
+            data = self.x.reshape(self.x.shape[0]*self.x.shape[1], self.x.shape[2]*self.x.shape[3])
         
             ##
             #print("pca matlab")
