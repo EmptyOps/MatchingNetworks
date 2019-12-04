@@ -304,6 +304,7 @@ class OmniglotNShotDataset():
             if is_found == False:
                 sdfhsdhfkjhd
         """
+        #TODO tmp. compare 
         if is_evaluation_only == True:
             is_found = False
             for c in range(0, self.x.shape[0]):
@@ -320,6 +321,7 @@ class OmniglotNShotDataset():
                     
                     if (result > 0.0).sum() == 0 and (result < 0.0).sum() == 0:
                         is_found = True
+                        print("c " + str(c) " i " + str(i))
                         print("fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
                         break
                 
@@ -342,6 +344,7 @@ class OmniglotNShotDataset():
                     
                     if (result > 0.0).sum() == 0 and (result < 0.0).sum() == 0:
                         is_found = True
+                        print("c " + str(c) " i " + str(i))
                         print("x_to_be_predicted fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
                         break
                 
