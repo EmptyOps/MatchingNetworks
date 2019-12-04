@@ -322,6 +322,24 @@ class OmniglotNShotDataset():
                     print("fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
                     break
                 
+            print("loading prepared x_to_be_predicted file for testing")
+            self.x_to_be_predicted = array( json.load( open( base_classes_file+"_x_to_be_predicted.json" ) ) )                 
+            for i in range(0, self.x_to_be_predicted.shape[1]):
+                xt = np.copy(self.x_to_be_predicted[self.evaluate_classes,i,:,:,:])
+                et = np.copy(self.evaluation[self.evaluate_classes,0,:,:,:])
+
+                result = np.subtract( xt, et)
+                if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
+                    continue
+                
+                #print ('the difference i ' + str(i))
+                #print (result)
+                
+                if (result > 0.0).sum() == 0 and (result < 0.0).sum() == 0:
+                    is_found = True
+                    print("x_to_be_predicted fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+                    break
+                
             if is_found == False:
                 print("not found")
                 sdfhsdhfkjhd
