@@ -324,6 +324,9 @@ class OmniglotNShotDataset():
                 
             print("loading prepared x_to_be_predicted file for testing")
             self.x_to_be_predicted = array( json.load( open( base_classes_file+"_x_to_be_predicted.json" ) ) )                 
+            self.x_to_be_predicted[:,:,27,99,0] = 0
+            self.x_to_be_predicted[:,:,27,103,0] = 0
+            self.x_to_be_predicted[:,:,27,107,0] = 0
             for i in range(0, self.x_to_be_predicted.shape[1]):
                 xt = np.copy(self.x_to_be_predicted[self.evaluate_classes,i,:,:,:])
                 et = np.copy(self.evaluation[self.evaluate_classes,0,:,:,:])
