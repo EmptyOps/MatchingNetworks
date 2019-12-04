@@ -166,6 +166,7 @@ class OmniglotNShotDataset():
                     
 
             #
+            is_loaded_evaluation_file = False
             if is_evaluation_only == True:
             
                 if not os.path.exists(evaluation_input_file.replace('{i}', str(0)) + "_prepared.json"):
@@ -220,6 +221,7 @@ class OmniglotNShotDataset():
                     temp = [] # Free memory
                 else:
                     print("loaded prepared evaluation_input_file")
+                    is_loaded_evaluation_file = True
                     self.evaluation = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) + "_prepared.json" ) ) ) 
                     
             
@@ -379,7 +381,14 @@ class OmniglotNShotDataset():
                     data.append( self.x_to_be_predicted[c, s, :, :, :].reshape( self.x.shape[2]*self.x.shape[3] ) )                     
             
             if is_evaluation_only == True:
-                data.append( self.evaluation[0, 0, :, :, :].reshape( self.x.shape[2]*self.x.shape[3] ) )                     
+                if is_loaded_evaluation_file == True:
+                    xecsize = self.evaluation.shape[0]
+                    xessize = self.evaluation.shape[1]
+                    for c in range(0, xecsize):
+                        for s in range(0, xessize):
+                            data.append( self.evaluation[c, s, :, :, :].reshape( self.x.shape[2]*self.x.shape[3] ) )                     
+                else:
+                    data.append( self.evaluation[0, 0, :, :, :].reshape( self.x.shape[2]*self.x.shape[3] ) )                     
             
             data = np.array(data)
             print(data.shape)
@@ -461,14 +470,24 @@ class OmniglotNShotDataset():
             
             if is_evaluation_only == False:            
                 self.x_to_be_predicted = np.zeros( ( xtpcsize, xtpssize, 40, 40, 1 ) )
-                for c in range(0, xtpcsize):
-                    for s in range(0, xtpssize):
+            else:
+                self.x_to_be_predicted = []
+                
+            for c in range(0, xtpcsize):
+                for s in range(0, xtpssize):
+                    if is_evaluation_only == False:
                         self.x_to_be_predicted[c, s, :, :, :] = p[ind].reshape( 40, 40, 1 ) 
-                        ind = ind + 1
+                    ind = ind + 1
                     
             if is_evaluation_only == True:
                 self.evaluation = np.zeros( ( self.evaluation.shape[0], self.evaluation.shape[1], 40, 40, 1 ) )
-                self.evaluation[:, :, :, :, :] = p[ len(p) - 1 ].reshape( 40, 40, 1 ) 
+                if is_loaded_evaluation_file == True:
+                    for c in range(0, xecsize):
+                        for s in range(0, xessize):
+                            self.evaluation[c, s, :, :, :] = p[ind].reshape( self.x.shape[2]*self.x.shape[3] ) )                     
+                            ind = ind + 1
+                else:
+                    self.evaluation[:, :, :, :, :] = p[ len(p) - 1 ].reshape( 40, 40, 1 ) 
 
                     
             data = []
