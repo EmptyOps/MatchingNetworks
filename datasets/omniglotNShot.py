@@ -321,7 +321,7 @@ class OmniglotNShotDataset():
                     
                     if (result > 0.0).sum() == 0 and (result < 0.0).sum() == 0:
                         is_found = True
-                        print("c " + str(c) " i " + str(i))
+                        print("c " + str(c) + " i " + str(i))
                         print("fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
                         break
                 
@@ -344,7 +344,7 @@ class OmniglotNShotDataset():
                     
                     if (result > 0.0).sum() == 0 and (result < 0.0).sum() == 0:
                         is_found = True
-                        print("c " + str(c) " i " + str(i))
+                        print("c " + str(c) + " i " + str(i))
                         print("x_to_be_predicted fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
                         break
                 
