@@ -160,8 +160,9 @@ class OmniglotNShotDataset():
                 print("loaded prepared base_classes_file")
                 self.x = array( json.load( open( base_classes_file ) ) ) 
                 
-                print("loaded prepared x_to_be_predicted file")
-                self.x_to_be_predicted = array( json.load( open( base_classes_file+"_x_to_be_predicted.json" ) ) ) 
+                if is_evaluation_only == False:
+                    print("loaded prepared x_to_be_predicted file")
+                    self.x_to_be_predicted = array( json.load( open( base_classes_file+"_x_to_be_predicted.json" ) ) ) 
                     
 
             #
