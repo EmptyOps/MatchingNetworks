@@ -484,7 +484,7 @@ class OmniglotNShotDataset():
                 if is_loaded_evaluation_file == True:
                     for c in range(0, xecsize):
                         for s in range(0, xessize):
-                            self.evaluation[c, s, :, :, :] = p[ind].reshape( self.x.shape[2]*self.x.shape[3] )                     
+                            self.evaluation[c, s, :, :, :] = p[ind].reshape( 40, 40, 1 )                      
                             ind = ind + 1
                 else:
                     self.evaluation[:, :, :, :, :] = p[ len(p) - 1 ].reshape( 40, 40, 1 ) 
