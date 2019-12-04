@@ -364,15 +364,22 @@ class OmniglotNShotDataset():
             data = []
             xcsize = self.x.shape[0]
             xssize = self.x.shape[1]
-            xtpcsize = self.x_to_be_predicted.shape[0]
-            xtpssize = self.x_to_be_predicted.shape[1]
             for c in range(0, xcsize):
                 for s in range(0, xssize):
                     data.append( self.x[c, s, :, :, :].reshape( self.x.shape[2]*self.x.shape[3] ) ) 
+
+            if len(self.x_to_be_predicted) == 0:
+                print("loading prepared x_to_be_predicted file for pca")
+                self.x_to_be_predicted = array( json.load( open( base_classes_file+"_x_to_be_predicted.json" ) ) )                 
                     
+            xtpcsize = self.x_to_be_predicted.shape[0]
+            xtpssize = self.x_to_be_predicted.shape[1]
             for c in range(0, xtpcsize):
                 for s in range(0, xtpssize):
                     data.append( self.x_to_be_predicted[c, s, :, :, :].reshape( self.x.shape[2]*self.x.shape[3] ) )                     
+            
+            if is_evaluation_only == True:
+                data.append( self.evaluation[0, 0, :, :, :].reshape( self.x.shape[2]*self.x.shape[3] ) )                     
             
             data = np.array(data)
             print(data.shape)
@@ -451,12 +458,18 @@ class OmniglotNShotDataset():
                 for s in range(0, xssize):
                     self.x[c, s, :, :, :] = p[ind].reshape( 40, 40, 1 ) 
                     ind = ind + 1
+            
+            if is_evaluation_only == False:            
+                self.x_to_be_predicted = np.zeros( ( xtpcsize, xtpssize, 40, 40, 1 ) )
+                for c in range(0, xtpcsize):
+                    for s in range(0, xtpssize):
+                        self.x_to_be_predicted[c, s, :, :, :] = p[ind].reshape( 40, 40, 1 ) 
+                        ind = ind + 1
                     
-            self.x_to_be_predicted = np.zeros( ( xtpcsize, xtpssize, 40, 40, 1 ) )
-            for c in range(0, xtpcsize):
-                for s in range(0, xtpssize):
-                    self.x_to_be_predicted[c, s, :, :, :] = p[ind].reshape( 40, 40, 1 ) 
-                    ind = ind + 1
+            if is_evaluation_only == True:
+                self.evaluation = np.zeros( ( self.evaluation.shape[0], self.evaluation.shape[1], 40, 40, 1 ) )
+                self.evaluation[:, :, :, :, :] = p[ len(p) - 1 ].reshape( 40, 40, 1 ) 
+
                     
             data = []
             p = []
