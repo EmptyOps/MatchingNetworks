@@ -223,6 +223,18 @@ class OmniglotNShotDataset():
                     self.evaluation = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) + "_prepared.json" ) ) ) 
                     
             
+        #TODO temp
+        self.x[:,:,27,99,0] = 0
+        self.x[:,:,27,103,0] = 0
+        self.x[:,:,27,107,0] = 0
+        if is_evaluation_only == False:
+            self.x_to_be_predicted[:,:,27,99,0] = 0
+            self.x_to_be_predicted[:,:,27,103,0] = 0
+            self.x_to_be_predicted[:,:,27,107,0] = 0
+        else:
+            self.evaluation[:,:,27,99,0] = 0
+            self.evaluation[:,:,27,103,0] = 0
+            self.evaluation[:,:,27,107,0] = 0
         
         #TODO tmp. compare 
         """
@@ -292,20 +304,29 @@ class OmniglotNShotDataset():
             if is_found == False:
                 sdfhsdhfkjhd
         """
-        
-        #TODO temp
-        self.x[:,:,27,99,0] = 0
-        self.x[:,:,27,103,0] = 0
-        self.x[:,:,27,107,0] = 0
-        if is_evaluation_only == False:
-            self.x_to_be_predicted[:,:,27,99,0] = 0
-            self.x_to_be_predicted[:,:,27,103,0] = 0
-            self.x_to_be_predicted[:,:,27,107,0] = 0
-        else:
-            self.evaluation[:,:,27,99,0] = 0
-            self.evaluation[:,:,27,103,0] = 0
-            self.evaluation[:,:,27,107,0] = 0
+        if is_evaluation_only == True:
+            is_found = False
+            for i in range(0, self.x.shape[1]):
+                xt = np.copy(self.x[self.evaluate_classes,i,:,:,:])
+                et = np.copy(self.evaluation[self.evaluate_classes,0,:,:,:])
 
+                result = np.subtract( xt, et)
+                if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
+                    continue
+                
+                #print ('the difference i ' + str(i))
+                #print (result)
+                
+                if (result > 0.0).sum() == 0 and (result < 0.0).sum() == 0:
+                    is_found = True
+                    print("fioundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd")
+                    break
+                
+            if is_found == False:
+                print("not found")
+                sdfhsdhfkjhd
+
+        
         #
         self.shuffle_classes = np.arange(self.x.shape[0])
         self.is_apply_pca_first = is_apply_pca_first
