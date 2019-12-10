@@ -65,7 +65,9 @@ class OmniglotNShotDataset():
             self.x_to_be_predicted_cls_indexes = {} 
             
             self.prediction_classes = 9
-            self.total_base_classes = 56
+            self.total_base_classes = 341   #56
+            self.tvt_records = 4 #19
+            self.re_records = 1 #10
             
             base_classes_file = input_file+"_base_classes.json"
             self.evaluate_classes = evaluate_classes
@@ -101,7 +103,7 @@ class OmniglotNShotDataset():
                         continue
                     
                     if input_labels[i] in temp:
-                        if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
+                        if len( temp[input_labels[i]] ) >= self.tvt_records:  #only 20 samples per class
                             if is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
                                 lbl_val = input_labels[i]
                                 if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
@@ -110,7 +112,7 @@ class OmniglotNShotDataset():
                                     lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
                                     
                                 if lbl_val in temp_to_be_predicted:
-                                    if len( temp_to_be_predicted[lbl_val] ) >= 10:  #only 20 samples per class
+                                    if len( temp_to_be_predicted[lbl_val] ) >= self.re_records:  #only 20 samples per class
                                         continue
                                     
                                     temp_to_be_predicted[lbl_val].append( input[i][:,:,np.newaxis] )
@@ -182,7 +184,7 @@ class OmniglotNShotDataset():
                     print(sizei)
                     for i in np.arange(sizei):
                         if input_labels[i] in temp:
-                            if len( temp[input_labels[i]] ) >= 19:  #only 20 samples per class
+                            if len( temp[input_labels[i]] ) >= self.tvt_records:  #only 20 samples per class
                                 if is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
                                     lbl_val = input_labels[i]
                                     if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
@@ -191,7 +193,7 @@ class OmniglotNShotDataset():
                                         lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
                                         
                                     if lbl_val in temp_to_be_predicted:
-                                        if len( temp_to_be_predicted[lbl_val] ) >= 10:  #only 20 samples per class
+                                        if len( temp_to_be_predicted[lbl_val] ) >= self.re_records:  #only 20 samples per class
                                             continue
                                         
                                         temp_to_be_predicted[lbl_val].append( input[i][:,:,np.newaxis] )
@@ -538,7 +540,8 @@ class OmniglotNShotDataset():
             self.cache_sample_prediction = cache_samples_for_evaluation  
             if is_evaluation_only == False:
                 #self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
-                self.x_train, self.x_test, self.x_val  = self.x[:30], self.x[30:43], self.x[43:]
+                #self.x_train, self.x_test, self.x_val  = self.x[:30], self.x[30:43], self.x[43:]
+                self.x_train, self.x_test, self.x_val  = self.x[:200], self.x[200:270], self.x[270:]
             else:
                 self.x_train  = self.x[:]
          
