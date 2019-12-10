@@ -125,9 +125,9 @@ class OmniglotNShotDataset():
                     else:
                         temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
 
-                #print( "temp.keys()" )
+                print( "temp.keys()" )
                 unique, counts = np.unique(input_labels, return_counts=True)
-                #print( dict(zip(unique, counts)) )
+                print( dict(zip(unique, counts)) )
                 
                 input = []  # Free memory
                 input_labels = []  # Free memory
@@ -140,8 +140,6 @@ class OmniglotNShotDataset():
                 temp = [] # Free memory
 
                 #np.save(os.path.join(dataroot,'data.npy'),self.x)
-                print( "x" )
-                print( self.x.shape )
                 with open( base_classes_file, 'w') as outfile:
                     json.dump(self.x.tolist(), outfile)                      
                     
