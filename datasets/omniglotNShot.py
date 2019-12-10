@@ -66,8 +66,8 @@ class OmniglotNShotDataset():
             
             self.prediction_classes = 9
             self.total_base_classes = 341   #56
-            self.tvt_records = 1 #19
-            self.re_records = 1 #10
+            self.tvt_records = 3 #19
+            self.re_records = 2 #10
             self.choice_replace = True #necessary when number of samples are small
             
             base_classes_file = input_file+"_base_classes.json"
@@ -750,14 +750,14 @@ class OmniglotNShotDataset():
                         n_test_samples = np.sum(cur_class == x_hat_class)
                         if is_eval_with_train_data == True or not cur_class == self.evaluate_classes:
                             if not cur_class == self.evaluate_classes:
-                                example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, False)
+                                example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, self.choice_replace)
                             else:
                                 #print( "example_inds_test here 1 in train mode" )
-                                example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), False)
+                                example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), self.choice_replace)
                                 example_inds_test = np.array( [0] ) #np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
                         else:
                             #print( "example_inds_test here 1 " )
-                            example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), False)
+                            example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), self.choice_replace)
                             example_inds_test = np.array( [0] ) #np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
                             #print( "example_inds here 1 " + str(n_test_samples) )
                     else:

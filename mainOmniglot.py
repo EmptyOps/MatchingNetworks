@@ -32,7 +32,7 @@ ABS_PATh = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 
 is_use_sample_data = False
-is_run_time_predictions = False
+is_run_time_predictions = True
 
 # Experiment Setup
 if is_use_sample_data:
