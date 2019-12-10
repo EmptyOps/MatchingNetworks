@@ -144,6 +144,7 @@ class OmniglotNShotDataset():
                 with open( base_classes_file, 'w') as outfile:
                     json.dump(self.x.tolist(), outfile)                      
                     
+                if self.is_run_time_predictions:
                     print( "temp_to_be_predicted.keys()" )
                     print( temp_to_be_predicted.keys() )
                     cls_index = 0
@@ -153,8 +154,7 @@ class OmniglotNShotDataset():
                         cls_index = cls_index + 1
                     self.x_to_be_predicted = np.array(self.x_to_be_predicted)
                     temp_to_be_predicted = [] # Free memory
-
-                if self.is_run_time_predictions:
+                    
                     #np.save(os.path.join(dataroot,'data.npy'),self.x)
                     with open( base_classes_file+"_x_to_be_predicted.json", 'w') as outfile:
                         json.dump(self.x_to_be_predicted.tolist(), outfile)                      
@@ -233,9 +233,10 @@ class OmniglotNShotDataset():
         self.x[:,:,27,103,0] = 0
         self.x[:,:,27,107,0] = 0
         if is_evaluation_only == False:
-            self.x_to_be_predicted[:,:,27,99,0] = 0
-            self.x_to_be_predicted[:,:,27,103,0] = 0
-            self.x_to_be_predicted[:,:,27,107,0] = 0
+            if self.is_run_time_predictions:
+                self.x_to_be_predicted[:,:,27,99,0] = 0
+                self.x_to_be_predicted[:,:,27,103,0] = 0
+                self.x_to_be_predicted[:,:,27,107,0] = 0
         else:
             self.evaluation[:,:,27,99,0] = 0
             self.evaluation[:,:,27,103,0] = 0
