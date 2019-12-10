@@ -66,7 +66,7 @@ class OmniglotNShotDataset():
             
             self.prediction_classes = 9
             self.total_base_classes = 341   #56
-            self.tvt_records = 4 #19
+            self.tvt_records = 3 #19
             self.re_records = 1 #10
             
             base_classes_file = input_file+"_base_classes.json"
