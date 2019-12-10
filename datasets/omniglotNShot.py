@@ -138,6 +138,8 @@ class OmniglotNShotDataset():
                 temp = [] # Free memory
 
                 #np.save(os.path.join(dataroot,'data.npy'),self.x)
+                print( "x" )
+                print( self.x.shape )
                 with open( base_classes_file, 'w') as outfile:
                     json.dump(self.x.tolist(), outfile)                      
                     
