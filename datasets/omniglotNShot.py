@@ -26,7 +26,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False):
 
         if is_evaluation_only == False:
             np.random.seed(2191)  # for reproducibility
@@ -66,13 +66,14 @@ class OmniglotNShotDataset():
             
             self.prediction_classes = 9
             self.total_base_classes = 341   #56
-            self.tvt_records = 3 #19
+            self.tvt_records = 1 #19
             self.re_records = 1 #10
             
             base_classes_file = input_file+"_base_classes.json"
             self.evaluate_classes = evaluate_classes
             self.is_eval_with_train_data = True if is_eval_with_train_data == 1 else False
             self.negative_test_offset = negative_test_offset
+            self.is_run_time_predictions = is_run_time_predictions
                         
             #
             if is_evaluation_only == False or not os.path.exists( base_classes_file ):
@@ -143,20 +144,20 @@ class OmniglotNShotDataset():
                 with open( base_classes_file, 'w') as outfile:
                     json.dump(self.x.tolist(), outfile)                      
                     
+                if self.is_run_time_predictions:
+                    print( "temp_to_be_predicted.keys()" )
+                    print( temp_to_be_predicted.keys() )
+                    cls_index = 0
+                    for classes in temp_to_be_predicted.keys():
+                        self.x_to_be_predicted_cls_indexes[classes] = cls_index
+                        self.x_to_be_predicted.append(np.array(temp_to_be_predicted[ list(temp_to_be_predicted.keys())[classes]]))
+                        cls_index = cls_index + 1
+                    self.x_to_be_predicted = np.array(self.x_to_be_predicted)
+                    temp_to_be_predicted = [] # Free memory
                     
-                print( "temp_to_be_predicted.keys()" )
-                print( temp_to_be_predicted.keys() )
-                cls_index = 0
-                for classes in temp_to_be_predicted.keys():
-                    self.x_to_be_predicted_cls_indexes[classes] = cls_index
-                    self.x_to_be_predicted.append(np.array(temp_to_be_predicted[ list(temp_to_be_predicted.keys())[classes]]))
-                    cls_index = cls_index + 1
-                self.x_to_be_predicted = np.array(self.x_to_be_predicted)
-                temp_to_be_predicted = [] # Free memory
-                
-                #np.save(os.path.join(dataroot,'data.npy'),self.x)
-                with open( base_classes_file+"_x_to_be_predicted.json", 'w') as outfile:
-                    json.dump(self.x_to_be_predicted.tolist(), outfile)                      
+                    #np.save(os.path.join(dataroot,'data.npy'),self.x)
+                    with open( base_classes_file+"_x_to_be_predicted.json", 'w') as outfile:
+                        json.dump(self.x_to_be_predicted.tolist(), outfile)                      
                     
             else:
                 print("loaded prepared base_classes_file")
@@ -558,7 +559,7 @@ class OmniglotNShotDataset():
             self.datasets_cache = {"train": self.load_data_cache(self.datasets["train"], ""),  #current epoch data cached
                                    "val": self.load_data_cache(self.datasets["val"], ""),
                                    "test": self.load_data_cache(self.datasets["test"], ""),
-                                   "x_to_be_predicted": self.load_data_cache(self.datasets["x_to_be_predicted"], "x_to_be_predicted")}
+                                   "x_to_be_predicted": None if not self.is_run_time_predictions else self.load_data_cache(self.datasets["x_to_be_predicted"], "x_to_be_predicted")}
         else:
             self.indexes = {"evaluation": 0}
             self.datasets = {"evaluation": self.x_train} #original data cached
