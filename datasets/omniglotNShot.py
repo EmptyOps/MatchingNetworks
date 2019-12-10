@@ -68,6 +68,7 @@ class OmniglotNShotDataset():
             self.total_base_classes = 341   #56
             self.tvt_records = 1 #19
             self.re_records = 1 #10
+            self.choice_replace = True #necessary when number of samples are small
             
             base_classes_file = input_file+"_base_classes.json"
             self.evaluate_classes = evaluate_classes
@@ -644,7 +645,7 @@ class OmniglotNShotDataset():
                     if cur_class in x_hat_class:
                         # Count number of times this class is inside the meta-test
                         n_test_samples = np.sum(cur_class == x_hat_class)
-                        example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + n_test_samples, False)
+                        example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + n_test_samples, self.choice_replace)
                         #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
                         #print( "example_inds here 2 " )
