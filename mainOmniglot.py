@@ -91,7 +91,8 @@ data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_
                                           evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], 
                                           evaluate_classes = int(sys.argv[25]), is_eval_with_train_data = int(sys.argv[26]), 
                                           negative_test_offset = int(sys.argv[27]), is_apply_pca_first = int(sys.argv[29]), 
-                                          cache_samples_for_evaluation = int(sys.argv[30]), is_run_time_predictions = is_run_time_predictions)
+                                          cache_samples_for_evaluation = int(sys.argv[30]), 
+                                          is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]) )
 
 obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
 obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce)

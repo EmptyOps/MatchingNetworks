@@ -26,7 +26,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900):
 
         if is_evaluation_only == False:
             np.random.seed(2191)  # for reproducibility
@@ -461,7 +461,7 @@ class OmniglotNShotDataset():
             """
             
             from sklearn.decomposition import PCA
-            p = PCA(n_components = 1600).fit_transform(data)
+            p = PCA(n_components = pca_components).fit_transform(data)
             print( type(p) )
             print( p )
             print( p.shape )
