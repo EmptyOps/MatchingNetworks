@@ -467,32 +467,33 @@ class OmniglotNShotDataset():
             print( p.shape )
             
             ind = 0
-            self.x = np.zeros( ( xcsize, xssize, 40, 40, 1 ) )
+            new_dimension = math.sqrt( pca_components )
+            self.x = np.zeros( ( xcsize, xssize, new_dimension, new_dimension, 1 ) )
             for c in range(0, xcsize):
                 for s in range(0, xssize):
-                    self.x[c, s, :, :, :] = p[ind].reshape( 40, 40, 1 ) 
+                    self.x[c, s, :, :, :] = p[ind].reshape( new_dimension, new_dimension, 1 ) 
                     ind = ind + 1
             
             if is_evaluation_only == False:            
-                self.x_to_be_predicted = np.zeros( ( xtpcsize, xtpssize, 40, 40, 1 ) )
+                self.x_to_be_predicted = np.zeros( ( xtpcsize, xtpssize, new_dimension, new_dimension, 1 ) )
             else:
                 self.x_to_be_predicted = []
                 
             for c in range(0, xtpcsize):
                 for s in range(0, xtpssize):
                     if is_evaluation_only == False:
-                        self.x_to_be_predicted[c, s, :, :, :] = p[ind].reshape( 40, 40, 1 ) 
+                        self.x_to_be_predicted[c, s, :, :, :] = p[ind].reshape( new_dimension, new_dimension, 1 ) 
                     ind = ind + 1
                     
             if is_evaluation_only == True:
-                self.evaluation = np.zeros( ( self.evaluation.shape[0], self.evaluation.shape[1], 40, 40, 1 ) )
+                self.evaluation = np.zeros( ( self.evaluation.shape[0], self.evaluation.shape[1], new_dimension, new_dimension, 1 ) )
                 if is_loaded_evaluation_file == True:
                     for c in range(0, xecsize):
                         for s in range(0, xessize):
-                            self.evaluation[c, s, :, :, :] = p[ind].reshape( 40, 40, 1 )                      
+                            self.evaluation[c, s, :, :, :] = p[ind].reshape( new_dimension, new_dimension, 1 )                      
                             ind = ind + 1
                 else:
-                    self.evaluation[:, :, :, :, :] = p[ len(p) - 1 ].reshape( 40, 40, 1 ) 
+                    self.evaluation[:, :, :, :, :] = p[ len(p) - 1 ].reshape( new_dimension, new_dimension, 1 ) 
 
                     
             data = []
