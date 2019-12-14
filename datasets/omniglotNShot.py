@@ -467,7 +467,7 @@ class OmniglotNShotDataset():
             print( p.shape )
             
             ind = 0
-            new_dimension = math.sqrt( pca_components )
+            new_dimension = int( math.sqrt( pca_components ) )
             self.x = np.zeros( ( xcsize, xssize, new_dimension, new_dimension, 1 ) )
             for c in range(0, xcsize):
                 for s in range(0, xssize):
