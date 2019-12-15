@@ -26,7 +26,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0):
 
         if is_evaluation_only == False:
             np.random.seed(2191)  # for reproducibility
@@ -65,7 +65,7 @@ class OmniglotNShotDataset():
             self.x_to_be_predicted_cls_indexes = {} 
             
             self.prediction_classes = 9
-            self.total_base_classes = 341   #56
+            self.total_base_classes = total_base_classes   #56
             self.tvt_records = 3 #19
             self.re_records = 2 #10
             self.choice_replace = True #necessary when number of samples are small
@@ -75,6 +75,7 @@ class OmniglotNShotDataset():
             self.is_eval_with_train_data = True if is_eval_with_train_data == 1 else False
             self.negative_test_offset = negative_test_offset
             self.is_run_time_predictions = is_run_time_predictions
+            self.is_evaluation_res_in_obj = is_evaluation_res_in_obj
                         
             #
             if is_evaluation_only == False or not os.path.exists( base_classes_file ):
@@ -736,7 +737,10 @@ class OmniglotNShotDataset():
                 pinds = np.random.permutation(n_samples)
                 #classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  #False
                 #classes = np.random.choice( self.prediction_classes, self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
-                classes = np.random.choice( 30, self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
+                if not self.is_evaluation_res_in_obj:
+                    classes = np.random.choice( 30, self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
+                else:
+                    classes = np.random.choice( data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
                 
                 # select 1-shot or 5-shot classes for test with repetition
                 x_hat_class = np.random.choice(classes, self.samples_per_class, True)
