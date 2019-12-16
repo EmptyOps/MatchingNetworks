@@ -23,7 +23,7 @@ import os, sys
              For a 5-way, 10-shot learning task, use classes_per_set=5 and samples_per_class=10
 '''
 
-is_debug = False
+is_debug = True
 
 ENV = int(sys.argv[1]) 
 
@@ -197,17 +197,23 @@ else:
         
         print(resdict)
         print(results)
+        
+        #save result
+        import json
+        if not outfile_path_prob == None:
+            with open( outfile_path_prob, 'w') as outfile:
+                json.dump(results, outfile)                      
     else:
         results = {}
-        resdict = {}
+        #resdict = {}
         sloop = int( int(sys.argv[30])/10 )
         for c in range(0, sloop):  #9):
             tot_acc = 0.0
             cnt = 0
             tot_matches = 0
             matched_cnt = 0
-            evaluation_cnt = 0
-            evaluation_matched_cnt = 0
+            #evaluation_cnt = 0
+            #evaluation_matched_cnt = 0
 
             for i in range(10):
                 if is_debug == True:
@@ -218,17 +224,31 @@ else:
                 
                 tot_acc = tot_acc + acc
                 cnt = cnt + 1
-                evaluation_cnt = evaluation_cnt + ( (target_y_actuals < 0).sum() )
+                #evaluation_cnt = evaluation_cnt + ( (target_y_actuals < 0).sum() )
                 
                 lenta = len(target_y_actuals[0])
                 for j in range(0, lenta):
                     lentai = len(target_y_actuals)
                     for k in range(0, lentai):
                         tot_matches = tot_matches + 1
+                        
+                        #
+                        y_actual = -1
+                        if target_y_actuals[k][j] < 0:
+                            y_actual = ( target_y_actuals[k][j] * -1 ) - 1
+                            if not y_actual in results:
+                                results[y_actual] = {}
+                                results[y_actual]["ec"] = 1
+                                results[y_actual]["emc"] = 0
+                            else:
+                                results[y_actual]["ec"] = results[y_actual]["ec"] + 1
+                            
                         if pred_indices[j][k] == y_target[k][j]:
                             matched_cnt = matched_cnt + 1
                             if target_y_actuals[k][j] < 0:
-                                evaluation_matched_cnt = evaluation_matched_cnt + 1
+                                #evaluation_matched_cnt = evaluation_matched_cnt + 1
+                                results[y_actual]["emc"] = results[y_actual]["emc"] + 1
+                                results[y_actual]["pr"] = str( results[y_actual]["emc"] / results[y_actual]["ec"] )
                 
                 if is_debug == True:
                     #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
@@ -241,19 +261,13 @@ else:
                 print( "class " + str(c) )
                 print( "tot_matches " + str( tot_matches ) )
                 print( "matched_cnt " + str( matched_cnt ) )
-                print( "evaluation_cnt " + str( evaluation_cnt ) )
-                print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
+                #print( "evaluation_cnt " + str( evaluation_cnt ) )
+                #print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
                 print( "avg acc " + str( (tot_acc / cnt) ) )
 
-            if len(data.shuffle_classes) > 0:
-                resdict[data.shuffle_classes[c]] = str( (evaluation_matched_cnt / evaluation_cnt) )
-            results.append( str( (evaluation_matched_cnt / evaluation_cnt) ) )
+            #if len(data.shuffle_classes) > 0:
+            #    resdict[data.shuffle_classes[c]] = str( (evaluation_matched_cnt / evaluation_cnt) )
+            #results.append( str( (evaluation_matched_cnt / evaluation_cnt) ) )
         
-        print(resdict)
+        #print(resdict)
         print(results)
-        
-    #save result
-    import json
-    if not outfile_path_prob == None:
-        with open( outfile_path_prob, 'w') as outfile:
-            json.dump(results, outfile)                      

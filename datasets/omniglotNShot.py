@@ -362,7 +362,7 @@ class OmniglotNShotDataset():
 
         
         #
-        self.shuffle_classes = np.arange(self.x.shape[0])
+        self.shuffle_classes = []   #not used   #np.arange(self.x.shape[0])     
         self.is_apply_pca_first = is_apply_pca_first
         
         #pca 
@@ -713,6 +713,8 @@ class OmniglotNShotDataset():
         #TODO temp. eval with train data
         is_eval_with_train_data = self.is_eval_with_train_data
         
+        list_evaluated_clss = []
+        
         n_samples = self.samples_per_class * self.classes_per_set
         data_cache = []
         for sample in range(0, self.cache_sample_prediction):
@@ -743,7 +745,27 @@ class OmniglotNShotDataset():
                     classes = np.random.choice( data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  
                 
                 # select 1-shot or 5-shot classes for test with repetition
-                x_hat_class = np.random.choice(classes, self.samples_per_class, True)
+                if not self.is_evaluation_res_in_obj:
+                    x_hat_class = np.random.choice(classes, self.samples_per_class, True)
+                else:
+                    #find least evaluated
+                    x_hat_class = []
+                    for jtmp, tmp_class in enumerate(classes):  
+                        if not tmp_class in list_evaluated_clss:
+                            list_evaluated_clss.append( tmp_class )
+                            x_hat_class = np.array( [ tmp_class ] )
+                            break
+                    if len(x_hat_class) == 0:
+                        for jtmp, tmp_class in enumerate(classes):  
+                            if list_evaluated_clss.count(tmp_class) == 1:
+                                list_evaluated_clss.append( tmp_class )
+                                x_hat_class = np.array( [ tmp_class ] )
+                                break
+                    if len(x_hat_class) == 0:
+                        x_hat_class = np.random.choice(classes, self.samples_per_class, True)
+                        
+                    self.evaluate_classes = x_hat_class[0]
+                
                 pinds_test = np.random.permutation(self.samples_per_class)
                 ind = 0
                 ind_test = 0
