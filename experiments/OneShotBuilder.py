@@ -332,7 +332,7 @@ class OneShotBuilder:
                                                      x_target.cuda(), y_target.cuda(), is_debug = False )
             else:
                 acc, c_loss_value, pred_indices = self.matchingNet(x_support_set, y_support_set_one_hot,
-                                                     x_target, y_target, is_debug = is_debug, is_evaluation_only = False, y_support_set_org = y_support_set )
+                                                     x_target, y_target, is_debug = is_debug, is_evaluation_only = False, y_support_set_org = y_support_set, target_y_actuals = target_y_actuals )
 
             if is_debug == True:
                 #iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])

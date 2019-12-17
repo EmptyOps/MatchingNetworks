@@ -50,7 +50,7 @@ class MatchingNetwork(nn.Module):
         self.num_samples_per_class = num_samples_per_class
         self.learning_rate = learning_rate
 
-    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None):
+    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None, target_y_actuals = None):
         """
         Builds graph for Matching Networks, produces losses and summary statistics.
         :param support_set_images: A tensor containing the support set images [batch_size, sequence_size, n_channels, 28, 28]
@@ -93,14 +93,19 @@ class MatchingNetwork(nn.Module):
             values, indices = preds.max(1)
             pred_indices.append( indices )
             if is_debug:
-                #print( "support set while in predictions debug mode" )
+                print( "support set while in predictions debug mode" )
                 #print( y_support_set_org )
+                print( target_y_actuals[:,i] )
                 print( "predictions debug mode" )
                 print( values )
                 print( indices )
                 print( indices.squeeze() )
                 print( "target label" )
                 print( target_label[:,i] )
+                
+                if F.cross_entropy(preds, target_label[:,i].long()) >= 0.35:
+                    print("accuracy found above limitttttttttttttttttttttttttttttttttttttttt" + str(F.cross_entropy(preds, target_label[:,i].long())))
+                    print( preds, target_label[:,i].long() )
             
             if i == 0:
                 accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
