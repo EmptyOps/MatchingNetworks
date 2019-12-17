@@ -567,7 +567,7 @@ class OmniglotNShotDataset():
         else:
             self.indexes = {"evaluation": 0}
             self.datasets = {"evaluation": self.x_train} #original data cached
-            self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation", self.evaluation)}
+            self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation", self.evaluation, True)}
                                    
     def normalization(self):
         """
@@ -690,7 +690,7 @@ class OmniglotNShotDataset():
             
         return data_cache
 
-    def load_data_cache_for_evaluation(self, data_pack, data_pack_type, data_pack_evaluation):
+    def load_data_cache_for_evaluation(self, data_pack, data_pack_type, data_pack_evaluation, is_init_call = None):
         """
         Collects 1000 batches data for N-shot learning
         :param data_pack: Data pack to use (any one of train, val, test)
@@ -699,6 +699,14 @@ class OmniglotNShotDataset():
         print( "data_pack" )
         print( data_pack_type )        
         print( data_pack.shape )
+        
+        print( "data_pack_evaluation" )
+        print( data_pack_evaluation.shape )
+        
+        
+        #shouldn't be called later during evaluation to speed up runtime
+        if not is_init_call == True:
+            raise Exception("Unexpected load cache call")
         
         """
         print( data_pack.shape[0] )

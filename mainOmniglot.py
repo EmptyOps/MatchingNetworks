@@ -240,6 +240,7 @@ else:
                                 results[y_actual] = {}
                                 results[y_actual]["ec"] = 1
                                 results[y_actual]["emc"] = 0
+                                results[y_actual]["pr"] = 0
                             else:
                                 results[y_actual]["ec"] = results[y_actual]["ec"] + 1
                             
@@ -248,7 +249,6 @@ else:
                             if target_y_actuals[k][j] < 0:
                                 #evaluation_matched_cnt = evaluation_matched_cnt + 1
                                 results[y_actual]["emc"] = results[y_actual]["emc"] + 1
-                                results[y_actual]["pr"] = str( results[y_actual]["emc"] / results[y_actual]["ec"] )
                 
                 if is_debug == True:
                     #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
@@ -270,4 +270,6 @@ else:
             #results.append( str( (evaluation_matched_cnt / evaluation_cnt) ) )
         
         #print(resdict)
+        for key in results.keys():
+            results[key]["pr"] = str( results[key]["emc"] / results[key]["ec"] )
         print(results)
