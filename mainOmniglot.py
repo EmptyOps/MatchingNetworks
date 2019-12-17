@@ -271,5 +271,9 @@ else:
         
         #print(resdict)
         for key in results.keys():
+            if True or is_debug == True:        
+                if (results[key]["emc"] / results[key]["ec"]) >= 0.5:
+                    print( "ckey " + str(key) + " pr " + str( results[key]["emc"] / results[key]["ec"] ) )
+                
             results[key]["pr"] = str( results[key]["emc"] / results[key]["ec"] )
         print(results)
