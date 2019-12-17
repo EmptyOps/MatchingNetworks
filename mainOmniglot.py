@@ -236,6 +236,7 @@ else:
                         y_actual = -1
                         if target_y_actuals[k][j] < 0:
                             y_actual = ( target_y_actuals[k][j] * -1 ) - 1
+                            print("y_actual " + str(y_actual))
                             if not y_actual in results:
                                 results[y_actual] = {}
                                 results[y_actual]["ec"] = 1
@@ -253,6 +254,8 @@ else:
                 if is_debug == True:
                     #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
                     print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
+                    if acc >= 0.35:
+                        print("accuracy found above limitttttttttttttttttttttttttttttttttttttttt")
                     #print(target_y_actuals)
                     #logger.log_value('run_time_predictions_loss', total_test_c_loss)
                     #logger.log_value('run_time_predictions_acc', total_test_accuracy)
