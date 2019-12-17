@@ -156,6 +156,10 @@ else:
             evaluation_matched_cnt = 0
 
             for i in range(10):
+            
+                #TODO temp. 
+                obj_oneShotBuilder.load_model()
+            
                 if is_debug == True:
                     print( "evaluation i " + str(i) )
                 #TODO what if we set support set to empty since its evaluation
