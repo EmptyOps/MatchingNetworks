@@ -156,10 +156,6 @@ else:
             evaluation_matched_cnt = 0
 
             for i in range(10):
-            
-                #TODO temp. 
-                obj_oneShotBuilder.load_model()
-            
                 if is_debug == True:
                     print( "evaluation i " + str(i) )
                 #TODO what if we set support set to empty since its evaluation
@@ -210,12 +206,12 @@ else:
     else:
         results = {}
         #resdict = {}
+        tot_acc = 0.0
+        cnt = 0
+        tot_matches = 0
+        matched_cnt = 0
         sloop = int( int(sys.argv[30])/10 )
         for c in range(0, sloop):  #9):
-            tot_acc = 0.0
-            cnt = 0
-            tot_matches = 0
-            matched_cnt = 0
             #evaluation_cnt = 0
             #evaluation_matched_cnt = 0
 
