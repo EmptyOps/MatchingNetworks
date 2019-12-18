@@ -131,6 +131,7 @@ class OmniglotNShotDataset():
                 print( "temp.keys()" )
                 unique, counts = np.unique(input_labels, return_counts=True)
                 print( dict(zip(unique, counts)) )
+                sdfkjdshfjhsdkfhj
                 
                 input = []  # Free memory
                 input_labels = []  # Free memory
