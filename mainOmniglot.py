@@ -143,6 +143,9 @@ if is_evaluation_only == False:
             #save model 
             obj_oneShotBuilder.save_model(e)
 else: 
+    #TODO tmp.
+    is_debug = True
+    
     if not is_evaluation_res_in_obj:
         results = []
         resdict = {}
