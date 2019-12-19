@@ -23,7 +23,7 @@ import os, sys
              For a 5-way, 10-shot learning task, use classes_per_set=5 and samples_per_class=10
 '''
 
-is_debug = True
+is_debug = False
 
 ENV = int(sys.argv[1]) 
 
