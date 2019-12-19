@@ -133,7 +133,6 @@ class OmniglotNShotDataset():
                 tmpdict = dict(zip(unique, counts))
                 print( tmpdict )
                 print( sorted(tmpdict.items(), key=lambda x: x[1], reverse=True) )
-                sdfkjdshfjhsdkfhj
                 
                 input = []  # Free memory
                 input_labels = []  # Free memory
