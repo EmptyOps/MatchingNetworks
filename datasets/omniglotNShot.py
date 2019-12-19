@@ -66,8 +66,8 @@ class OmniglotNShotDataset():
             
             self.prediction_classes = 9
             self.total_base_classes = total_base_classes   #56
-            self.tvt_records = 3 #19
-            self.re_records = 2 #10
+            self.tvt_records = 11    #3 #19
+            self.re_records = 2     #2 #10
             self.choice_replace = True #necessary when number of samples are small
             
             base_classes_file = input_file+"_base_classes.json"
