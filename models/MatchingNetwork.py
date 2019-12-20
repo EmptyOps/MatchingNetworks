@@ -146,13 +146,14 @@ class MatchingNetwork(nn.Module):
                 print( support_set_images[:,i,:,:,:].shape )
                 gen_encode = self.g( torch.Tensor(support_set_images[:,i,:,:,:]) )
                 print( gen_encode.shape )
+                
+                #encoded_images.append(gen_encode)
                 pinds = np.random.permutation( gen_encode.shape[0] - np.mod(gen_encode.shape[0],target_image.shape[0])  )
                 for gei in range( 0, int( math.floor(gen_encode.shape[0] / target_image.shape[0]) ) ): 
                     encoded_images.append( gen_encode[ pinds[gei*target_image.shape[0]:(gei+1)*target_image.shape[0]], :] )
                     if (gei+2)*target_image.shape[0] >= gen_encode.shape[0]:
                         break
                 
-                encoded_images.append(gen_encode)
                 for ci in range(0, support_set_images.shape[0]):
                     support_set_labels_one_hot[ci, i] = ci
         
