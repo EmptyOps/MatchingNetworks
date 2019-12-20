@@ -139,7 +139,7 @@ class MatchingNetwork(nn.Module):
         print( support_set_labels_one_hot.shape )
         encoded_images = []
         if is_evaluation_only == False:
-            for i in np.arange(support_set_images.size(1)):
+            for i in np.arange(support_set_images.shape[1]):
                 gen_encode = self.g(support_set_images[:,i,:,:,:])
                 encoded_images.append(gen_encode)
                 for ci in range(0, support_set_images.shape[0]):
