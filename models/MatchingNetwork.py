@@ -140,7 +140,7 @@ class MatchingNetwork(nn.Module):
         encoded_images = []
         if is_evaluation_only == False:
             for i in np.arange(support_set_images.shape[1]):
-                gen_encode = self.g(support_set_images[:,i,:,:,:])
+                gen_encode = self.g( torch.Tensor(support_set_images[:,i,:,:,:], requires_grad=False) )
                 encoded_images.append(gen_encode)
                 for ci in range(0, support_set_images.shape[0]):
                     support_set_labels_one_hot.append(ci)
