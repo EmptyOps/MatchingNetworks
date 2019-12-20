@@ -137,10 +137,10 @@ class MatchingNetwork(nn.Module):
         print( "encoded_images" )
         print( type(support_set_labels_one_hot) )
         print( support_set_labels_one_hot.shape )
-        support_set_labels_one_hot = np.zeros( (support_set_images.shape[0], target_image.size(1) ) )  #support_set_images.shape[1]) )
+        support_set_labels_one_hot = np.zeros( (support_set_images.shape[0], support_set_images.shape[1]) )
         encoded_images = []
         if is_evaluation_only == False:
-            for i in np.arange(target_image.size(1)):   #(support_set_images.shape[1]):
+            for i in np.arange(support_set_images.shape[1]):
                 print( "gen_encode" )
                 print( support_set_images[:,i,:,:,:].shape )
                 gen_encode = self.g( torch.Tensor(support_set_images[:,i,:,:,:]) )
@@ -161,20 +161,21 @@ class MatchingNetwork(nn.Module):
             print( target_image[:,i,:,:,:].shape )
             gen_encode = self.g(target_image[:,i,:,:,:])
             print( gen_encode.shape )
-            encoded_images.append(gen_encode)
-            print( type(encoded_images) )
-            #print( encoded_images.size() )
-            outputs = torch.stack(encoded_images)
-            print( type(outputs) )
-            print( outputs.shape )
+            #encoded_images.append(gen_encode)
+            #print( type(encoded_images) )
+            #outputs = torch.stack(encoded_images)
+            #print( type(outputs) )
+            #print( outputs.shape )
             
 
             if self.fce:
+                raise Exception("outputs does not contain target image")
                 outputs, hn, cn = self.lstm(outputs)
 
             # get similarity between support set embeddings and target
             if is_evaluation_only == False:
-                similarities = self.dn(support_set=outputs[:-1], input_image=outputs[-1])
+                #similarities = self.dn(support_set=outputs[:-1], input_image=outputs[-1])
+                similarities = self.dn(support_set=encoded_images, input_image=gen_encode)
             else:
                 similarities = self.dn(input_image=outputs[:])
             similarities = similarities.t()
