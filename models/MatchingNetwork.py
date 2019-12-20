@@ -124,7 +124,7 @@ class MatchingNetwork(nn.Module):
             
         return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices
 
-    def custom_predict(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None, target_y_actuals = None):
+    def predict(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None, target_y_actuals = None):
         """
         Builds graph for Matching Networks, produces losses and summary statistics.
         :param support_set_images: A tensor containing the support set images [batch_size, sequence_size, n_channels, 28, 28]
