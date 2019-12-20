@@ -997,6 +997,14 @@ class OmniglotNShotDataset():
 					
         return x_support_set, y_support_set, x_target, y_target, target_y_actuals        
 
+    def get_batch_predict(self,str_type):
+        """
+        Get next batch
+        :return: Next batch
+        """
+        return self.datasets[str_type]
+        
+        
     def __rotate_data(self, image, k):
         """
         Rotates one image by self.k * 90 degrees counter-clockwise

@@ -143,6 +143,8 @@ if is_evaluation_only == False:
             #save model 
             obj_oneShotBuilder.save_model(e)
 else: 
+    is_do_plain_predict = True
+    
     #TODO tmp.
     is_debug = True
     
@@ -213,70 +215,144 @@ else:
         cnt = 0
         tot_matches = 0
         matched_cnt = 0
-        sloop = int( int(sys.argv[30])/10 )
-        for c in range(0, sloop):  #9):
-            #evaluation_cnt = 0
-            #evaluation_matched_cnt = 0
+        if is_do_plain_predict:
+            sloop = int( int(sys.argv[30])/10 )
+            for c in range(0, sloop):  #9):
+                #evaluation_cnt = 0
+                #evaluation_matched_cnt = 0
 
-            for i in range(10):
-                if is_debug == True:
-                    print( "evaluation i " + str(i) )
-                #TODO what if we set support set to empty since its evaluation
-                #total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_evaluation(total_test_batches=1)
-                c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices = obj_oneShotBuilder.run_evaluation(total_test_batches=1, is_debug = is_debug)
-                
-                tot_acc = tot_acc + acc
-                cnt = cnt + 1
-                #evaluation_cnt = evaluation_cnt + ( (target_y_actuals < 0).sum() )
-                
-                lenta = len(target_y_actuals[0])
-                for j in range(0, lenta):
-                    lentai = len(target_y_actuals)
-                    for k in range(0, lentai):
-                        tot_matches = tot_matches + 1
-                        
-                        #
-                        y_actual = -1
-                        if target_y_actuals[k][j] < 0:
-                            y_actual = ( target_y_actuals[k][j] * -1 ) - 1
-                            if not y_actual in results:
-                                results[y_actual] = {}
-                                results[y_actual]["ec"] = 1
-                                results[y_actual]["emc"] = 0
-                                results[y_actual]["pr"] = 0
-                            else:
-                                results[y_actual]["ec"] = results[y_actual]["ec"] + 1
+                for i in range(10):
+                    if is_debug == True:
+                        print( "evaluation i " + str(i) )
+                    #TODO what if we set support set to empty since its evaluation
+                    #total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_evaluation(total_test_batches=1)
+                    c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug)
+                    
+                    tot_acc = tot_acc + acc
+                    cnt = cnt + 1
+                    #evaluation_cnt = evaluation_cnt + ( (target_y_actuals < 0).sum() )
+                    
+                    lenta = len(target_y_actuals[0])
+                    for j in range(0, lenta):
+                        lentai = len(target_y_actuals)
+                        for k in range(0, lentai):
+                            tot_matches = tot_matches + 1
                             
-                        if pred_indices[j][k] == y_target[k][j]:
-                            matched_cnt = matched_cnt + 1
+                            #
+                            y_actual = -1
                             if target_y_actuals[k][j] < 0:
-                                #evaluation_matched_cnt = evaluation_matched_cnt + 1
-                                results[y_actual]["emc"] = results[y_actual]["emc"] + 1
+                                y_actual = ( target_y_actuals[k][j] * -1 ) - 1
+                                if not y_actual in results:
+                                    results[y_actual] = {}
+                                    results[y_actual]["ec"] = 1
+                                    results[y_actual]["emc"] = 0
+                                    results[y_actual]["pr"] = 0
+                                else:
+                                    results[y_actual]["ec"] = results[y_actual]["ec"] + 1
+                                
+                            if pred_indices[j][k] == y_target[k][j]:
+                                matched_cnt = matched_cnt + 1
+                                if target_y_actuals[k][j] < 0:
+                                    #evaluation_matched_cnt = evaluation_matched_cnt + 1
+                                    results[y_actual]["emc"] = results[y_actual]["emc"] + 1
+                    
+                    if is_debug == True:
+                        #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
+                        print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
+                        #print(target_y_actuals)
+                        #logger.log_value('run_time_predictions_loss', total_test_c_loss)
+                        #logger.log_value('run_time_predictions_acc', total_test_accuracy)
                 
-                if is_debug == True:
-                    #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
-                    print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
-                    #print(target_y_actuals)
-                    #logger.log_value('run_time_predictions_loss', total_test_c_loss)
-                    #logger.log_value('run_time_predictions_acc', total_test_accuracy)
-            
-            if is_debug == True:        
-                print( "class " + str(c) )
-                print( "tot_matches " + str( tot_matches ) )
-                print( "matched_cnt " + str( matched_cnt ) )
-                #print( "evaluation_cnt " + str( evaluation_cnt ) )
-                #print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
-                print( "avg acc " + str( (tot_acc / cnt) ) )
+                if is_debug == True:        
+                    print( "class " + str(c) )
+                    print( "tot_matches " + str( tot_matches ) )
+                    print( "matched_cnt " + str( matched_cnt ) )
+                    #print( "evaluation_cnt " + str( evaluation_cnt ) )
+                    #print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
+                    print( "avg acc " + str( (tot_acc / cnt) ) )
 
-            #if len(data.shuffle_classes) > 0:
-            #    resdict[data.shuffle_classes[c]] = str( (evaluation_matched_cnt / evaluation_cnt) )
-            #results.append( str( (evaluation_matched_cnt / evaluation_cnt) ) )
-        
-        #print(resdict)
-        for key in results.keys():
-            if True or is_debug == True:        
-                if (results[key]["emc"] / results[key]["ec"]) >= 0.5:
-                    print( "ckey " + str(key) + " pr " + str( results[key]["emc"] / results[key]["ec"] ) )
+                break
+                    
+                #if len(data.shuffle_classes) > 0:
+                #    resdict[data.shuffle_classes[c]] = str( (evaluation_matched_cnt / evaluation_cnt) )
+                #results.append( str( (evaluation_matched_cnt / evaluation_cnt) ) )
                 
-            results[key]["pr"] = str( results[key]["emc"] / results[key]["ec"] )
-        print(results)
+            break
+            
+            #print(resdict)
+            for key in results.keys():
+                if True or is_debug == True:        
+                    if (results[key]["emc"] / results[key]["ec"]) >= 0.5:
+                        print( "ckey " + str(key) + " pr " + str( results[key]["emc"] / results[key]["ec"] ) )
+                    
+                results[key]["pr"] = str( results[key]["emc"] / results[key]["ec"] )
+            print(results)
+        
+        else:
+            sloop = int( int(sys.argv[30])/10 )
+            for c in range(0, sloop):  #9):
+                #evaluation_cnt = 0
+                #evaluation_matched_cnt = 0
+
+                for i in range(10):
+                    if is_debug == True:
+                        print( "evaluation i " + str(i) )
+                    #TODO what if we set support set to empty since its evaluation
+                    #total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_evaluation(total_test_batches=1)
+                    c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices = obj_oneShotBuilder.run_evaluation(total_test_batches=1, is_debug = is_debug)
+                    
+                    tot_acc = tot_acc + acc
+                    cnt = cnt + 1
+                    #evaluation_cnt = evaluation_cnt + ( (target_y_actuals < 0).sum() )
+                    
+                    lenta = len(target_y_actuals[0])
+                    for j in range(0, lenta):
+                        lentai = len(target_y_actuals)
+                        for k in range(0, lentai):
+                            tot_matches = tot_matches + 1
+                            
+                            #
+                            y_actual = -1
+                            if target_y_actuals[k][j] < 0:
+                                y_actual = ( target_y_actuals[k][j] * -1 ) - 1
+                                if not y_actual in results:
+                                    results[y_actual] = {}
+                                    results[y_actual]["ec"] = 1
+                                    results[y_actual]["emc"] = 0
+                                    results[y_actual]["pr"] = 0
+                                else:
+                                    results[y_actual]["ec"] = results[y_actual]["ec"] + 1
+                                
+                            if pred_indices[j][k] == y_target[k][j]:
+                                matched_cnt = matched_cnt + 1
+                                if target_y_actuals[k][j] < 0:
+                                    #evaluation_matched_cnt = evaluation_matched_cnt + 1
+                                    results[y_actual]["emc"] = results[y_actual]["emc"] + 1
+                    
+                    if is_debug == True:
+                        #print("predictions loss: {}, predictions_accuracy: {}".format(total_test_c_loss, total_test_accuracy))
+                        print(c_loss_value, acc)    #, y_support_set_one_hot, y_target)
+                        #print(target_y_actuals)
+                        #logger.log_value('run_time_predictions_loss', total_test_c_loss)
+                        #logger.log_value('run_time_predictions_acc', total_test_accuracy)
+                
+                if is_debug == True:        
+                    print( "class " + str(c) )
+                    print( "tot_matches " + str( tot_matches ) )
+                    print( "matched_cnt " + str( matched_cnt ) )
+                    #print( "evaluation_cnt " + str( evaluation_cnt ) )
+                    #print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
+                    print( "avg acc " + str( (tot_acc / cnt) ) )
+
+                #if len(data.shuffle_classes) > 0:
+                #    resdict[data.shuffle_classes[c]] = str( (evaluation_matched_cnt / evaluation_cnt) )
+                #results.append( str( (evaluation_matched_cnt / evaluation_cnt) ) )
+            
+            #print(resdict)
+            for key in results.keys():
+                if True or is_debug == True:        
+                    if (results[key]["emc"] / results[key]["ec"]) >= 0.5:
+                        print( "ckey " + str(key) + " pr " + str( results[key]["emc"] / results[key]["ec"] ) )
+                    
+                results[key]["pr"] = str( results[key]["emc"] / results[key]["ec"] )
+            print(results)
