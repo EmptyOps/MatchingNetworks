@@ -157,7 +157,7 @@ class MatchingNetwork(nn.Module):
             gen_encode = self.g(target_image[:,i,:,:,:])
             encoded_images.append(gen_encode)
             print( type(encoded_images) )
-            print( encoded_images.size() )
+            #print( encoded_images.size() )
             outputs = torch.stack(encoded_images)
             print( type(outputs) )
             print( outputs.shape )
