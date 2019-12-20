@@ -263,6 +263,8 @@ else:
                         #logger.log_value('run_time_predictions_loss', total_test_c_loss)
                         #logger.log_value('run_time_predictions_acc', total_test_accuracy)
                 
+                    break
+                
                 if is_debug == True:        
                     print( "class " + str(c) )
                     print( "tot_matches " + str( tot_matches ) )
@@ -271,13 +273,11 @@ else:
                     #print( "evaluation_matched_cnt " + str( evaluation_matched_cnt ) )
                     print( "avg acc " + str( (tot_acc / cnt) ) )
 
-                break
-                    
                 #if len(data.shuffle_classes) > 0:
                 #    resdict[data.shuffle_classes[c]] = str( (evaluation_matched_cnt / evaluation_cnt) )
                 #results.append( str( (evaluation_matched_cnt / evaluation_cnt) ) )
                 
-            break
+                break
             
             #print(resdict)
             for key in results.keys():
