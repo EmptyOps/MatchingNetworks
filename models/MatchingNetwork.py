@@ -141,7 +141,10 @@ class MatchingNetwork(nn.Module):
         encoded_images = []
         if is_evaluation_only == False:
             for i in np.arange(target_image.size(1)):   #(support_set_images.shape[1]):
+                print( "gen_encode" )
+                print( support_set_images[:,i,:,:,:].shape )
                 gen_encode = self.g( torch.Tensor(support_set_images[:,i,:,:,:]) )
+                print( gen_encode.shape )
                 encoded_images.append(gen_encode)
                 for ci in range(0, support_set_images.shape[0]):
                     support_set_labels_one_hot[ci, i] = ci
@@ -154,7 +157,10 @@ class MatchingNetwork(nn.Module):
         pred_indices = []
         # produce embeddings for target images
         for i in np.arange(target_image.size(1)):
+            print( "gen_encode" )
+            print( target_image[:,i,:,:,:].shape )
             gen_encode = self.g(target_image[:,i,:,:,:])
+            print( gen_encode.shape )
             encoded_images.append(gen_encode)
             print( type(encoded_images) )
             #print( encoded_images.size() )

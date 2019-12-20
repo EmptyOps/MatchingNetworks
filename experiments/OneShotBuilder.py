@@ -352,7 +352,10 @@ class OneShotBuilder:
                 
             x_support_set, y_support_set, x_target, y_target, target_y_actuals = \
                 self.data.get_batch_evaluation(str_type='evaluation', cls=0, rotate_flag=False)
-                
+            
+            print( "y_support_set" )
+            print( y_support_set )
+            
             x_support_set = Variable(torch.from_numpy(x_support_set), volatile=True).float()
             y_support_set = Variable(torch.from_numpy(y_support_set), volatile=True).long()
             x_target = Variable(torch.from_numpy(x_target), volatile=True).float()
@@ -366,6 +369,9 @@ class OneShotBuilder:
                                                       self.classes_per_set).zero_()
             y_support_set_one_hot.scatter_(2, y_support_set.data, 1)
             y_support_set_one_hot = Variable(y_support_set_one_hot)
+            print( y_support_set )
+            print( y_support_set_one_hot )
+            
 
             # Reshape channels
             size = x.shape
