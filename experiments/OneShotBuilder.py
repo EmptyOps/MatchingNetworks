@@ -368,8 +368,8 @@ class OneShotBuilder:
             y_support_set_one_hot = Variable(y_support_set_one_hot)
 
             # Reshape channels
-            size = x.size()
-            x = x.view(size[0], size[1], size[4], size[2], size[3])
+            size = x.shape
+            x = x.reshape(size[0], size[1], size[4], size[2], size[3])
             size = x_support_set.size()
             x_support_set = x_support_set.view(size[0], size[1], size[4], size[2], size[3])
             size = x_target.size()
