@@ -166,7 +166,7 @@ class MatchingNetwork(nn.Module):
                     print("pjs")
                     print(pjs)
                     target_image[:,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[ii*target_image.shape[0]:(ii+1)*target_image.shape[0]],pjs,:,:,:]), volatile=True).float()
-                    target_label[:,0] = Variable(torch.from_numpy( np.random.permutation( support_set_labels_one_hot_org_shape[1] ) ), volatile=True).long()
+                    target_label[:,0] = Variable(torch.from_numpy( np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) ), volatile=True).long()
                     print(target_label)
                         
                     """
