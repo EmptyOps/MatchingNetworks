@@ -229,7 +229,7 @@ else:
                 else:
                     results[y_actual]["ec"] = results[y_actual]["ec"] + 1
                     
-                results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (1.0 - emclvlclsl[li]) )
+                results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (1.0 - emclvlclsl[li].item()) )
             
             for li in range(0, len(emcllcls)):
                 y_actual = emcllcls[li]
@@ -241,7 +241,7 @@ else:
                 else:
                     results[y_actual]["ec"] = results[y_actual]["ec"] + 1
                     
-                results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (1.0 - emcllclsl[li])
+                results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (1.0 - emcllclsl[li].item())
 
             print(results)
         
