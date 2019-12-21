@@ -166,7 +166,7 @@ class MatchingNetwork(nn.Module):
                     print("pjs")
                     print(pjs)
                     target_image[:,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[ii*target_image.shape[0]:(ii+1)*target_image.shape[0]],pjs,:,:,:]), volatile=True).float()
-                    target_label[:,0] = pjs
+                    target_label[:,0] = Variable(torch.from_numpy(pjs), volatile=True).long()
                     print(target_label)
                         
                     """
@@ -248,7 +248,6 @@ class MatchingNetwork(nn.Module):
                         if F.cross_entropy(preds, target_label[:,i].long()) <= 1.1:
                             print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
                             print( preds )
-                            detecteddfsgdfg
                         
                     if i == 0:
                         accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
