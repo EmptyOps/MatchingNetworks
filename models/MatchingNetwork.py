@@ -159,7 +159,7 @@ class MatchingNetwork(nn.Module):
                     encoded_images = []
                     
                     print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
-                    xhat_pinds = np.random.permutation( support_set_labels_one_hot_org_shape[1] )
+                    xhat_pinds = np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) #np.random.permutation( support_set_labels_one_hot_org_shape[1] )
                     xhat_ind = 0
                     for j in range(0, support_set_labels_one_hot_org_shape[1]):
                     
