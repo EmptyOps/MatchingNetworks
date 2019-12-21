@@ -152,6 +152,9 @@ class MatchingNetwork(nn.Module):
             tot_ec = 0
             tot_emc = 0
             tot_emcll = 0
+            tot_emclvl = 0
+            emcllcls = []
+            emclvlcls = []
             #for i in np.arange(support_set_images.shape[1]):
             for tatmpts in range(0, target_image.shape[0]):
                 for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
@@ -162,6 +165,7 @@ class MatchingNetwork(nn.Module):
                     pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                     pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                     ii_cntr = 0
+                    tstcls = 0
                     for ii in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
                         encoded_images = []
                         
@@ -183,6 +187,7 @@ class MatchingNetwork(nn.Module):
                                 if not tatmpts == xhat_ind:
                                     target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
                                 else:
+                                    tstcls = pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1]
                                     target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(target_image_org[xhat_ind,0,:,:,:]), volatile=True).float()
                                 target_label[xhat_ind,0] = Variable( torch.from_numpy( np.array( [j] ) ), volatile=True).long()
                                 xhat_ind = xhat_ind + 1 
@@ -282,6 +287,11 @@ class MatchingNetwork(nn.Module):
                                 tot_emc = tot_emc + 1
                                 if F.cross_entropy(preds, target_label[:,i].long()) <= 0.92:
                                     tot_emcll = tot_emcll + 1
+                                    emcllcls.append( tstcls )
+                                    
+                                    if F.cross_entropy(preds, target_label[:,i].long()) <= 0.90:
+                                        tot_emclvl = tot_emclvl + 1
+                                        emclvlcls.append( tstcls )
                             
                         if i == 0:
                             accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
@@ -301,7 +311,9 @@ class MatchingNetwork(nn.Module):
         #if is_debug:
         #    dfsdfsdfsdf
             
-            print("tot_ec " + str(tot_ec) + " tot_emc " + str(tot_emc) + " tot_emcll " + str(tot_emcll) )
+            print("tot_ec " + str(tot_ec) + " tot_emc " + str(tot_emc) + " tot_emcll " + str(tot_emcll) + " tot_emclvl " + str(tot_emclvl) )
+            print( "emcllcls ", emcllcls )
+            print( "emclvlcls ", emclvlcls )
             
         return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices
         
