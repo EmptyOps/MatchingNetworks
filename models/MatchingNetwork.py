@@ -148,8 +148,12 @@ class MatchingNetwork(nn.Module):
             from torch.autograd import Variable
             #for i in np.arange(support_set_images.shape[1]):
             for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
-                pinds = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
-                pinds = pinds * support_set_labels_one_hot_org_shape[1]
+                pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
+                #repeat 5 times
+                pinds = np.concatenate( ( pindstmp, pindstmp ), axis=0 )
+                pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                 ii_cntr = 0
                 for ii in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
                     encoded_images = []
