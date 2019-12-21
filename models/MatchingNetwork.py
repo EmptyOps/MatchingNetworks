@@ -144,6 +144,7 @@ class MatchingNetwork(nn.Module):
         encoded_images = []
         if is_evaluation_only == False:
             import math
+            from torch.autograd import Variable
             #for i in np.arange(support_set_images.shape[1]):
             pinds = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
             for i in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
