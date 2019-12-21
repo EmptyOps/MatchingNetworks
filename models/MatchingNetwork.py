@@ -187,8 +187,8 @@ class MatchingNetwork(nn.Module):
                             n_test_samples = np.sum(j == xhat_pinds)
                             for xhat_i in range(0, n_test_samples):
                                 if not tatmpts == xhat_ind:
-                                    #target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
-                                    target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]), volatile=True).float()
+                                    target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
+                                    #target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]), volatile=True).float()
                                 else:
                                     tstcls = pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1]
                                     target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(target_image_org[xhat_ind,0,:,:,:]), volatile=True).float()
@@ -291,13 +291,15 @@ class MatchingNetwork(nn.Module):
                                 if F.cross_entropy(preds, target_label[:,i].long()) <= 0.92:
                                     tot_emcll = tot_emcll + 1
                                     
-                                    if F.cross_entropy(preds, target_label[:,i].long()) <= 0.915:
+                                    if F.cross_entropy(preds, target_label[:,i].long()) <= 0.915 and values[tatmpts] >= 0.90:
                                         tot_emclvl = tot_emclvl + 1
                                         emclvlcls.append( tstcls[0] )
-                                        emclvlclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
+                                        #emclvlclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
+                                        emclvlclsl.append( values[tatmpts] )
                                     else:
                                         emcllcls.append( tstcls[0] )
-                                        emcllclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
+                                        #emcllclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
+                                        emcllclsl.append( values[tatmpts] )
                             
                         if i == 0:
                             accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
