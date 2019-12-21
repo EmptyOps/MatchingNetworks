@@ -241,13 +241,16 @@ class MatchingNetwork(nn.Module):
                             print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
                             print( preds )
                             detecteddfsgdfg
-                    
+                        
                     if i == 0:
                         accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
                         crossentropy_loss = F.cross_entropy(preds, target_label[:,i].long())
                     else:
                         accuracy = accuracy + torch.mean((indices.squeeze() == target_label[:, i]).float())
                         crossentropy_loss = crossentropy_loss + F.cross_entropy(preds, target_label[:, i].long())
+                    
+                    if is_debug:                    
+                        print( "test_loss: {}, test_accuracy: {}".format(crossentropy_loss.data, accuracy.data) )
 
                     ## delete the last target image encoding of encoded_images
                     #encoded_images.pop()
