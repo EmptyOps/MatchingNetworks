@@ -153,7 +153,7 @@ class MatchingNetwork(nn.Module):
                     gen_encode = self.g( torch.Tensor(support_set_images[pinds[i*target_image.shape[0]:(i+1)*target_image.shape[0]],j,:,:,:]) )
                     print( gen_encode.shape )
                     
-                    encoded_images.append(gen_encode)
+                    encoded_images.append( Variable(gen_encode, volatile=True).float() )
                     tmp_one_hot[:,j,j] = 1
                 """
                 pinds = np.random.permutation( gen_encode.shape[0] - np.mod(gen_encode.shape[0],target_image.shape[0])  )
