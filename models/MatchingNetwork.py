@@ -291,7 +291,7 @@ class MatchingNetwork(nn.Module):
                                 if F.cross_entropy(preds, target_label[:,i].long()) <= 0.92:
                                     tot_emcll = tot_emcll + 1
                                     
-                                    if F.cross_entropy(preds, target_label[:,i].long()) <= 0.915 and values[tatmpts] >= 0.90:
+                                    if F.cross_entropy(preds, target_label[:,i].long()) <= 0.915 and values[tatmpts] >= 0.95:
                                         tot_emclvl = tot_emclvl + 1
                                         emclvlcls.append( tstcls[0] )
                                         #emclvlclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
