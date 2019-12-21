@@ -139,7 +139,7 @@ class MatchingNetwork(nn.Module):
         support_set_labels_one_hot_org_shape = support_set_labels_one_hot.shape
         print( support_set_labels_one_hot.shape )
         print( target_image.shape )
-        tmp_one_hot = np.zeros( (support_set_labels_one_hot.shape[0], target_image.shape[1], target_image.shape[1]) )
+        tmp_one_hot = np.zeros( (support_set_labels_one_hot_org_shape[0], support_set_labels_one_hot_org_shape[1], support_set_labels_one_hot_org_shape[1]) )
         print( tmp_one_hot.shape )
         support_set_labels_one_hot = []# np.zeros( (target_image.shape[0], target_image.shape[1], target_image.shape[0]) )
         encoded_images = []
