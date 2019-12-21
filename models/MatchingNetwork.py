@@ -146,6 +146,9 @@ class MatchingNetwork(nn.Module):
         if is_evaluation_only == False:
             import math
             from torch.autograd import Variable
+            tot_ec = 0
+            tot_emc = 0
+            tot_emcll = 0
             #for i in np.arange(support_set_images.shape[1]):
             for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
                 pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
@@ -213,7 +216,7 @@ class MatchingNetwork(nn.Module):
                     print( type(support_set_labels_one_hot) )
                     print( support_set_labels_one_hot.shape )
                         
-                       
+                    tot_ec = tot_ec + 1
                     pred_indices = []
             # produce embeddings for target images
             #for i in np.arange(target_image.size(1)):
@@ -269,7 +272,9 @@ class MatchingNetwork(nn.Module):
                         if F.cross_entropy(preds, target_label[:,i].long()) <= 0.95:
                             print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
                             print( preds )
-                            detectedgdskjfhksdjhfjsdhf
+                            tot_emc = tot_emc + 1
+                            if F.cross_entropy(preds, target_label[:,i].long()) <= 0.9:
+                                tot_emcll = tot_emcll + 1
                         
                     if i == 0:
                         accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
@@ -288,6 +293,8 @@ class MatchingNetwork(nn.Module):
 
         #if is_debug:
         #    dfsdfsdfsdf
+            
+            print("tot_ec " + str(tot_ec) + " tot_emc " + str(tot_emc) + " tot_emcll " + str(tot_emcll) )
             
         return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices
         
