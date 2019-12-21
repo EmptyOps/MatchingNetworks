@@ -153,147 +153,150 @@ class MatchingNetwork(nn.Module):
             tot_emc = 0
             tot_emcll = 0
             #for i in np.arange(support_set_images.shape[1]):
-            for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
-                pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
-                #repeat 5 times
-                pinds = np.concatenate( ( pindstmp, pindstmp ), axis=0 )
-                pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
-                pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
-                pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
-                ii_cntr = 0
-                for ii in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
-                    encoded_images = []
-                    
-                    print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
-                    xhat_pinds = np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) #np.random.permutation( support_set_labels_one_hot_org_shape[1] )
-                    xhat_ind = 0
-                    for j in range(0, support_set_labels_one_hot_org_shape[1]):
-                    
-                        print( support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:].shape )
-                        gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]) )
-                        print( gen_encode.shape )
+            for tatmpts in range(0, target_image.shape[0]):
+                for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
+                    pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
+                    #repeat 5 times
+                    pinds = np.concatenate( ( pindstmp, pindstmp ), axis=0 )
+                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                    ii_cntr = 0
+                    for ii in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
+                        encoded_images = []
                         
-                        encoded_images.append( Variable(gen_encode, volatile=True).float() )
-                        tmp_one_hot[:,j,j] = 1
+                        print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
+                        xhat_pinds = np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) #np.random.permutation( support_set_labels_one_hot_org_shape[1] )
+                        xhat_ind = 0
+                        for j in range(0, support_set_labels_one_hot_org_shape[1]):
+                        
+                            print( support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:].shape )
+                            gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]) )
+                            print( gen_encode.shape )
+                            
+                            encoded_images.append( Variable(gen_encode, volatile=True).float() )
+                            tmp_one_hot[:,j,j] = 1
 
-                        #prepare target
-                        n_test_samples = np.sum(j == xhat_pinds)
-                        for xhat_i in range(0, n_test_samples):
-                            #target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
-                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(target_image_org[xhat_ind,0,:,:,:]), volatile=True).float()
-                            target_label[xhat_ind,0] = Variable( torch.from_numpy( np.array( [j] ) ), volatile=True).long()
-                            xhat_ind = xhat_ind + 1 
-                        
-                        ii_cntr = ii_cntr + 1
+                            #prepare target
+                            n_test_samples = np.sum(j == xhat_pinds)
+                            for xhat_i in range(0, n_test_samples):
+                                if not tatmpts == xhat_ind:
+                                    target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
+                                else:
+                                    target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(target_image_org[xhat_ind,0,:,:,:]), volatile=True).float()
+                                target_label[xhat_ind,0] = Variable( torch.from_numpy( np.array( [j] ) ), volatile=True).long()
+                                xhat_ind = xhat_ind + 1 
+                            
+                            ii_cntr = ii_cntr + 1
 
-                    
-                    """                    
-                    #randcls = np.random.randint(0, target_image.shape[0])
-                    pjs = np.random.permutation( target_image.shape[0] )
-                    print("pjs")
-                    print(pjs)
-                    target_image[:,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[ii*target_image.shape[0]:(ii+1)*target_image.shape[0]],pjs,:,:,:]), volatile=True).float()
-                    target_label[:,0] = Variable(torch.from_numpy( np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) ), volatile=True).long()
-                    print(target_label)
-                    """
                         
-                    """
-                    pinds = np.random.permutation( gen_encode.shape[0] - np.mod(gen_encode.shape[0],target_image.shape[0])  )
-                    for gei in range( 0, int( math.floor(gen_encode.shape[0] / target_image.shape[0]) ) ): 
-                        encoded_images.append( gen_encode[ pinds[gei*target_image.shape[0]:(gei+1)*target_image.shape[0]], :] )
-                        
-                        for ci in range(0, target_image.shape[1]):
+                        """                    
+                        #randcls = np.random.randint(0, target_image.shape[0])
+                        pjs = np.random.permutation( target_image.shape[0] )
+                        print("pjs")
+                        print(pjs)
+                        target_image[:,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[ii*target_image.shape[0]:(ii+1)*target_image.shape[0]],pjs,:,:,:]), volatile=True).float()
+                        target_label[:,0] = Variable(torch.from_numpy( np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) ), volatile=True).long()
+                        print(target_label)
+                        """
+                            
+                        """
+                        pinds = np.random.permutation( gen_encode.shape[0] - np.mod(gen_encode.shape[0],target_image.shape[0])  )
+                        for gei in range( 0, int( math.floor(gen_encode.shape[0] / target_image.shape[0]) ) ): 
+                            encoded_images.append( gen_encode[ pinds[gei*target_image.shape[0]:(gei+1)*target_image.shape[0]], :] )
+                            
+                            for ci in range(0, target_image.shape[1]):
+                                support_set_labels_one_hot.append( tmp_one_hot )
+                            
                             support_set_labels_one_hot.append( tmp_one_hot )
+                            
+                            if (gei+2)*target_image.shape[0] >= gen_encode.shape[0]:
+                                break
+                        """
                         
-                        support_set_labels_one_hot.append( tmp_one_hot )
+                        print("tmp_one_hot")
+                        print(tmp_one_hot.shape)
+                        support_set_labels_one_hot = tmp_one_hot
+                        #break
+                            
+                        support_set_labels_one_hot = Variable(torch.from_numpy(support_set_labels_one_hot), volatile=True).float()
+                        print( type(support_set_labels_one_hot) )
+                        print( support_set_labels_one_hot.shape )
+                            
+                        tot_ec = tot_ec + 1
+                        pred_indices = []
+                # produce embeddings for target images
+                #for i in np.arange(target_image.size(1)):
+                        i = 0
+                        print( "target gen_encode" )
+                        print( target_image[:,i,:,:,:].shape )
+                        gen_encode = self.g(target_image[:,i,:,:,:])
+                        print( gen_encode.shape )
+                        #encoded_images.append(gen_encode)
+                        #print( type(encoded_images) )
+                        #outputs = torch.stack(encoded_images)
+                        #print( type(outputs) )
+                        #print( outputs.shape )
                         
-                        if (gei+2)*target_image.shape[0] >= gen_encode.shape[0]:
-                            break
-                    """
-                    
-                    print("tmp_one_hot")
-                    print(tmp_one_hot.shape)
-                    support_set_labels_one_hot = tmp_one_hot
-                    #break
-                        
-                    support_set_labels_one_hot = Variable(torch.from_numpy(support_set_labels_one_hot), volatile=True).float()
-                    print( type(support_set_labels_one_hot) )
-                    print( support_set_labels_one_hot.shape )
-                        
-                    tot_ec = tot_ec + 1
-                    pred_indices = []
-            # produce embeddings for target images
-            #for i in np.arange(target_image.size(1)):
-                    i = 0
-                    print( "target gen_encode" )
-                    print( target_image[:,i,:,:,:].shape )
-                    gen_encode = self.g(target_image[:,i,:,:,:])
-                    print( gen_encode.shape )
-                    #encoded_images.append(gen_encode)
-                    #print( type(encoded_images) )
-                    #outputs = torch.stack(encoded_images)
-                    #print( type(outputs) )
-                    #print( outputs.shape )
-                    
 
-                    if self.fce:
-                        raise Exception("outputs does not contain target image")
-                        outputs, hn, cn = self.lstm(outputs)
+                        if self.fce:
+                            raise Exception("outputs does not contain target image")
+                            outputs, hn, cn = self.lstm(outputs)
 
-                    # get similarity between support set embeddings and target
-                    if is_evaluation_only == False:
-                        #similarities = self.dn(support_set=outputs[:-1], input_image=outputs[-1])
-                        similarities = self.dn(support_set=encoded_images, input_image=gen_encode)
-                    else:
-                        similarities = self.dn(input_image=outputs[:])
-                    similarities = similarities.t()
+                        # get similarity between support set embeddings and target
+                        if is_evaluation_only == False:
+                            #similarities = self.dn(support_set=outputs[:-1], input_image=outputs[-1])
+                            similarities = self.dn(support_set=encoded_images, input_image=gen_encode)
+                        else:
+                            similarities = self.dn(input_image=outputs[:])
+                        similarities = similarities.t()
 
-                    # produce predictions for target probabilities
-                    if is_evaluation_only == False:
-                        preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)
-                    else:
-                        preds = self.classify(similarities)
+                        # produce predictions for target probabilities
+                        if is_evaluation_only == False:
+                            preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)
+                        else:
+                            preds = self.classify(similarities)
 
-                    print(support_set_labels_one_hot)
-                    print(preds)
+                        print(support_set_labels_one_hot)
+                        print(preds)
+                            
+                        # calculate accuracy and crossentropy loss
+                        values, indices = preds.max(1)
+                        pred_indices.append( indices )
+                        if is_debug:
+                            print( "support set while in predictions debug mode" )
+                            #print( y_support_set_org )
+                            print( target_y_actuals[:,i] )
+                            print( "predictions debug mode" )
+                            print( values )
+                            print( indices.squeeze() )
+                            print( target_label[:,i] )
+                            
+                            if False and torch.mean((indices.squeeze() == target_label[:,i]).float()) >= 0.9:
+                                print( "accuracy found above limitttttttttttttttttttttttttttttttttttttttt " + str( torch.mean((indices.squeeze() == target_label[:,i]).float()) ) )
+                                print( preds )
+                            
+                            if F.cross_entropy(preds, target_label[:,i].long()) <= 1.15:
+                                print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
+                                print( preds )
+                                tot_emc = tot_emc + 1
+                                if F.cross_entropy(preds, target_label[:,i].long()) <= 0.95:
+                                    tot_emcll = tot_emcll + 1
+                            
+                        if i == 0:
+                            accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
+                            crossentropy_loss = F.cross_entropy(preds, target_label[:,i].long())
+                        else:
+                            accuracy = accuracy + torch.mean((indices.squeeze() == target_label[:, i]).float())
+                            crossentropy_loss = crossentropy_loss + F.cross_entropy(preds, target_label[:, i].long())
                         
-                    # calculate accuracy and crossentropy loss
-                    values, indices = preds.max(1)
-                    pred_indices.append( indices )
-                    if is_debug:
-                        print( "support set while in predictions debug mode" )
-                        #print( y_support_set_org )
-                        print( target_y_actuals[:,i] )
-                        print( "predictions debug mode" )
-                        print( values )
-                        print( indices.squeeze() )
-                        print( target_label[:,i] )
-                        
-                        if False and torch.mean((indices.squeeze() == target_label[:,i]).float()) >= 0.9:
-                            print( "accuracy found above limitttttttttttttttttttttttttttttttttttttttt " + str( torch.mean((indices.squeeze() == target_label[:,i]).float()) ) )
-                            print( preds )
-                        
-                        if F.cross_entropy(preds, target_label[:,i].long()) <= 1.15:
-                            print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
-                            print( preds )
-                            tot_emc = tot_emc + 1
-                            if F.cross_entropy(preds, target_label[:,i].long()) <= 0.95:
-                                tot_emcll = tot_emcll + 1
-                        
-                    if i == 0:
-                        accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
-                        crossentropy_loss = F.cross_entropy(preds, target_label[:,i].long())
-                    else:
-                        accuracy = accuracy + torch.mean((indices.squeeze() == target_label[:, i]).float())
-                        crossentropy_loss = crossentropy_loss + F.cross_entropy(preds, target_label[:, i].long())
-                    
-                    if is_debug:                    
-                        print( "test_loss: {}, test_accuracy: {}".format(crossentropy_loss.data, accuracy.data) )
+                        if is_debug:                    
+                            print( "test_loss: {}, test_accuracy: {}".format(crossentropy_loss.data, accuracy.data) )
 
-                    ## delete the last target image encoding of encoded_images
-                    #encoded_images.pop()
-                    
-                    #return accuracy, crossentropy_loss, pred_indices
+                        ## delete the last target image encoding of encoded_images
+                        #encoded_images.pop()
+                        
+                        #return accuracy, crossentropy_loss, pred_indices
 
         #if is_debug:
         #    dfsdfsdfsdf
