@@ -173,7 +173,7 @@ class MatchingNetwork(nn.Module):
                         #prepare target
                         n_test_samples = np.sum(j == xhat_pinds)
                         for xhat_i in range(0, n_test_samples):
-                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]),:,:,:]), volatile=True).float()
+                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
                             target_label[xhat_ind,0] = Variable( torch.from_numpy( np.array( [j] ) ), volatile=True).long()
                             xhat_ind = xhat_ind + 1 
                         
