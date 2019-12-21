@@ -150,7 +150,7 @@ class MatchingNetwork(nn.Module):
             pinds = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
             for i in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
                 print( "gen_encode" )
-                for j in range(0, support_set_labels_one_hot_org_shape.shape[1]):
+                for j in range(0, support_set_labels_one_hot_org_shape[1]):
                     print( support_set_images[pinds[i*target_image.shape[0]:(i+1)*target_image.shape[0]],j,:,:,:].shape )
                     gen_encode = self.g( torch.Tensor(support_set_images[pinds[i*target_image.shape[0]:(i+1)*target_image.shape[0]],j,:,:,:]) )
                     print( gen_encode.shape )
