@@ -172,7 +172,7 @@ class MatchingNetwork(nn.Module):
                 support_set_labels_one_hot = tmp_one_hot
                 break
                     
-        support_set_labels_one_hot = Variable(support_set_labels_one_hot, volatile=True).float()
+        support_set_labels_one_hot = Variable(torch.from_numpy(support_set_labels_one_hot), volatile=True).float()
         print( type(support_set_labels_one_hot) )
         print( support_set_labels_one_hot.shape )
                     
