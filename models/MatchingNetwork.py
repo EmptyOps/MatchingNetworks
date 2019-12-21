@@ -205,7 +205,7 @@ class MatchingNetwork(nn.Module):
 
             # produce predictions for target probabilities
             if is_evaluation_only == False:
-                preds = self.classify(similarities,support_set_y=torch.from_numpy(support_set_labels_one_hot))
+                preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)
             else:
                 preds = self.classify(similarities)
 
