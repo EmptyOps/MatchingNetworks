@@ -149,18 +149,34 @@ class MatchingNetwork(nn.Module):
             #for i in np.arange(support_set_images.shape[1]):
             for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
                 pinds = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
+                pinds = pinds * support_set_labels_one_hot_org_shape[1]
+                ii_cntr = 0
                 for ii in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
                     encoded_images = []
                     
                     print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
+                    xhat_pinds = np.random.permutation( support_set_labels_one_hot_org_shape[1] )
+                    xhat_ind = 0
                     for j in range(0, support_set_labels_one_hot_org_shape[1]):
-                        print( support_set_images[pinds[ii*target_image.shape[0]:(ii+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:].shape )
-                        gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii*target_image.shape[0]:(ii+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]) )
+                    
+                        print( support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:].shape )
+                        gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]) )
                         print( gen_encode.shape )
                         
                         encoded_images.append( Variable(gen_encode, volatile=True).float() )
                         tmp_one_hot[:,j,j] = 1
+
+                        #prepare target
+                        n_test_samples = np.sum(j == xhat_pinds)
+                        for xhat_i in range(0, n_test_samples):
+                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii*target_image.shape[0])+xhat_ind:(ii*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]),:,:,:]), volatile=True).float()
+                            target_label[xhat_ind,0] = Variable( torch.from_numpy( np.array( [j] ) ), volatile=True).long()
+                            xhat_ind = xhat_ind + 1 
                         
+                        ii_cntr = ii_cntr + 1
+
+                    
+                    """                    
                     #randcls = np.random.randint(0, target_image.shape[0])
                     pjs = np.random.permutation( target_image.shape[0] )
                     print("pjs")
@@ -168,6 +184,7 @@ class MatchingNetwork(nn.Module):
                     target_image[:,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[ii*target_image.shape[0]:(ii+1)*target_image.shape[0]],pjs,:,:,:]), volatile=True).float()
                     target_label[:,0] = Variable(torch.from_numpy( np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) ), volatile=True).long()
                     print(target_label)
+                    """
                         
                     """
                     pinds = np.random.permutation( gen_encode.shape[0] - np.mod(gen_encode.shape[0],target_image.shape[0])  )
