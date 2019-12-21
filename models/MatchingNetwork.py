@@ -209,6 +209,9 @@ class MatchingNetwork(nn.Module):
             else:
                 preds = self.classify(similarities)
 
+            print(support_set_labels_one_hot)
+            print(preds)
+                
             # calculate accuracy and crossentropy loss
             values, indices = preds.max(1)
             pred_indices.append( indices )
@@ -236,8 +239,8 @@ class MatchingNetwork(nn.Module):
                 accuracy = accuracy + torch.mean((indices.squeeze() == target_label[:, i]).float())
                 crossentropy_loss = crossentropy_loss + F.cross_entropy(preds, target_label[:, i].long())
 
-            # delete the last target image encoding of encoded_images
-            encoded_images.pop()
+            ## delete the last target image encoding of encoded_images
+            #encoded_images.pop()
             
             return accuracy, crossentropy_loss, pred_indices
 
