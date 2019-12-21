@@ -137,27 +137,41 @@ class MatchingNetwork(nn.Module):
         print( "encoded_images" )
         print( type(support_set_labels_one_hot) )
         print( support_set_labels_one_hot.shape )
-        support_set_labels_one_hot = np.zeros( (support_set_images.shape[0], support_set_images.shape[1]) )
+        print( target_image.shape )
+        tmp_one_hot = np.zeros( (support_set_labels_one_hot.shape[0], target_image.shape[1], target_image.shape[1]) )
+        print( tmp_one_hot.shape )
+        support_set_labels_one_hot = []# np.zeros( (target_image.shape[0], target_image.shape[1], target_image.shape[0]) )
         encoded_images = []
         if is_evaluation_only == False:
             import math
-            for i in np.arange(support_set_images.shape[1]):
+            #for i in np.arange(support_set_images.shape[1]):
+            pinds = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
+            for i in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
                 print( "gen_encode" )
-                print( support_set_images[:,i,:,:,:].shape )
-                gen_encode = self.g( torch.Tensor(support_set_images[:,i,:,:,:]) )
-                print( gen_encode.shape )
-                
-                #encoded_images.append(gen_encode)
+                for j in np.arange(target_image.shape[1]):
+                    print( support_set_images[pinds[i*target_image.shape[0]:(i+1)*target_image.shape[0]],j,:,:,:].shape )
+                    gen_encode = self.g( torch.Tensor(support_set_images[pinds[i*target_image.shape[0]:(i+1)*target_image.shape[0]],j,:,:,:]) )
+                    print( gen_encode.shape )
+                    
+                    encoded_images.append(gen_encode)
+                    tmp_one_hot[:,j,j] = 1
+                """
                 pinds = np.random.permutation( gen_encode.shape[0] - np.mod(gen_encode.shape[0],target_image.shape[0])  )
                 for gei in range( 0, int( math.floor(gen_encode.shape[0] / target_image.shape[0]) ) ): 
                     encoded_images.append( gen_encode[ pinds[gei*target_image.shape[0]:(gei+1)*target_image.shape[0]], :] )
+                    
+                    for ci in range(0, target_image.shape[1]):
+                        support_set_labels_one_hot.append( tmp_one_hot )
+                    
+                    support_set_labels_one_hot.append( tmp_one_hot )
+                    
                     if (gei+2)*target_image.shape[0] >= gen_encode.shape[0]:
                         break
-                
-                for ci in range(0, support_set_images.shape[0]):
-                    support_set_labels_one_hot[ci, i] = ci
-        
-        support_set_labels_one_hot = np.array(support_set_labels_one_hot)
+                """
+                support_set_labels_one_hot = tmp_one_hot
+                break
+                    
+        support_set_labels_one_hot = np.array( support_set_labels_one_hot )
         print( type(support_set_labels_one_hot) )
         print( support_set_labels_one_hot.shape )
                     
