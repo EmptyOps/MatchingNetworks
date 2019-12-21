@@ -161,6 +161,14 @@ class MatchingNetwork(nn.Module):
                         encoded_images.append( Variable(gen_encode, volatile=True).float() )
                         tmp_one_hot[:,j,j] = 1
                         
+                    #randcls = np.random.randint(0, target_image.shape[0])
+                    pjs = np.random.permutation( support_set_images.shape[1] )
+                    print("pjs")
+                    print(pjs)
+                    target_image[:,0,:,:,:] = support_set_images[pinds[ii*target_image.shape[0]:(ii+1)*target_image.shape[0]],pjs,:,:,:]
+                    target_label[:,0] = pjs
+                    print(target_label)
+                        
                     """
                     pinds = np.random.permutation( gen_encode.shape[0] - np.mod(gen_encode.shape[0],target_image.shape[0])  )
                     for gei in range( 0, int( math.floor(gen_encode.shape[0] / target_image.shape[0]) ) ): 
