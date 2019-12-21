@@ -149,13 +149,14 @@ class MatchingNetwork(nn.Module):
             pinds = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
             for i in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
                 print( "gen_encode" )
-                for j in np.arange(target_image.shape[1]):
+                for j in range(0, target_image.shape[1]):
                     print( support_set_images[pinds[i*target_image.shape[0]:(i+1)*target_image.shape[0]],j,:,:,:].shape )
                     gen_encode = self.g( torch.Tensor(support_set_images[pinds[i*target_image.shape[0]:(i+1)*target_image.shape[0]],j,:,:,:]) )
                     print( gen_encode.shape )
                     
                     encoded_images.append( Variable(gen_encode, volatile=True).float() )
                     tmp_one_hot[:,j,j] = 1
+                    
                 """
                 pinds = np.random.permutation( gen_encode.shape[0] - np.mod(gen_encode.shape[0],target_image.shape[0])  )
                 for gei in range( 0, int( math.floor(gen_encode.shape[0] / target_image.shape[0]) ) ): 
@@ -169,6 +170,9 @@ class MatchingNetwork(nn.Module):
                     if (gei+2)*target_image.shape[0] >= gen_encode.shape[0]:
                         break
                 """
+                
+                print("tmp_one_hot")
+                print(tmp_one_hot.shape)
                 support_set_labels_one_hot = tmp_one_hot
                 break
                     
@@ -180,7 +184,7 @@ class MatchingNetwork(nn.Module):
         pred_indices = []
         # produce embeddings for target images
         for i in np.arange(target_image.size(1)):
-            print( "gen_encode" )
+            print( "target gen_encode" )
             print( target_image[:,i,:,:,:].shape )
             gen_encode = self.g(target_image[:,i,:,:,:])
             print( gen_encode.shape )
