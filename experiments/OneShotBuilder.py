@@ -384,14 +384,14 @@ class OneShotBuilder:
                 acc, c_loss_value, pred_indices = self.matchingNet.predict(x.cuda(), y_support_set_one_hot.cuda(),
                                                      x_target.cuda(), y_target.cuda(), is_debug = False )
             else:
-                acc, c_loss_value, pred_indices = self.matchingNet.predict(x, y_support_set_one_hot,
+                acc, c_loss_value, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl = self.matchingNet.predict(x, y_support_set_one_hot,
                                                      x_target, y_target, is_debug = is_debug, is_evaluation_only = False, y_support_set_org = y_support_set, target_y_actuals = target_y_actuals )
 
             if is_debug == True:
                 #iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
                 print( "test_loss: {}, test_accuracy: {}".format(c_loss_value.data, acc.data) )
             
-            return c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices        
+            return c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl        
         
     def __adjust_learning_rate(self,optimizer):
         """Updates the learning rate given the learning rate decay.

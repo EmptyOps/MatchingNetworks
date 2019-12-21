@@ -155,6 +155,8 @@ class MatchingNetwork(nn.Module):
             tot_emclvl = 0
             emcllcls = []
             emclvlcls = []
+            emcllclsl = []
+            emclvlclsl = []
             #for i in np.arange(support_set_images.shape[1]):
             for tatmpts in range(0, target_image.shape[0]):
                 for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
@@ -287,11 +289,14 @@ class MatchingNetwork(nn.Module):
                                 tot_emc = tot_emc + 1
                                 if F.cross_entropy(preds, target_label[:,i].long()) <= 0.92:
                                     tot_emcll = tot_emcll + 1
-                                    emcllcls.append( tstcls )
                                     
                                     if F.cross_entropy(preds, target_label[:,i].long()) <= 0.90:
                                         tot_emclvl = tot_emclvl + 1
-                                        emclvlcls.append( tstcls )
+                                        emclvlcls.append( tstcls[0] )
+                                        emclvlclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
+                                    else:
+                                        emcllcls.append( tstcls[0] )
+                                        emcllclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
                             
                         if i == 0:
                             accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
@@ -313,9 +318,11 @@ class MatchingNetwork(nn.Module):
             
             print("tot_ec " + str(tot_ec) + " tot_emc " + str(tot_emc) + " tot_emcll " + str(tot_emcll) + " tot_emclvl " + str(tot_emclvl) )
             print( "emcllcls ", emcllcls )
+            print( "emcllclsl ", emcllclsl )
             print( "emclvlcls ", emclvlcls )
+            print( "emclvlclsl ", emclvlclsl )
             
-        return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices
+        return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl
         
 class MatchingNetworkTest(unittest.TestCase):
     def setUp(self):
