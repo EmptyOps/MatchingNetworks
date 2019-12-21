@@ -148,11 +148,13 @@ class MatchingNetwork(nn.Module):
             from torch.autograd import Variable
             #for i in np.arange(support_set_images.shape[1]):
             pinds = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
-            for i in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
+            for ii in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
+                encoded_images = []
+                
                 print( "gen_encode" )
                 for j in range(0, support_set_labels_one_hot_org_shape[1]):
-                    print( support_set_images[pinds[i*target_image.shape[0]:(i+1)*target_image.shape[0]],j,:,:,:].shape )
-                    gen_encode = self.g( torch.Tensor(support_set_images[pinds[i*target_image.shape[0]:(i+1)*target_image.shape[0]],j,:,:,:]) )
+                    print( support_set_images[pinds[ii*target_image.shape[0]:(ii+1)*target_image.shape[0]],j,:,:,:].shape )
+                    gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii*target_image.shape[0]:(ii+1)*target_image.shape[0]],j,:,:,:]) )
                     print( gen_encode.shape )
                     
                     encoded_images.append( Variable(gen_encode, volatile=True).float() )
@@ -175,79 +177,80 @@ class MatchingNetwork(nn.Module):
                 print("tmp_one_hot")
                 print(tmp_one_hot.shape)
                 support_set_labels_one_hot = tmp_one_hot
-                break
+                #break
                     
-        support_set_labels_one_hot = Variable(torch.from_numpy(support_set_labels_one_hot), volatile=True).float()
-        print( type(support_set_labels_one_hot) )
-        print( support_set_labels_one_hot.shape )
+                support_set_labels_one_hot = Variable(torch.from_numpy(support_set_labels_one_hot), volatile=True).float()
+                print( type(support_set_labels_one_hot) )
+                print( support_set_labels_one_hot.shape )
                     
                    
-        pred_indices = []
+                pred_indices = []
         # produce embeddings for target images
-        for i in np.arange(target_image.size(1)):
-            print( "target gen_encode" )
-            print( target_image[:,i,:,:,:].shape )
-            gen_encode = self.g(target_image[:,i,:,:,:])
-            print( gen_encode.shape )
-            #encoded_images.append(gen_encode)
-            #print( type(encoded_images) )
-            #outputs = torch.stack(encoded_images)
-            #print( type(outputs) )
-            #print( outputs.shape )
-            
-
-            if self.fce:
-                raise Exception("outputs does not contain target image")
-                outputs, hn, cn = self.lstm(outputs)
-
-            # get similarity between support set embeddings and target
-            if is_evaluation_only == False:
-                #similarities = self.dn(support_set=outputs[:-1], input_image=outputs[-1])
-                similarities = self.dn(support_set=encoded_images, input_image=gen_encode)
-            else:
-                similarities = self.dn(input_image=outputs[:])
-            similarities = similarities.t()
-
-            # produce predictions for target probabilities
-            if is_evaluation_only == False:
-                preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)
-            else:
-                preds = self.classify(similarities)
-
-            print(support_set_labels_one_hot)
-            print(preds)
+        #for i in np.arange(target_image.size(1)):
+                i = 0
+                print( "target gen_encode" )
+                print( target_image[:,i,:,:,:].shape )
+                gen_encode = self.g(target_image[:,i,:,:,:])
+                print( gen_encode.shape )
+                #encoded_images.append(gen_encode)
+                #print( type(encoded_images) )
+                #outputs = torch.stack(encoded_images)
+                #print( type(outputs) )
+                #print( outputs.shape )
                 
-            # calculate accuracy and crossentropy loss
-            values, indices = preds.max(1)
-            pred_indices.append( indices )
-            if is_debug:
-                print( "support set while in predictions debug mode" )
-                #print( y_support_set_org )
-                print( target_y_actuals[:,i] )
-                print( "predictions debug mode" )
-                print( values )
-                print( indices.squeeze() )
-                print( target_label[:,i] )
-                
-                if False and torch.mean((indices.squeeze() == target_label[:,i]).float()) >= 0.9:
-                    print( "accuracy found above limitttttttttttttttttttttttttttttttttttttttt " + str( torch.mean((indices.squeeze() == target_label[:,i]).float()) ) )
-                    print( preds )
-                
-                if F.cross_entropy(preds, target_label[:,i].long()) <= 1.1:
-                    print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
-                    print( preds )
-            
-            if i == 0:
-                accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
-                crossentropy_loss = F.cross_entropy(preds, target_label[:,i].long())
-            else:
-                accuracy = accuracy + torch.mean((indices.squeeze() == target_label[:, i]).float())
-                crossentropy_loss = crossentropy_loss + F.cross_entropy(preds, target_label[:, i].long())
 
-            ## delete the last target image encoding of encoded_images
-            #encoded_images.pop()
-            
-            return accuracy, crossentropy_loss, pred_indices
+                if self.fce:
+                    raise Exception("outputs does not contain target image")
+                    outputs, hn, cn = self.lstm(outputs)
+
+                # get similarity between support set embeddings and target
+                if is_evaluation_only == False:
+                    #similarities = self.dn(support_set=outputs[:-1], input_image=outputs[-1])
+                    similarities = self.dn(support_set=encoded_images, input_image=gen_encode)
+                else:
+                    similarities = self.dn(input_image=outputs[:])
+                similarities = similarities.t()
+
+                # produce predictions for target probabilities
+                if is_evaluation_only == False:
+                    preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)
+                else:
+                    preds = self.classify(similarities)
+
+                print(support_set_labels_one_hot)
+                print(preds)
+                    
+                # calculate accuracy and crossentropy loss
+                values, indices = preds.max(1)
+                pred_indices.append( indices )
+                if is_debug:
+                    print( "support set while in predictions debug mode" )
+                    #print( y_support_set_org )
+                    print( target_y_actuals[:,i] )
+                    print( "predictions debug mode" )
+                    print( values )
+                    print( indices.squeeze() )
+                    print( target_label[:,i] )
+                    
+                    if False and torch.mean((indices.squeeze() == target_label[:,i]).float()) >= 0.9:
+                        print( "accuracy found above limitttttttttttttttttttttttttttttttttttttttt " + str( torch.mean((indices.squeeze() == target_label[:,i]).float()) ) )
+                        print( preds )
+                    
+                    if F.cross_entropy(preds, target_label[:,i].long()) <= 1.1:
+                        print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
+                        print( preds )
+                
+                if i == 0:
+                    accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
+                    crossentropy_loss = F.cross_entropy(preds, target_label[:,i].long())
+                else:
+                    accuracy = accuracy + torch.mean((indices.squeeze() == target_label[:, i]).float())
+                    crossentropy_loss = crossentropy_loss + F.cross_entropy(preds, target_label[:, i].long())
+
+                ## delete the last target image encoding of encoded_images
+                #encoded_images.pop()
+                
+                #return accuracy, crossentropy_loss, pred_indices
 
         #if is_debug:
         #    dfsdfsdfsdf
