@@ -136,8 +136,7 @@ class MatchingNetwork(nn.Module):
         
         target_image_org = np.copy(target_image)
         
-        print( target_image )
-        sdfjkhsdkfjh
+        #target_image
         
         # produce embeddings for support set images
         #print( "encoded_images" )
@@ -192,19 +191,23 @@ class MatchingNetwork(nn.Module):
                     for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
                         ii_cntr = 0
                         tstcls = 0
-                        for ii in range( 0, int( math.floor( support_set_images.shape[0] / target_image.shape[0] ) ) if nardr == 0 else int( math.floor( len(uniq_cls) / target_image.shape[0] ) ) ): 
+                        iilength = int( math.floor( support_set_images.shape[0] / target_image.shape[0] ) ) if nardr == 0 else int( math.floor( len(uniq_cls) / target_image.shape[0] ) )
+                        for ii in range( 0, iilength ): 
                             encoded_images = []
                             
                             #print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
-                            xhat_pinds = np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) #np.random.permutation( support_set_labels_one_hot_org_shape[1] )
+                            xhat_pinds = np.random.shuffle( np.concatenate( ( np.random.permutation( support_set_labels_one_hot_org_shape[1] ), np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] - support_set_labels_one_hot_org_shape[1] ) ), axis=0 ) ) #np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) #np.random.permutation( support_set_labels_one_hot_org_shape[1] )
+                            print( xhat_pinds )
+                            dsfkhksdjhfksdjhfkjh
                             xhat_ind = 0
                             for j in range(0, support_set_labels_one_hot_org_shape[1]):
                             
+                                jinds = int( math.floor(ii_cntr/iilength) ) + (jj*support_set_labels_one_hot_org_shape[1])  #( j )+(jj*support_set_labels_one_hot_org_shape[1])  
                                 #print( support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:].shape )
                                 if nardr == 0:
-                                    gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]) )
+                                    gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:]) )
                                 else:
-                                    gen_encode = self.g( torch.Tensor(support_set_images[uniq_cls[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]) )
+                                    gen_encode = self.g( torch.Tensor(support_set_images[uniq_cls[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]]],jinds,:,:,:]) )
                                 #print( gen_encode.shape )
                                 
                                 encoded_images.append( Variable(gen_encode, volatile=True).float() )
