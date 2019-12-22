@@ -321,7 +321,7 @@ class OmniglotNShotDataset():
                 sdfhsdhfkjhd
         """
         #TODO tmp. compare 
-        if is_evaluation_only == True:
+        if False and is_evaluation_only == True:
             is_found = False
             for c in range(0, self.x.shape[0]):
                 for i in range(0, self.x.shape[1]):
