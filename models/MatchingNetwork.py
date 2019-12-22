@@ -136,16 +136,16 @@ class MatchingNetwork(nn.Module):
         
         target_image_org = np.copy(target_image)
         
-        target_image
+        #target_image
         
         # produce embeddings for support set images
-        print( "encoded_images" )
-        print( type(support_set_labels_one_hot) )
+        #print( "encoded_images" )
+        #print( type(support_set_labels_one_hot) )
         support_set_labels_one_hot_org_shape = support_set_labels_one_hot.shape
-        print( support_set_labels_one_hot.shape )
-        print( target_image.shape )
+        #print( support_set_labels_one_hot.shape )
+        #print( target_image.shape )
         tmp_one_hot = np.zeros( (support_set_labels_one_hot_org_shape[0], support_set_labels_one_hot_org_shape[1], support_set_labels_one_hot_org_shape[1]) )
-        print( tmp_one_hot.shape )
+        #print( tmp_one_hot.shape )
         support_set_labels_one_hot = []# np.zeros( (target_image.shape[0], target_image.shape[1], target_image.shape[0]) )
         encoded_images = []
         if is_evaluation_only == False:
@@ -155,10 +155,17 @@ class MatchingNetwork(nn.Module):
             tot_emc = 0
             tot_emcll = 0
             tot_emclvl = 0
+            uniq_cls = []
+            
             emcllcls = []
             emclvlcls = []
             emcllclsl = []
             emclvlclsl = []
+            
+            emcllcls_n1 = []
+            emclvlcls_n1 = []
+            emcllclsl_n1 = []
+            emclvlclsl_n1 = []
             #for i in np.arange(support_set_images.shape[1]):
             for nardr in range(0, 1):
                 for tatmpts in range(0, target_image.shape[0]):
@@ -183,14 +190,14 @@ class MatchingNetwork(nn.Module):
                         for ii in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
                             encoded_images = []
                             
-                            print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
+                            #print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
                             xhat_pinds = np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) #np.random.permutation( support_set_labels_one_hot_org_shape[1] )
                             xhat_ind = 0
                             for j in range(0, support_set_labels_one_hot_org_shape[1]):
                             
-                                print( support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:].shape )
+                                #print( support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:].shape )
                                 gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]) )
-                                print( gen_encode.shape )
+                                #print( gen_encode.shape )
                                 
                                 encoded_images.append( Variable(gen_encode, volatile=True).float() )
                                 tmp_one_hot[:,j,j] = 1
@@ -234,24 +241,25 @@ class MatchingNetwork(nn.Module):
                                     break
                             """
                             
-                            print("tmp_one_hot")
-                            print(tmp_one_hot.shape)
+                            #print("tmp_one_hot")
+                            #print(tmp_one_hot.shape)
                             support_set_labels_one_hot = tmp_one_hot
                             #break
                                 
                             support_set_labels_one_hot = Variable(torch.from_numpy(support_set_labels_one_hot), volatile=True).float()
-                            print( type(support_set_labels_one_hot) )
-                            print( support_set_labels_one_hot.shape )
+                            #print( type(support_set_labels_one_hot) )
+                            #print( support_set_labels_one_hot.shape )
                                 
                             tot_ec = tot_ec + 1
                             pred_indices = []
                     # produce embeddings for target images
                     #for i in np.arange(target_image.size(1)):
                             i = 0
-                            print( "target gen_encode" )
-                            print( target_image[:,i,:,:,:].shape )
+                            #print( "target gen_encode" )
+                            #print( target_image[:,i,:,:,:].shape )
                             gen_encode = self.g(target_image[:,i,:,:,:])
-                            print( gen_encode.shape )
+                            #print( gen_encode.shape )
+                            
                             #encoded_images.append(gen_encode)
                             #print( type(encoded_images) )
                             #outputs = torch.stack(encoded_images)
@@ -277,20 +285,20 @@ class MatchingNetwork(nn.Module):
                             else:
                                 preds = self.classify(similarities)
 
-                            print(support_set_labels_one_hot)
-                            print(preds)
+                            #print(support_set_labels_one_hot)
+                            #print(preds)
                                 
                             # calculate accuracy and crossentropy loss
                             values, indices = preds.max(1)
                             pred_indices.append( indices )
                             if is_debug:
-                                print( "support set while in predictions debug mode" )
-                                #print( y_support_set_org )
-                                print( target_y_actuals[:,i] )
-                                print( "predictions debug mode" )
-                                print( values )
-                                print( indices.squeeze() )
-                                print( target_label[:,i] )
+                                #print( "support set while in predictions debug mode" )
+                                ##print( y_support_set_org )
+                                #print( target_y_actuals[:,i] )
+                                #print( "predictions debug mode" )
+                                #print( values )
+                                #print( indices.squeeze() )
+                                #print( target_label[:,i] )
                                 
                                 if False and torch.mean((indices.squeeze() == target_label[:,i]).float()) >= 0.9:
                                     print( "accuracy found above limitttttttttttttttttttttttttttttttttttttttt " + str( torch.mean((indices.squeeze() == target_label[:,i]).float()) ) )
@@ -305,13 +313,24 @@ class MatchingNetwork(nn.Module):
                                         
                                         if F.cross_entropy(preds, target_label[:,i].long()) <= 0.915 and values[tatmpts] >= 0.95:
                                             tot_emclvl = tot_emclvl + 1
-                                            emclvlcls.append( tstcls[0] )
-                                            #emclvlclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
-                                            emclvlclsl.append( values[tatmpts] )
+                                            if nardr == 0:
+                                                emclvlcls.append( tstcls[0] )
+                                                #emclvlclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
+                                                emclvlclsl.append( values[tatmpts] )
+                                            else:
+                                                emclvlcls_n1.append( tstcls[0] )
+                                                #emclvlclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
+                                                emclvlclsl_n1.append( values[tatmpts] )
                                         else:
-                                            emcllcls.append( tstcls[0] )
-                                            #emcllclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
-                                            emcllclsl.append( values[tatmpts] )
+                                            if nardr == 0:
+                                                emcllcls.append( tstcls[0] )
+                                                #emcllclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
+                                                emcllclsl.append( values[tatmpts] )
+                                            else:
+                                                emcllcls_n1.append( tstcls[0] )
+                                                #emcllclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
+                                                emcllclsl_n1.append( values[tatmpts] )
+
                                 
                             if i == 0:
                                 accuracy = torch.mean((indices.squeeze() == target_label[:,i]).float())
@@ -320,8 +339,8 @@ class MatchingNetwork(nn.Module):
                                 accuracy = accuracy + torch.mean((indices.squeeze() == target_label[:, i]).float())
                                 crossentropy_loss = crossentropy_loss + F.cross_entropy(preds, target_label[:, i].long())
                             
-                            if is_debug:                    
-                                print( "test_loss: {}, test_accuracy: {}".format(crossentropy_loss.data, accuracy.data) )
+                            #if is_debug:                    
+                                #print( "test_loss: {}, test_accuracy: {}".format(crossentropy_loss.data, accuracy.data) )
 
                             ## delete the last target image encoding of encoded_images
                             #encoded_images.pop()
@@ -336,6 +355,11 @@ class MatchingNetwork(nn.Module):
                 print( "emcllclsl ", emcllclsl )
                 print( "emclvlcls ", emclvlcls )
                 print( "emclvlclsl ", emclvlclsl )
+                
+                print( "emcllcls_n1 ", emcllcls_n1 )
+                print( "emcllclsl_n1 ", emcllclsl_n1 )
+                print( "emclvlcls_n1 ", emclvlcls_n1 )
+                print( "emclvlclsl_n1 ", emclvlclsl_n1 )
             
         return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl
         
