@@ -220,13 +220,14 @@ class OmniglotNShotDataset():
                     #        print("key " + str(key) + " len " + str(len(value)))
                     unique, counts = np.unique(input_labels, return_counts=True)
                     print( dict(zip(unique, counts)) )
+                    
+                    print(temp.keys())
                     """
                     
                     input = []  # Free memory
                     input_labels = []  # Free memory
                     
                     self.evaluation = [] 
-                    print(temp.keys())
                     for classes in temp.keys():
                         self.evaluation.append(np.array(temp[ list(temp.keys())[classes]]))
                     self.evaluation = np.array(self.evaluation)

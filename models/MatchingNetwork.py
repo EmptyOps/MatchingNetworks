@@ -136,7 +136,8 @@ class MatchingNetwork(nn.Module):
         
         target_image_org = np.copy(target_image)
         
-        #target_image
+        print( target_image )
+        sdfjkhsdkfjh
         
         # produce embeddings for support set images
         #print( "encoded_images" )
