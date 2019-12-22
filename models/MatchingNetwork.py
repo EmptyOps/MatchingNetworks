@@ -151,6 +151,8 @@ class MatchingNetwork(nn.Module):
         if is_evaluation_only == False:
             import math
             from torch.autograd import Variable
+            import itertools
+                    
             tot_ec = 0
             tot_emc = 0
             tot_emcll = 0
@@ -167,27 +169,33 @@ class MatchingNetwork(nn.Module):
             emcllclsl_n1 = []
             emclvlclsl_n1 = []
             #for i in np.arange(support_set_images.shape[1]):
-            for nardr in range(0, 1):
+            for nardr in range(0, 2):
+                if nardr == 0:
+                    pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
+                    #repeat 5 times
+                    pinds = np.concatenate( ( pindstmp, pindstmp ), axis=0 )
+                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                else:
+                    pindstmp = np.array(list(itertools.permutations(uniq_cls, target_image.shape[0])))   #np.random.permutation( len(uniq_cls) - np.mod(len(uniq_cls),target_image.shape[0]) )
+                    print(uniq_cls)
+                    print(pindstmp.shape)
+                    print(pindstmp)
+                    #repeat 5 times
+                    pinds = np.concatenate( ( pindstmp, pindstmp ), axis=0 )
+                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                    print(pinds.shape)
+                    print(pinds)
+                    
                 for tatmpts in range(0, target_image.shape[0]):
-                    if nardr == 0:
-                        pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
-                        #repeat 5 times
-                        pinds = np.concatenate( ( pindstmp, pindstmp ), axis=0 )
-                        pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
-                        pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
-                        pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
-                    else:
-                        pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0]) )
-                        #repeat 5 times
-                        pinds = np.concatenate( ( pindstmp, pindstmp ), axis=0 )
-                        pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
-                        pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
-                        pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                         
                     for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
                         ii_cntr = 0
                         tstcls = 0
-                        for ii in range( 0, int( math.floor(support_set_images.shape[0] / target_image.shape[0]) ) ): 
+                        for ii in range( 0, int( math.floor( support_set_images.shape[0] / target_image.shape[0] ) ) if nardr == 0 else int( math.floor( len(pinds) / target_image.shape[0] ) ) ): 
                             encoded_images = []
                             
                             #print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
@@ -196,7 +204,10 @@ class MatchingNetwork(nn.Module):
                             for j in range(0, support_set_labels_one_hot_org_shape[1]):
                             
                                 #print( support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:].shape )
-                                gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]) )
+                                if nardr == 0:
+                                    gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]) )
+                                else:
+                                    gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]) )
                                 #print( gen_encode.shape )
                                 
                                 encoded_images.append( Variable(gen_encode, volatile=True).float() )
@@ -206,10 +217,17 @@ class MatchingNetwork(nn.Module):
                                 n_test_samples = np.sum(j == xhat_pinds)
                                 for xhat_i in range(0, n_test_samples):
                                     if not tatmpts == xhat_ind:
-                                        target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
+                                        if nardr == 0:
+                                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
+                                        else:
+                                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[ii_cntr][xhat_ind],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
                                         #target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]), volatile=True).float()
                                     else:
-                                        tstcls = pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1]
+                                        if nardr == 0:
+                                            tstcls = pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1]
+                                        else:
+                                            tstcls = pinds[ii_cntr][xhat_ind]
+                                            
                                         target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(target_image_org[xhat_ind,0,:,:,:]), volatile=True).float()
                                     target_label[xhat_ind,0] = Variable( torch.from_numpy( np.array( [j] ) ), volatile=True).long()
                                     xhat_ind = xhat_ind + 1 
@@ -314,6 +332,9 @@ class MatchingNetwork(nn.Module):
                                         if F.cross_entropy(preds, target_label[:,i].long()) <= 0.915 and values[tatmpts] >= 0.95:
                                             tot_emclvl = tot_emclvl + 1
                                             if nardr == 0:
+                                                if not tstcls[0] in uniq_cls:
+                                                    uniq_cls.append(tstcls[0])
+                                            
                                                 emclvlcls.append( tstcls[0] )
                                                 #emclvlclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
                                                 emclvlclsl.append( values[tatmpts] )
@@ -323,6 +344,9 @@ class MatchingNetwork(nn.Module):
                                                 emclvlclsl_n1.append( values[tatmpts] )
                                         else:
                                             if nardr == 0:
+                                                if not tstcls[0] in uniq_cls:
+                                                    uniq_cls.append(tstcls[0])
+                                                        
                                                 emcllcls.append( tstcls[0] )
                                                 #emcllclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
                                                 emcllclsl.append( values[tatmpts] )
