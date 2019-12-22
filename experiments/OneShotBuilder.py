@@ -46,7 +46,7 @@ class OneShotBuilder:
                                              fce=fce,
                                              num_classes_per_set=classes_per_set,
                                              num_samples_per_class=samples_per_class,
-                                             nClasses = 0, image_size = 28, layer_size = 1600)
+                                             nClasses = 0, image_size = 28, layer_size = 256)
         else: 
             self.matchingNet = torch.load(self.model_path)
                                              
