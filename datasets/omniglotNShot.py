@@ -168,6 +168,7 @@ class OmniglotNShotDataset():
             else:
                 print("loaded prepared base_classes_file")
                 self.x = array( json.load( open( base_classes_file ) ) ) 
+                print(self.x.shape)
                 
                 if is_evaluation_only == False:
                     print("loaded prepared x_to_be_predicted file")
@@ -211,6 +212,7 @@ class OmniglotNShotDataset():
                         else:
                             temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
 
+                    """
                     print( "temp.keys()" )
                     #print( temp.keys() )
                     #for key, value in temp.items(): 
@@ -218,6 +220,7 @@ class OmniglotNShotDataset():
                     #        print("key " + str(key) + " len " + str(len(value)))
                     unique, counts = np.unique(input_labels, return_counts=True)
                     print( dict(zip(unique, counts)) )
+                    """
                     
                     input = []  # Free memory
                     input_labels = []  # Free memory
