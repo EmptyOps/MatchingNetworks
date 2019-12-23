@@ -321,14 +321,14 @@ class MatchingNetwork(nn.Module):
                                     print( "accuracy found above limitttttttttttttttttttttttttttttttttttttttt " + str( torch.mean((indices.squeeze() == target_label[:,i]).float()) ) )
                                     print( preds )
                                 
-                                if F.cross_entropy(preds, target_label[:,i].long()) <= 0.95 or nardr >= 1:
+                                if (F.cross_entropy(preds, target_label[:,i].long()) <= 0.95 and values[tatmpts] >= 0.97) or nardr >= 1:
                                     print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
                                     print( preds )
                                     tot_emc = tot_emc + 1
-                                    if F.cross_entropy(preds, target_label[:,i].long()) <= 0.95:
+                                    if (F.cross_entropy(preds, target_label[:,i].long()) <= 0.95 and values[tatmpts] >= 0.98):
                                         tot_emcll = tot_emcll + 1
                                         
-                                        if F.cross_entropy(preds, target_label[:,i].long()) <= 0.93 and values[tatmpts] >= 0.95:
+                                        if F.cross_entropy(preds, target_label[:,i].long()) <= 0.93 and values[tatmpts] >= 0.995:
                                             tot_emclvl = tot_emclvl + 1
                                             if nardr == 0:
                                                 if not tstcls[0] in uniq_cls:
@@ -341,7 +341,7 @@ class MatchingNetwork(nn.Module):
                                                 emclvlcls_n1.append( tstcls[0] )
                                                 #emclvlclsl.append( F.cross_entropy(preds, target_label[:,i].long()) )
                                                 emclvlclsl_n1.append( values[tatmpts] )
-                                        elif values[tatmpts] >= 0.90:
+                                        elif values[tatmpts] >= 0.985:
                                             if nardr == 0:
                                                 if not tstcls[0] in uniq_cls:
                                                     uniq_cls.append(tstcls[0])
