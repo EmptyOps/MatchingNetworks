@@ -50,7 +50,7 @@ if is_use_sample_data:
     total_test_batches = 250
 else:
     batch_size = 8 #32
-    fce = True
+    fce = False
     classes_per_set = 5     #20    #5
     samples_per_class = 1   #5
     channels = 1
