@@ -509,7 +509,7 @@ class OmniglotNShotDataset():
             p = []
             
         #visualize 
-        if is_visualize_data = True:
+        if is_visualize_data == True:
             raise Exception("Not implemented yet")
             
         """
