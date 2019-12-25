@@ -104,11 +104,9 @@ class OneShotBuilder:
                 size = x_target.size()
                 x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
                 if self.isCudaAvailable:
-                    cuda_available
                     acc, c_loss_value, _ = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
                                                          x_target.cuda(), y_target.cuda())
                 else:
-                    cuda_not_available
                     acc, c_loss_value, _ = self.matchingNet(x_support_set, y_support_set_one_hot,
                                                          x_target, y_target)
 
