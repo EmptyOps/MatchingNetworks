@@ -34,6 +34,7 @@ ABS_PATh = os.path.dirname(os.path.abspath(__file__)) + "/"
 is_use_sample_data = False
 is_run_time_predictions = True
 is_evaluation_res_in_obj = True if int(sys.argv[32]) == 1 else False
+is_visualize_data = True
 
 # Experiment Setup
 if is_use_sample_data:
@@ -49,7 +50,7 @@ if is_use_sample_data:
     total_test_batches = 250
 else:
     batch_size = 8 #32
-    fce = False
+    fce = True
     classes_per_set = 5     #20    #5
     samples_per_class = 1   #5
     channels = 1
@@ -94,7 +95,8 @@ data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_
                                           negative_test_offset = int(sys.argv[27]), is_apply_pca_first = int(sys.argv[29]), 
                                           cache_samples_for_evaluation = int(sys.argv[30]), 
                                           is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]), 
-                                          is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]))
+                                          is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]), 
+                                          is_visualize_data = is_visualize_data)
 
 obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
 obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce)
