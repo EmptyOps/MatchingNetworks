@@ -557,7 +557,7 @@ class OmniglotNShotDataset():
                 #self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
                 #self.x_train, self.x_test, self.x_val  = self.x[:30], self.x[30:43], self.x[43:]
                 #self.x_train, self.x_test, self.x_val  = self.x[:200], self.x[200:270], self.x[270:]
-                self.x_train, self.x_test, self.x_val  = self.x[:4], self.x[4:6], self.x[6:]
+                self.x_train, self.x_test, self.x_val  = self.x[:4], None, self.x[4:]  #, self.x[6:]
             else:
                 self.x_train  = self.x[:]
          
@@ -575,7 +575,7 @@ class OmniglotNShotDataset():
             self.datasets = {"train": self.x_train, "val": self.x_val, "test": self.x_test, "x_to_be_predicted": self.x_to_be_predicted} #original data cached
             self.datasets_cache = {"train": self.load_data_cache(self.datasets["train"], ""),  #current epoch data cached
                                    "val": self.load_data_cache(self.datasets["val"], ""),
-                                   "test": self.load_data_cache(self.datasets["test"], ""),
+                                   "test": None if self.x_test == None else self.load_data_cache(self.datasets["test"], ""),
                                    "x_to_be_predicted": None if not self.is_run_time_predictions else self.load_data_cache(self.datasets["x_to_be_predicted"], "x_to_be_predicted")}
         else:
             self.indexes = {"evaluation": 0}

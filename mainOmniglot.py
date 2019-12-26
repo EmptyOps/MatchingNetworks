@@ -120,7 +120,7 @@ if is_evaluation_only == False:
             logger.log_value('val_loss', total_val_c_loss)
             logger.log_value('val_acc', total_val_accuracy)
 
-            if total_val_accuracy >= best_val:  # if new best val accuracy -> produce test statistics
+            if False and total_val_accuracy >= best_val:  # if new best val accuracy -> produce test statistics
                 best_val = total_val_accuracy
                 total_test_c_loss, total_test_accuracy = obj_oneShotBuilder.run_testing_epoch(
                     total_test_batches=total_test_batches)
