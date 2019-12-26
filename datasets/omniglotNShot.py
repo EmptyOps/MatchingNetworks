@@ -556,7 +556,8 @@ class OmniglotNShotDataset():
             if is_evaluation_only == False:
                 #self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
                 #self.x_train, self.x_test, self.x_val  = self.x[:30], self.x[30:43], self.x[43:]
-                self.x_train, self.x_test, self.x_val  = self.x[:200], self.x[200:270], self.x[270:]
+                #self.x_train, self.x_test, self.x_val  = self.x[:200], self.x[200:270], self.x[270:]
+                self.x_train, self.x_test, self.x_val  = self.x[:4], self.x[4:6], self.x[6:]
             else:
                 self.x_train  = self.x[:]
          
