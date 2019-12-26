@@ -33,7 +33,7 @@ def convLayer(in_planes, out_planes, useDropout = False):
     return seq
 
 class Classifier(nn.Module):
-    def __init__(self, layer_size, nClasses = 0, num_channels = 1, useDropout = False, image_size = 28):
+    def __init__(self, layer_size, nClasses = 0, num_channels = 1, useDropout = False, image_size = 28, is_use_lstm_layer=False):
         super(Classifier, self).__init__()
 
         """
@@ -43,6 +43,8 @@ class Classifier(nn.Module):
         :param num_channels: Number of channels of images
         :param useDroput: use Dropout with p=0.1 in each Conv block
         """
+        self.is_use_lstm_layer = is_use_lstm_layer
+        
         self.layer1 = convLayer(num_channels, layer_size, useDropout)
         self.layer2 = convLayer(layer_size, layer_size, useDropout)
         self.layer3 = convLayer(layer_size, layer_size, useDropout)

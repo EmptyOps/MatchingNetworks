@@ -32,7 +32,7 @@ ABS_PATh = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 
 is_use_sample_data = False
-is_run_time_predictions = True
+is_run_time_predictions = True if int(sys.argv[34]) == 1 else False 
 is_evaluation_res_in_obj = True if int(sys.argv[32]) == 1 else False
 is_visualize_data = False
 

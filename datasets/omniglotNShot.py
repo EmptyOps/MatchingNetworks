@@ -66,8 +66,8 @@ class OmniglotNShotDataset():
             
             self.prediction_classes = 9
             self.total_base_classes = total_base_classes   #56
-            self.tvt_records = 11    #3 #19
-            self.re_records = 2     #2 #10
+            self.tvt_records = 25   #11    #3 #19
+            self.re_records = 0     #2     #2 #10
             self.choice_replace = True #necessary when number of samples are small
             
             base_classes_file = input_file+"_base_classes.json"
@@ -107,7 +107,7 @@ class OmniglotNShotDataset():
                     
                     if input_labels[i] in temp:
                         if len( temp[input_labels[i]] ) >= self.tvt_records:  #only 20 samples per class
-                            if is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
+                            if self.re_records > 0 and is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
                                 lbl_val = input_labels[i]
                                 if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
                                     lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
