@@ -49,9 +49,9 @@ if is_use_sample_data:
     total_val_batches = 100
     total_test_batches = 250
 else:
-    batch_size = 8 #32
+    batch_size = 32     #8 #32
     fce = False
-    classes_per_set = 5     #20    #5
+    classes_per_set = 1    #5     #20    #5
     samples_per_class = 1   #5
     channels = 1
     # Training setup
