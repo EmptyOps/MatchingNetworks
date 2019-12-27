@@ -21,7 +21,7 @@ import torch.nn.functional as F
 class MatchingNetwork(nn.Module):
     def __init__(self, keep_prob, \
                  batch_size=100, num_channels=1, learning_rate=0.001, fce=False, num_classes_per_set=5, \
-                 num_samples_per_class=1, nClasses = 0, image_size = 28, layer_size = 64, is_use_lstm_layer=False):
+                 num_samples_per_class=1, nClasses = 0, image_size = 28, layer_size = 64, is_use_lstm_layer=False, vector_dim = vector_dim):
         super(MatchingNetwork, self).__init__()
 
         """
@@ -45,7 +45,7 @@ class MatchingNetwork(nn.Module):
             self.g = Classifier(layer_size = layer_size, num_channels=num_channels,
                                 nClasses= nClasses, image_size = image_size )
         else:
-            self.lstm = BidirectionalLSTM(layer_sizes=[layer_size], batch_size=self.batch_size, vector_dim = image_size)
+            self.lstm = BidirectionalLSTM(layer_sizes=[layer_size], batch_size=self.batch_size, vector_dim = vector_dim)
                                 
         if fce:
             self.lstm = BidirectionalLSTM(layer_sizes=[32], batch_size=self.batch_size, vector_dim = self.g.outSize)
