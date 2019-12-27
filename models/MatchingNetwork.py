@@ -74,6 +74,7 @@ class MatchingNetwork(nn.Module):
                     gen_encode = self.g(support_set_images[:,i,:,:,:])
                 else: 
                     gen_encode, _, _ = self.g( support_set_images[:,i,:,:,:].reshape( support_set_images.shape[0], 1, self.vector_dim ) )
+                    gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                     
                 encoded_images.append(gen_encode)
 
@@ -84,6 +85,7 @@ class MatchingNetwork(nn.Module):
                 gen_encode = self.g(target_image[:,i,:,:,:])
             else:
                 gen_encode, _, _ = self.g(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ))
+                gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                 
             print("gen_encode ", gen_encode.shape)
             encoded_images.append(gen_encode)
