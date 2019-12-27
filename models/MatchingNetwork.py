@@ -89,6 +89,7 @@ class MatchingNetwork(nn.Module):
             encoded_images.append(gen_encode)
             outputs = torch.stack(encoded_images)
             print("outputs ", outputs.shape)
+            dfsdfsdf
 
             if self.fce:
                 outputs, hn, cn = self.lstm(outputs)
