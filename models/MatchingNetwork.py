@@ -21,7 +21,7 @@ import torch.nn.functional as F
 class MatchingNetwork(nn.Module):
     def __init__(self, keep_prob, \
                  batch_size=100, num_channels=1, learning_rate=0.001, fce=False, num_classes_per_set=5, \
-                 num_samples_per_class=1, nClasses = 0, image_size = 28, layer_size = 64):
+                 num_samples_per_class=1, nClasses = 0, image_size = 28, layer_size = 64, is_use_lstm_layer=False):
         super(MatchingNetwork, self).__init__()
 
         """
@@ -37,6 +37,8 @@ class MatchingNetwork(nn.Module):
         :param nClasses: total number of classes. It changes the output size of the classifier g with a final FC layer.
         :param image_input: size of the input image. It is needed in case we want to create the last FC classification 
         """
+        self.is_use_lstm_layer = is_use_lstm_layer
+        
         self.batch_size = batch_size
         self.fce = fce
         self.g = Classifier(layer_size = layer_size, num_channels=num_channels,

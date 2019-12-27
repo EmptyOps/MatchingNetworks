@@ -239,9 +239,11 @@ class OmniglotNShotDataset():
                     
             
         #TODO temp
-        self.x[:,:,27,99,0] = 0
-        self.x[:,:,27,103,0] = 0
-        self.x[:,:,27,107,0] = 0
+        if self.x.shape[2] >= 28 and self.x.shape[3] >= 108:
+            self.x[:,:,27,99,0] = 0
+            self.x[:,:,27,103,0] = 0
+            self.x[:,:,27,107,0] = 0
+            
         if is_evaluation_only == False:
             if self.is_run_time_predictions:
                 self.x_to_be_predicted[:,:,27,99,0] = 0
