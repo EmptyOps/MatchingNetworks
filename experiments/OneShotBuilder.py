@@ -27,7 +27,7 @@ class OneShotBuilder:
         self.data = data
         self.model_path = model_path
 
-    def build_experiment(self, batch_size, classes_per_set, samples_per_class, channels, fce, image_size = 28, layer_size = 1600, is_use_lstm_layer=False, vector_dim = vector_dim):
+    def build_experiment(self, batch_size, classes_per_set, samples_per_class, channels, fce, image_size = 28, layer_size = 1600, is_use_lstm_layer=False, vector_dim = None):
 
         """
         :param batch_size: The experiment batch size

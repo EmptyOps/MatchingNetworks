@@ -21,7 +21,7 @@ import torch.nn.functional as F
 class MatchingNetwork(nn.Module):
     def __init__(self, keep_prob, \
                  batch_size=100, num_channels=1, learning_rate=0.001, fce=False, num_classes_per_set=5, \
-                 num_samples_per_class=1, nClasses = 0, image_size = 28, layer_size = 64, is_use_lstm_layer=False, vector_dim = vector_dim):
+                 num_samples_per_class=1, nClasses = 0, image_size = 28, layer_size = 64, is_use_lstm_layer=False, vector_dim = None):
         super(MatchingNetwork, self).__init__()
 
         """
