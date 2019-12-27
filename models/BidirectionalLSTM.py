@@ -50,7 +50,7 @@ class BidirectionalLSTM(nn.Module):
         print( "batch_size", self.batch_size )
         c0 = Variable(torch.rand(self.lstm.num_layers*4, self.batch_size, self.lstm.hidden_size),
                       requires_grad=False).cuda()
-        h0 = Variable(torch.rand(self.lstm.num_layers*2, self.batch_size, self.lstm.hidden_size),
+        h0 = Variable(torch.rand(self.lstm.num_layers*3, self.batch_size, self.lstm.hidden_size),
                       requires_grad=False).cuda()
         print("c0 ", c0.shape, " h0 ", h0.shape)
         output, (hn, cn) = self.lstm(inputs, (h0, c0))
