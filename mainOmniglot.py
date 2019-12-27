@@ -53,7 +53,7 @@ if is_use_sample_data:
 else:
     batch_size = 8     #8 #32
     fce = False
-    classes_per_set = 5     #2    #5     #20    #5
+    classes_per_set = 7     #2    #5     #20    #5
     samples_per_class = 1   #5
     channels = 1
     # Training setup
