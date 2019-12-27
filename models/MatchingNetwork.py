@@ -38,6 +38,7 @@ class MatchingNetwork(nn.Module):
         :param image_input: size of the input image. It is needed in case we want to create the last FC classification 
         """
         self.is_use_lstm_layer = is_use_lstm_layer
+        self.vector_dim = vector_dim
         
         self.batch_size = batch_size
         self.fce = fce
@@ -45,7 +46,7 @@ class MatchingNetwork(nn.Module):
             self.g = Classifier(layer_size = layer_size, num_channels=num_channels,
                                 nClasses= nClasses, image_size = image_size )
         else:
-            self.lstm = BidirectionalLSTM(layer_sizes=[layer_size], batch_size=self.batch_size, vector_dim = vector_dim)
+            self.g = BidirectionalLSTM(layer_sizes=[layer_size], batch_size=self.batch_size, vector_dim = vector_dim)
                                 
         if fce:
             self.lstm = BidirectionalLSTM(layer_sizes=[32], batch_size=self.batch_size, vector_dim = self.g.outSize)
@@ -69,13 +70,21 @@ class MatchingNetwork(nn.Module):
         encoded_images = []
         if is_evaluation_only == False:
             for i in np.arange(support_set_images.size(1)):
-                gen_encode = self.g(support_set_images[:,i,:,:,:])
+                if not self.is_use_lstm_layer:
+                    gen_encode = self.g(support_set_images[:,i,:,:,:])
+                else: 
+                    gen_encode = self.g( support_set_images[:,i,:,:,:].reshape( support_set_images.shape[0], 0, self.vector_dim ) )
+                    
                 encoded_images.append(gen_encode)
 
         pred_indices = []
         # produce embeddings for target images
         for i in np.arange(target_image.size(1)):
-            gen_encode = self.g(target_image[:,i,:,:,:])
+            if not self.is_use_lstm_layer:
+                gen_encode = self.g(target_image[:,i,:,:,:])
+            else:
+                gen_encode = self.g(target_image[:,i,:,:,:].reshape( target_image.shape[0], 0, self.vector_dim ))
+                
             encoded_images.append(gen_encode)
             outputs = torch.stack(encoded_images)
 
