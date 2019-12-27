@@ -27,7 +27,7 @@ class OneShotBuilder:
         self.data = data
         self.model_path = model_path
 
-    def build_experiment(self, batch_size, classes_per_set, samples_per_class, channels, fce):
+    def build_experiment(self, batch_size, classes_per_set, samples_per_class, channels, fce, image_size = 28, layer_size = 1600, is_use_lstm_layer=False):
 
         """
         :param batch_size: The experiment batch size
@@ -46,7 +46,8 @@ class OneShotBuilder:
                                              fce=fce,
                                              num_classes_per_set=classes_per_set,
                                              num_samples_per_class=samples_per_class,
-                                             nClasses = 0, image_size = 28, layer_size = 1600)
+                                             nClasses = 0, image_size = image_size, layer_size = layer_size, 
+                                             is_use_lstm_layer=is_use_lstm_layer)
         else: 
             self.matchingNet = torch.load(self.model_path)
                                              

@@ -99,7 +99,7 @@ data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_
                                           is_visualize_data = is_visualize_data)
 
 obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
-obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce)
+obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, image_size = int(sys.argv[35]), layer_size = int(sys.argv[36]), is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True )
 
 if is_evaluation_only == False:
     if not 'EPOCH' in model_path:

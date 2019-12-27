@@ -41,8 +41,12 @@ class MatchingNetwork(nn.Module):
         
         self.batch_size = batch_size
         self.fce = fce
-        self.g = Classifier(layer_size = layer_size, num_channels=num_channels,
-                            nClasses= nClasses, image_size = image_size )
+        if not self.is_use_lstm_layer:
+            self.g = Classifier(layer_size = layer_size, num_channels=num_channels,
+                                nClasses= nClasses, image_size = image_size )
+        else:
+            self.lstm = BidirectionalLSTM(layer_sizes=[layer_size], batch_size=self.batch_size, vector_dim = image_size)
+                                
         if fce:
             self.lstm = BidirectionalLSTM(layer_sizes=[32], batch_size=self.batch_size, vector_dim = self.g.outSize)
         self.dn = DistanceNetwork()
