@@ -73,7 +73,7 @@ class MatchingNetwork(nn.Module):
                 if not self.is_use_lstm_layer:
                     gen_encode = self.g(support_set_images[:,i,:,:,:])
                 else: 
-                    gen_encode = self.g( support_set_images[:,i,:,:,:].reshape( support_set_images.shape[0], 1, self.vector_dim ) )
+                    gen_encode, _, _ = self.g( support_set_images[:,i,:,:,:].reshape( support_set_images.shape[0], 1, self.vector_dim ) )
                     
                 encoded_images.append(gen_encode)
 
@@ -85,8 +85,10 @@ class MatchingNetwork(nn.Module):
             else:
                 gen_encode, _, _ = self.g(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ))
                 
+            print("gen_encode ", gen_encode.shape)
             encoded_images.append(gen_encode)
             outputs = torch.stack(encoded_images)
+            print("outputs ", outputs.shape)
 
             if self.fce:
                 outputs, hn, cn = self.lstm(outputs)
