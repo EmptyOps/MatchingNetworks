@@ -14,6 +14,7 @@ from experiments.OneShotBuilder import OneShotBuilder
 import tqdm
 from logger import Logger
 import os, sys
+import numpy as np
 
 '''
 :param batch_size: Experiment batch_size
