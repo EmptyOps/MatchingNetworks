@@ -36,8 +36,7 @@ class BidirectionalLSTM(nn.Module):
         dropout: If non-zero, introduces a dropout layer on the outputs of each RNN layer except the last layer
         bidirectional: If True, becomes a bidirectional RNN. Default: False
         '''
-        self.lstm = nn.LSTM(batch_size = self.batch_size,
-                            input_size=self.vector_dim,
+        self.lstm = nn.LSTM(input_size=self.vector_dim,
                             num_layers=self.num_layers,
                             hidden_size=self.hidden_size,
                             bidirectional=True)
@@ -48,7 +47,6 @@ class BidirectionalLSTM(nn.Module):
         :param x: The inputs should be a list of shape [sequence_length, batch_size, 64]
         :return: Returns the LSTM outputs, as well as the forward and backward hidden states.
         """
-        print( "batch_size", self.batch_size )
         c0 = Variable(torch.rand(self.lstm.num_layers*2, self.batch_size, self.lstm.hidden_size),
                       requires_grad=False).cuda()
         h0 = Variable(torch.rand(self.lstm.num_layers*2, self.batch_size, self.lstm.hidden_size),
