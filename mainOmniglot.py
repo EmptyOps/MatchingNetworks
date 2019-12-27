@@ -37,6 +37,7 @@ is_run_validation_batch = False
 is_run_time_predictions = True if int(sys.argv[34]) == 1 else False 
 is_evaluation_res_in_obj = True if int(sys.argv[32]) == 1 else False
 is_visualize_data = False
+save_interval = int(sys.argv[39])
 
 # Experiment Setup
 if is_use_sample_data:
@@ -150,7 +151,8 @@ if is_evaluation_only == False:
             logger.step()
             
             #save model 
-            obj_oneShotBuilder.save_model(e)
+            if save_interval == -1 or np.mod( e, save_interval ) == 0:
+                obj_oneShotBuilder.save_model(e)
 else: 
     is_do_plain_predict = True
     
