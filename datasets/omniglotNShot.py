@@ -26,7 +26,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True):
 
         if is_evaluation_only == False:
             np.random.seed(2191)  # for reproducibility
@@ -559,7 +559,10 @@ class OmniglotNShotDataset():
                 #self.x_train, self.x_test, self.x_val  = self.x[:900], self.x[900:1200], self.x[1200:]
                 #self.x_train, self.x_test, self.x_val  = self.x[:30], self.x[30:43], self.x[43:]
                 #self.x_train, self.x_test, self.x_val  = self.x[:200], self.x[200:270], self.x[270:]
-                self.x_train, self.x_test, self.x_val  = self.x[:4], None, self.x[4:]  #, self.x[6:]
+                if is_run_validation_batch:
+                    self.x_train, self.x_test, self.x_val  = self.x[:4], None, self.x[4:]  #, self.x[6:]
+                else:
+                    self.x_train, self.x_test, self.x_val  = self.x[:], None, None  #, self.x[6:]
             else:
                 self.x_train  = self.x[:]
          
@@ -576,7 +579,7 @@ class OmniglotNShotDataset():
             self.indexes = {"train": 0, "val": 0, "test": 0, "x_to_be_predicted": 0}
             self.datasets = {"train": self.x_train, "val": self.x_val, "test": self.x_test, "x_to_be_predicted": self.x_to_be_predicted} #original data cached
             self.datasets_cache = {"train": self.load_data_cache(self.datasets["train"], ""),  #current epoch data cached
-                                   "val": self.load_data_cache(self.datasets["val"], ""),
+                                   "val": None if self.x_val == None else self.load_data_cache(self.datasets["val"], ""),
                                    "test": None if self.x_test == None else self.load_data_cache(self.datasets["test"], ""),
                                    "x_to_be_predicted": None if not self.is_run_time_predictions else self.load_data_cache(self.datasets["x_to_be_predicted"], "x_to_be_predicted")}
         else:

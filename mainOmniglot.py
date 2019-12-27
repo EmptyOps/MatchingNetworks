@@ -33,6 +33,7 @@ ABS_PATh = os.path.dirname(os.path.abspath(__file__)) + "/"
 
 
 is_use_sample_data = False
+is_run_validation_batch = False 
 is_run_time_predictions = True if int(sys.argv[34]) == 1 else False 
 is_evaluation_res_in_obj = True if int(sys.argv[32]) == 1 else False
 is_visualize_data = False
@@ -97,7 +98,7 @@ data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_
                                           cache_samples_for_evaluation = int(sys.argv[30]), 
                                           is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]), 
                                           is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]), 
-                                          is_visualize_data = is_visualize_data)
+                                          is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch)
 
 obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
 obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
@@ -115,14 +116,16 @@ if is_evaluation_only == False:
             total_c_loss, total_accuracy = obj_oneShotBuilder.run_training_epoch(total_train_batches=total_train_batches)
             print("Epoch {}: train_loss: {}, train_accuracy: {}".format(e, total_c_loss, total_accuracy))
 
-            total_val_c_loss, total_val_accuracy = obj_oneShotBuilder.run_validation_epoch(
-                total_val_batches=total_val_batches)
-            print("Epoch {}: val_loss: {}, val_accuracy: {}".format(e, total_val_c_loss, total_val_accuracy))
-
             logger.log_value('train_loss', total_c_loss)
             logger.log_value('train_acc', total_accuracy)
-            logger.log_value('val_loss', total_val_c_loss)
-            logger.log_value('val_acc', total_val_accuracy)
+
+            if is_run_validation_batch:
+                total_val_c_loss, total_val_accuracy = obj_oneShotBuilder.run_validation_epoch(
+                    total_val_batches=total_val_batches)
+                print("Epoch {}: val_loss: {}, val_accuracy: {}".format(e, total_val_c_loss, total_val_accuracy))
+
+                logger.log_value('val_loss', total_val_c_loss)
+                logger.log_value('val_acc', total_val_accuracy)
 
             if False and total_val_accuracy >= best_val:  # if new best val accuracy -> produce test statistics
                 best_val = total_val_accuracy
