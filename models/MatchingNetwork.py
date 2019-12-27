@@ -85,11 +85,8 @@ class MatchingNetwork(nn.Module):
             else:
                 gen_encode = self.g(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ))
                 
-            print("shapes")
-            print(gen_encode.shape)
             encoded_images.append(gen_encode)
             outputs = torch.stack(encoded_images)
-            print(outputs.shape)
 
             if self.fce:
                 outputs, hn, cn = self.lstm(outputs)
