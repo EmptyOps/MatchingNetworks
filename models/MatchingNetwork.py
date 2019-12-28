@@ -188,7 +188,7 @@ class MatchingNetwork(nn.Module):
             emcllclsl_n1 = []
             emclvlclsl_n1 = []
             #for i in np.arange(support_set_images.shape[1]):
-            for nardr in range(0, 2):
+            for nardr in range(0, 1):   # 2):
                 if nardr == 0:
                     pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
                     #repeat 5 times
@@ -222,7 +222,11 @@ class MatchingNetwork(nn.Module):
                                 jinds = int( math.floor(ii_cntr/iilength) ) + (jj*support_set_labels_one_hot_org_shape[1])  #( j )+(jj*support_set_labels_one_hot_org_shape[1])  
                                 #print( support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:].shape )
                                 if nardr == 0:
-                                    gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:]) )
+                                    if not self.is_use_lstm_layer:
+                                        gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:]) )
+                                    else: 
+                                        gen_encode, _, _ = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( support_set_images.shape[0], 1, self.vector_dim )) )
+                                        gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                                 else:
                                     gen_encode = self.g( torch.Tensor(support_set_images[uniq_cls[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]]],jinds,:,:,:]) )
                                 #print( gen_encode.shape )
@@ -292,7 +296,11 @@ class MatchingNetwork(nn.Module):
                             i = 0
                             #print( "target gen_encode" )
                             #print( target_image[:,i,:,:,:].shape )
-                            gen_encode = self.g(target_image[:,i,:,:,:])
+                            if not self.is_use_lstm_layer:
+                                gen_encode = self.g(target_image[:,i,:,:,:])
+                            else: 
+                                gen_encode, _, _ = self.g( torch.Tensor(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim )) )
+                                gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                             #print( gen_encode.shape )
                             
                             #encoded_images.append(gen_encode)
