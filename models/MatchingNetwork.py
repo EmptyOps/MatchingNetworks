@@ -239,7 +239,7 @@ class MatchingNetwork(nn.Module):
                                     if not self.is_use_lstm_layer:
                                         gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:]) )
                                     else: 
-                                        gen_encode, _, _ = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( support_set_images.shape[0], 1, self.vector_dim )) )
+                                        gen_encode, _, _ = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim )) )
                                         gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                                 else:
                                     gen_encode = self.g( torch.Tensor(support_set_images[uniq_cls[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]]],jinds,:,:,:]) )
