@@ -199,9 +199,17 @@ class MatchingNetwork(nn.Module):
                         pindstmp = np.concatenate( ( np.random.permutation( support_set_images.shape[0] ), np.random.choice( support_set_images.shape[0], target_image.shape[0] - support_set_images.shape[0] ) ), axis=0 ) 
                         print( "pindstmp", pindstmp )
                     #repeat 5 times
-                    pinds = np.concatenate( ( pindstmp, pindstmp ), axis=0 )
+                    tmp_copy = np.copy( pindstmp )
+                    print( "tmp_copy 1 ", tmp_copy )
+                    np.random.shuffle( tmp_copy )
+                    print( "tmp_copy 1 ", tmp_copy )
+                    pinds = np.concatenate( ( pindstmp,  tmp_copy ), axis=0 )
                     for rpt in range(0, support_set_labels_one_hot_org_shape[1]-2):
-                        pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                        tmp_copy = np.copy( pindstmp )
+                        print( "tmp_copy ", rpt+2, tmp_copy )
+                        np.random.shuffle( tmp_copy )
+                        print( "tmp_copy ", rpt+2, tmp_copy )
+                        pinds = np.concatenate( ( pinds, tmp_copy ), axis=0 )
                 else:
                     uniq_cls = np.array(uniq_cls)
                     pindstmp = np.random.permutation( len(uniq_cls) - np.mod(len(uniq_cls),target_image.shape[0]) )
