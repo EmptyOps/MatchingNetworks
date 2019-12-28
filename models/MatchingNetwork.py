@@ -153,10 +153,6 @@ class MatchingNetwork(nn.Module):
         :return: 
         """
         
-        print(target_image.shape)
-        target_image = np.delete(target_image, 0)
-        print(target_image.shape)
-
         target_image_org = np.copy(target_image)
         target_image = target_image.cuda()
         
