@@ -389,10 +389,10 @@ class MatchingNetwork(nn.Module):
                                     print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
                                     print( preds )
                                     tot_emc = tot_emc + 1
-                                    if (F.cross_entropy(preds, target_label[:,i].long()) <= 0.95 and values[tatmpts] >= 0.98):
+                                    if (F.cross_entropy(preds, target_label[:,i].long()) <= 1.25 and values[tatmpts] >= 0.98):
                                         tot_emcll = tot_emcll + 1
                                         
-                                        if F.cross_entropy(preds, target_label[:,i].long()) <= 0.93 and values[tatmpts] >= 0.995:
+                                        if F.cross_entropy(preds, target_label[:,i].long()) <= 1.19 and values[tatmpts] >= 0.99:
                                             tot_emclvl = tot_emclvl + 1
                                             if nardr == 0:
                                                 if not tstcls[0] in uniq_cls:
