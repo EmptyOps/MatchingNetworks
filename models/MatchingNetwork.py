@@ -189,11 +189,8 @@ class MatchingNetwork(nn.Module):
             emcllclsl_n1 = []
             emclvlclsl_n1 = []
             
-            print( "starting loop..." )
-            
             #for i in np.arange(support_set_images.shape[1]):
             for nardr in range(0, 1):   # 2):
-                print( "loop 1" )
             
                 if nardr == 0:
                     if support_set_images.shape[0] >= target_image.shape[0]:
@@ -216,15 +213,12 @@ class MatchingNetwork(nn.Module):
                     
                 for tatmpts in range(0, target_image.shape[0]):
                         
-                    print( "loop 2 ", support_set_images.shape, support_set_labels_one_hot_org_shape, target_image.shape )                        
-                        
                     for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
                     
                         ii_cntr = 0
                         tstcls = 0
                         iilength = int( math.floor( support_set_images.shape[0] / target_image.shape[0] ) ) if nardr == 0 else int( math.floor( len(uniq_cls) / target_image.shape[0] ) )
                         iilength = 1 if iilength == 0 else iilength
-                        print( "loop 3 ", iilength ) 
                         for ii in range( 0, iilength ): 
                             encoded_images = []
                             
@@ -234,6 +228,9 @@ class MatchingNetwork(nn.Module):
                             for j in range(0, support_set_labels_one_hot_org_shape[1]):
                             
                                 jinds = int( math.floor(ii_cntr/iilength) ) + (jj*support_set_labels_one_hot_org_shape[1])  #( j )+(jj*support_set_labels_one_hot_org_shape[1])  
+                                
+                                print( "j " + str(j) + " jinds " + str(jinds) )
+                                
                                 #print( support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:].shape )
                                 if nardr == 0:
                                     if not self.is_use_lstm_layer:
@@ -294,8 +291,8 @@ class MatchingNetwork(nn.Module):
                                     break
                             """
                             
-                            print("tmp_one_hot")
-                            print(tmp_one_hot.shape)
+                            #print("tmp_one_hot")
+                            #print(tmp_one_hot.shape)
                             support_set_labels_one_hot = tmp_one_hot
                             #break
                                 
@@ -308,14 +305,12 @@ class MatchingNetwork(nn.Module):
                     # produce embeddings for target images
                     #for i in np.arange(target_image.size(1)):
                             i = 0
-                            print( "target gen_encode" )
-                            print( target_image[:,i,:,:,:].shape )
+                            #print( "target gen_encode" )
+                            #print( target_image[:,i,:,:,:].shape )
                             if not self.is_use_lstm_layer:
                                 gen_encode = self.g(target_image[:,i,:,:,:])
                             else: 
-                                print( "target gen_encode 1" )
                                 gen_encode, _, _ = self.g( torch.Tensor(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim )).cuda() )
-                                print( "target gen_encode 2" )
                                 gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                             #print( gen_encode.shape )
                             
