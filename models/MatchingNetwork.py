@@ -230,8 +230,10 @@ class MatchingNetwork(nn.Module):
                             
                             print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
                             xhat_pinds = np.concatenate( ( np.random.permutation( support_set_labels_one_hot_org_shape[1] ), np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] - support_set_labels_one_hot_org_shape[1] ) ), axis=0 ) #np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) #np.random.permutation( support_set_labels_one_hot_org_shape[1] )
+                            print( "gen_encode 1 " )
                             xhat_ind = 0
                             for j in range(0, support_set_labels_one_hot_org_shape[1]):
+                                print( "gen_encode 2 " )
                             
                                 jinds = int( math.floor(ii_cntr/iilength) ) + (jj*support_set_labels_one_hot_org_shape[1])  #( j )+(jj*support_set_labels_one_hot_org_shape[1])  
                                 #print( support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:].shape )
@@ -239,8 +241,11 @@ class MatchingNetwork(nn.Module):
                                     if not self.is_use_lstm_layer:
                                         gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:]) )
                                     else: 
+                                        print( "gen_encode 3 " )
                                         gen_encode, _, _ = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim )) )
+                                        print( "gen_encode 4 " )
                                         gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
+                                        print( "gen_encode 5 " )
                                 else:
                                     gen_encode = self.g( torch.Tensor(support_set_images[uniq_cls[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]]],jinds,:,:,:]) )
                                 #print( gen_encode.shape )
