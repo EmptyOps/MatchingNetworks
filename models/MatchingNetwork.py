@@ -188,6 +188,9 @@ class MatchingNetwork(nn.Module):
             emclvlcls_n1 = []
             emcllclsl_n1 = []
             emclvlclsl_n1 = []
+            
+            print( "starting loop..." )
+            
             #for i in np.arange(support_set_images.shape[1]):
             for nardr in range(0, 1):   # 2):
                 if nardr == 0:
@@ -215,7 +218,7 @@ class MatchingNetwork(nn.Module):
                         for ii in range( 0, iilength ): 
                             encoded_images = []
                             
-                            #print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
+                            print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
                             xhat_pinds = np.concatenate( ( np.random.permutation( support_set_labels_one_hot_org_shape[1] ), np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] - support_set_labels_one_hot_org_shape[1] ) ), axis=0 ) #np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) #np.random.permutation( support_set_labels_one_hot_org_shape[1] )
                             xhat_ind = 0
                             for j in range(0, support_set_labels_one_hot_org_shape[1]):
@@ -281,8 +284,8 @@ class MatchingNetwork(nn.Module):
                                     break
                             """
                             
-                            #print("tmp_one_hot")
-                            #print(tmp_one_hot.shape)
+                            print("tmp_one_hot")
+                            print(tmp_one_hot.shape)
                             support_set_labels_one_hot = tmp_one_hot
                             #break
                                 
@@ -295,8 +298,8 @@ class MatchingNetwork(nn.Module):
                     # produce embeddings for target images
                     #for i in np.arange(target_image.size(1)):
                             i = 0
-                            #print( "target gen_encode" )
-                            #print( target_image[:,i,:,:,:].shape )
+                            print( "target gen_encode" )
+                            print( target_image[:,i,:,:,:].shape )
                             if not self.is_use_lstm_layer:
                                 gen_encode = self.g(target_image[:,i,:,:,:])
                             else: 
@@ -339,7 +342,7 @@ class MatchingNetwork(nn.Module):
                                 #print( "support set while in predictions debug mode" )
                                 ##print( y_support_set_org )
                                 #print( target_y_actuals[:,i] )
-                                if nardr >= 1:
+                                if True or nardr >= 1:
                                     print( "predictions debug mode" )
                                     print( values )
                                     print( indices.squeeze() )
