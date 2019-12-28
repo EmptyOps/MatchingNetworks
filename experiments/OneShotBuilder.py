@@ -357,6 +357,8 @@ class OneShotBuilder:
             print( "y_support_set" )
             print( y_support_set )
             
+            x = Variable(torch.from_numpy(x), volatile=True).float()
+            
             x_support_set = Variable(torch.from_numpy(x_support_set), volatile=True).float()
             y_support_set = Variable(torch.from_numpy(y_support_set), volatile=True).long()
             x_target = Variable(torch.from_numpy(x_target), volatile=True).float()
