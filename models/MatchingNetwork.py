@@ -154,6 +154,7 @@ class MatchingNetwork(nn.Module):
         """
         
         target_image_org = np.copy(target_image)
+        target_image = target_image.cuda()
         
         #target_image
         
@@ -324,7 +325,7 @@ class MatchingNetwork(nn.Module):
 
                             # produce predictions for target probabilities
                             if is_evaluation_only == False:
-                                preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)
+                                preds = self.classify(similarities,support_set_y=support_set_labels_one_hot.cuda())
                             else:
                                 preds = self.classify(similarities)
 
