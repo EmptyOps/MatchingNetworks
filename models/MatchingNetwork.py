@@ -154,7 +154,7 @@ class MatchingNetwork(nn.Module):
         """
         
         target_image_org = np.copy(target_image)
-        target_image = target_image.cuda()
+        #target_image = target_image.cuda()
         
         #target_image
         
