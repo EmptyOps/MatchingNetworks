@@ -24,7 +24,7 @@ import numpy as np
              For a 5-way, 10-shot learning task, use classes_per_set=5 and samples_per_class=10
 '''
 
-is_debug = False
+is_debug = True
 
 ENV = int(sys.argv[1]) 
 
