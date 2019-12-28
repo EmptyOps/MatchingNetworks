@@ -196,16 +196,19 @@ class MatchingNetwork(nn.Module):
                 print( "loop 1" )
             
                 if nardr == 0:
-                    pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
+                    if support_set_images.shape[0] >= target_image.shape[0]:
+                        pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
+                    else:
+                        pindstmp = np.concatenate( ( np.random.permutation( support_set_images.shape[0] ), np.random.choice( support_set_images.shape[0], target_image.shape[0] - support_set_images.shape[0] ) ), axis=0 ) 
                     #repeat 5 times
                     pinds = np.concatenate( ( pindstmp, pindstmp ), axis=0 )
-                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
-                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
-                    pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
+                    for rpt in range(0, support_set_labels_one_hot_org_shape[1]-2):
+                        pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                 else:
                     uniq_cls = np.array(uniq_cls)
                     pindstmp = np.random.permutation( len(uniq_cls) - np.mod(len(uniq_cls),target_image.shape[0]) )
                     #repeat 5 times
+                    raise Exception("NotImplementedError")
                     pinds = np.concatenate( ( pindstmp, pindstmp ), axis=0 )
                     pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                     pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
