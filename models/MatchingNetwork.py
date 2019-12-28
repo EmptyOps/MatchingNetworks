@@ -203,22 +203,29 @@ class MatchingNetwork(nn.Module):
                     else:
                         if support_set_images.shape[0] < target_image.shape[0]:
                             pindstmp = np.concatenate( ( np.random.permutation( support_set_images.shape[0] ), np.random.choice( support_set_images.shape[0], target_image.shape[0] - support_set_images.shape[0] ) ), axis=0 ) 
-                        else:
-                            pindstmp = np.random.permutation( support_set_images.shape[0] ) 
                             
-                        print( "pindstmp", pindstmp )
-                        #repeat 5 times
-                        tmp_copy = np.copy( pindstmp )
-                        print( "tmp_copy 1 ", tmp_copy )
-                        np.random.shuffle( tmp_copy )
-                        print( "tmp_copy 1 ", tmp_copy )
-                        pinds = np.concatenate( ( pindstmp,  tmp_copy ), axis=0 )
-                        for rpt in range(0, support_set_labels_one_hot_org_shape[1]-2):
+                            print( "pindstmp", pindstmp )
+                            #repeat 5 times
                             tmp_copy = np.copy( pindstmp )
-                            print( "tmp_copy ", rpt+2, tmp_copy )
+                            print( "tmp_copy 1 ", tmp_copy )
                             np.random.shuffle( tmp_copy )
-                            print( "tmp_copy ", rpt+2, tmp_copy )
-                            pinds = np.concatenate( ( pinds, tmp_copy ), axis=0 )
+                            print( "tmp_copy 1 ", tmp_copy )
+                            pinds = np.concatenate( ( pindstmp,  tmp_copy ), axis=0 )
+                            for rpt in range(0, support_set_labels_one_hot_org_shape[1]-2):
+                                tmp_copy = np.copy( pindstmp )
+                                print( "tmp_copy ", rpt+2, tmp_copy )
+                                np.random.shuffle( tmp_copy )
+                                print( "tmp_copy ", rpt+2, tmp_copy )
+                                pinds = np.concatenate( ( pinds, tmp_copy ), axis=0 )
+                        else:
+                            pinds = np.arange( support_set_images.shape[0] ) 
+                            
+                            print( "pindstmp", pinds )
+                            #repeat 5 times
+                            for rpt in range(0, support_set_labels_one_hot_org_shape[1]-1):
+                                pindstmp = np.concatenate( ( np.arange( rpt+1, support_set_images.shape[0] - 1 ), np.arange( 0 , rpt ) ), axis=0 )
+                                print( "rpt ", rpt, pindstmp )
+                                pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                 else:
                     uniq_cls = np.array(uniq_cls)
                     pindstmp = np.random.permutation( len(uniq_cls) - np.mod(len(uniq_cls),target_image.shape[0]) )
