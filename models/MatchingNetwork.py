@@ -193,6 +193,8 @@ class MatchingNetwork(nn.Module):
             
             #for i in np.arange(support_set_images.shape[1]):
             for nardr in range(0, 1):   # 2):
+                print( "loop 1" )
+            
                 if nardr == 0:
                     pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
                     #repeat 5 times
@@ -211,10 +213,14 @@ class MatchingNetwork(nn.Module):
                     
                 for tatmpts in range(0, target_image.shape[0]):
                         
+                    print( "loop 2 ", support_set_images.shape, support_set_labels_one_hot_org_shape )                        
+                        
                     for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
+                    
                         ii_cntr = 0
                         tstcls = 0
                         iilength = int( math.floor( support_set_images.shape[0] / target_image.shape[0] ) ) if nardr == 0 else int( math.floor( len(uniq_cls) / target_image.shape[0] ) )
+                        print( "loop 3 ", iilength ) 
                         for ii in range( 0, iilength ): 
                             encoded_images = []
                             
