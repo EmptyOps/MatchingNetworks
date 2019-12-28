@@ -197,6 +197,7 @@ class MatchingNetwork(nn.Module):
                         pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
                     else:
                         pindstmp = np.concatenate( ( np.random.permutation( support_set_images.shape[0] ), np.random.choice( support_set_images.shape[0], target_image.shape[0] - support_set_images.shape[0] ) ), axis=0 ) 
+                        print( "pindstmp", pindstmp )
                     #repeat 5 times
                     pinds = np.concatenate( ( pindstmp, pindstmp ), axis=0 )
                     for rpt in range(0, support_set_labels_one_hot_org_shape[1]-2):
