@@ -242,7 +242,8 @@ class MatchingNetwork(nn.Module):
                                         gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:]) )
                                     else: 
                                         print( "gen_encode 3 " )
-                                        gen_encode, _, _ = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim )) )
+                                        print( support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ) )
+                                        gen_encode, _, _ = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ) ).cuda() )
                                         print( "gen_encode 4 " )
                                         gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                                         print( "gen_encode 5 " )
@@ -258,7 +259,7 @@ class MatchingNetwork(nn.Module):
                                 for xhat_i in range(0, n_test_samples):
                                     if not tatmpts == xhat_ind:
                                         if nardr == 0:
-                                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
+                                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float().cuda()
                                         else:
                                             target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[uniq_cls[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1]],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
                                         #target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]), volatile=True).float()
@@ -268,7 +269,7 @@ class MatchingNetwork(nn.Module):
                                         else:
                                             tstcls = uniq_cls[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1]]
                                             
-                                        target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(target_image_org[xhat_ind,0,:,:,:]), volatile=True).float()
+                                        target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(target_image_org[xhat_ind,0,:,:,:]), volatile=True).float().cuda()
                                     target_label[xhat_ind,0] = Variable( torch.from_numpy( np.array( [j] ) ), volatile=True).long()
                                     xhat_ind = xhat_ind + 1 
                                 
