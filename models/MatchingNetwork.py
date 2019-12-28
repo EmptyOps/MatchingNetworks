@@ -223,7 +223,7 @@ class MatchingNetwork(nn.Module):
                             print( "pindstmp", pinds )
                             #repeat 5 times
                             for rpt in range(0, support_set_labels_one_hot_org_shape[1]-1):
-                                pindstmp = np.concatenate( ( np.arange( rpt+1, support_set_images.shape[0] - 1 ), np.arange( 0 , rpt ) ), axis=0 )
+                                pindstmp = np.concatenate( ( np.arange( rpt+1, support_set_images.shape[0] ), np.arange( 0 , rpt+1 ) ), axis=0 )
                                 print( "rpt ", rpt, pindstmp )
                                 pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                 else:
