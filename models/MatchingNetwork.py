@@ -223,6 +223,7 @@ class MatchingNetwork(nn.Module):
                         ii_cntr = 0
                         tstcls = 0
                         iilength = int( math.floor( support_set_images.shape[0] / target_image.shape[0] ) ) if nardr == 0 else int( math.floor( len(uniq_cls) / target_image.shape[0] ) )
+                        iilength = 1 if iilength == 0 else iilength
                         print( "loop 3 ", iilength ) 
                         for ii in range( 0, iilength ): 
                             encoded_images = []
