@@ -52,7 +52,7 @@ if is_use_sample_data:
     total_val_batches = 100
     total_test_batches = 250
 else:
-    batch_size = 8     #8 #32
+    batch_size = 7     #8 #32
     fce = False
     classes_per_set = 7     #2    #5     #20    #5
     samples_per_class = 1   #5

@@ -193,7 +193,7 @@ class MatchingNetwork(nn.Module):
             for nardr in range(0, 1):   # 2):
             
                 if nardr == 0:
-                    if support_set_images.shape[0] >= target_image.shape[0]:
+                    if support_set_images.shape[0] > target_image.shape[0]:
                         pindstmp = np.random.permutation( support_set_images.shape[0] - np.mod(support_set_images.shape[0],target_image.shape[0])  )
                     else:
                         pindstmp = np.concatenate( ( np.random.permutation( support_set_images.shape[0] ), np.random.choice( support_set_images.shape[0], target_image.shape[0] - support_set_images.shape[0] ) ), axis=0 ) 
