@@ -225,7 +225,7 @@ class MatchingNetwork(nn.Module):
                                     if not self.is_use_lstm_layer:
                                         gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:]) )
                                     else: 
-                                        gen_encode, _, _ = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( support_set_images.shape[0], 1, self.vector_dim )) )
+                                        gen_encode, _, _ = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( support_set_images.shape[0], 1, self.vector_dim ).cuda() ) )
                                         gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                                 else:
                                     gen_encode = self.g( torch.Tensor(support_set_images[uniq_cls[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]]],jinds,:,:,:]) )
@@ -299,7 +299,7 @@ class MatchingNetwork(nn.Module):
                             if not self.is_use_lstm_layer:
                                 gen_encode = self.g(target_image[:,i,:,:,:])
                             else: 
-                                gen_encode, _, _ = self.g( torch.Tensor(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim )) )
+                                gen_encode, _, _ = self.g( torch.Tensor(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim )).cuda() )
                                 gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                             #print( gen_encode.shape )
                             
@@ -324,7 +324,7 @@ class MatchingNetwork(nn.Module):
 
                             # produce predictions for target probabilities
                             if is_evaluation_only == False:
-                                preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)
+                                preds = self.classify(similarities,support_set_y=support_set_labels_one_hot.cuda())
                             else:
                                 preds = self.classify(similarities)
 
