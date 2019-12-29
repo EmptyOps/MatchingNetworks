@@ -388,16 +388,16 @@ class MatchingNetwork(nn.Module):
                                     print( preds )
                                 
                                 #if (F.cross_entropy(preds, target_label[:,i].long()) <= 1.25 and values[tatmpts] >= 0.75) or nardr >= 1:
-                                if (F.cross_entropy(preds, target_label[:,i].long()) <= 1.35 and torch.mean((indices.squeeze() == target_label[:,i]).float()) ) >= 1.0) or nardr >= 1:
+                                if (F.cross_entropy(preds, target_label[:,i].long()) <= 1.35 and torch.mean((indices.squeeze() == target_label[:,i]).float()) >= 1.0) or nardr >= 1:
                                     print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
                                     print( preds )
                                     tot_emc = tot_emc + 1
                                     #if (F.cross_entropy(preds, target_label[:,i].long()) <= 1.25 and values[tatmpts] >= 0.98):
-                                    if (F.cross_entropy(preds, target_label[:,i].long()) <= 1.35 and torch.mean((indices.squeeze() == target_label[:,i]).float()) ) >= 1.0):
+                                    if (F.cross_entropy(preds, target_label[:,i].long()) <= 1.35 and torch.mean((indices.squeeze() == target_label[:,i]).float()) >= 1.0):
                                         tot_emcll = tot_emcll + 1
                                         
                                         #if F.cross_entropy(preds, target_label[:,i].long()) <= 1.19 and values[tatmpts] >= 0.99:
-                                        if (F.cross_entropy(preds, target_label[:,i].long()) <= 1.35 and torch.mean((indices.squeeze() == target_label[:,i]).float()) ) >= 1.0)
+                                        if (F.cross_entropy(preds, target_label[:,i].long()) <= 1.35 and torch.mean((indices.squeeze() == target_label[:,i]).float()) >= 1.0):
                                             tot_emclvl = tot_emclvl + 1
                                             if nardr == 0:
                                                 if not tstcls[0] in uniq_cls:
