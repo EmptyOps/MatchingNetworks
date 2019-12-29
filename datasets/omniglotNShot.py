@@ -26,7 +26,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1):
 
         if is_evaluation_only == False:
             np.random.seed(2191)  # for reproducibility
@@ -78,7 +78,7 @@ class OmniglotNShotDataset():
             self.is_evaluation_res_in_obj = is_evaluation_res_in_obj
                         
             #
-            if is_evaluation_only == False or not os.path.exists( base_classes_file ):
+            if is_evaluation_only == False or not os.path.exists( base_classes_file ) or is_load_test_record:
                 print( "(!) Merging inputs, should only be executed in training mode." )
                 input = []
                 input_labels = []
@@ -98,6 +98,7 @@ class OmniglotNShotDataset():
                 sizei = len(input)
                 print("sizei")
                 print(sizei)
+                test_record_index_cnt = -1
                 for i in np.arange(sizei):
                     #if is_evaluation_only == True and input_labels[i] >= self.prediction_classes:
                     #    continue
@@ -105,28 +106,37 @@ class OmniglotNShotDataset():
                     if input_labels[i] >= self.total_base_classes:
                         continue
                     
-                    if input_labels[i] in temp:
-                        if len( temp[input_labels[i]] ) >= self.tvt_records:  #only 20 samples per class
-                            if self.re_records > 0 and is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
-                                lbl_val = input_labels[i]
-                                if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
-                                    lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
-                                if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
-                                    lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
-                                    
-                                if lbl_val in temp_to_be_predicted:
-                                    if len( temp_to_be_predicted[lbl_val] ) >= self.re_records:  #only 20 samples per class
-                                        continue
-                                    
-                                    temp_to_be_predicted[lbl_val].append( input[i][:,:,np.newaxis] )
-                                else:     
-                                    temp_to_be_predicted[lbl_val]=[input[i][:,:,np.newaxis]]
-                        
-                            continue
-                        
-                        temp[input_labels[i]].append( input[i][:,:,np.newaxis] )
+                    if is_load_test_record:
+                        if input_labels[i] == test_record_class:
+                            test_record_index_cnt = test_record_index_cnt + 1
+                            
+                            if test_record_index_cnt == test_record_index:
+                                self.evaluation = np.zeros( ( self.total_base_classes, self.tvt_records, input[i].shape[0], input[i].shape[1], 1 ) )
+                                self.evaluation[:,:,:,:,:] = input[i][:,:,np.newaxis]
+                                break
                     else:
-                        temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
+                        if input_labels[i] in temp:
+                            if len( temp[input_labels[i]] ) >= self.tvt_records:  #only 20 samples per class
+                                if self.re_records > 0 and is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
+                                    lbl_val = input_labels[i]
+                                    if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
+                                        lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
+                                    if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
+                                        lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
+                                        
+                                    if lbl_val in temp_to_be_predicted:
+                                        if len( temp_to_be_predicted[lbl_val] ) >= self.re_records:  #only 20 samples per class
+                                            continue
+                                        
+                                        temp_to_be_predicted[lbl_val].append( input[i][:,:,np.newaxis] )
+                                    else:     
+                                        temp_to_be_predicted[lbl_val]=[input[i][:,:,np.newaxis]]
+                            
+                                continue
+                            
+                            temp[input_labels[i]].append( input[i][:,:,np.newaxis] )
+                        else:
+                            temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
 
                 """
                 print( "temp.keys()" )
@@ -140,16 +150,28 @@ class OmniglotNShotDataset():
                 input_labels = []  # Free memory
                 self.x = [] # Free memory
 
-                        
-                for classes in temp.keys():
-                    self.x.append(np.array(temp[ list(temp.keys())[classes]]))
-                self.x = np.array(self.x)
-                temp = [] # Free memory
-
-                #np.save(os.path.join(dataroot,'data.npy'),self.x)
-                with open( base_classes_file, 'w') as outfile:
-                    json.dump(self.x.tolist(), outfile)                      
+                if is_load_test_record:
+                    for classes in temp.keys():
+                        self.x.append(np.array(temp[ list(temp.keys())[classes]]))
+                    self.x = np.array(self.x)
                     
+                    print("loaded prepared base_classes_file")
+                    self.x = array( json.load( open( base_classes_file ) ) ) 
+                    print(self.x.shape)
+                    
+                    print( "loaded test record " )
+                    print( self.evaluation.shape )
+                else:
+                    for classes in temp.keys():
+                        self.x.append(np.array(temp[ list(temp.keys())[classes]]))
+                    self.x = np.array(self.x)
+
+                    #np.save(os.path.join(dataroot,'data.npy'),self.x)
+                    with open( base_classes_file, 'w') as outfile:
+                        json.dump(self.x.tolist(), outfile)                      
+
+                temp = [] # Free memory
+                        
                 if self.is_run_time_predictions:
                     print( "temp_to_be_predicted.keys()" )
                     print( temp_to_be_predicted.keys() )
@@ -177,7 +199,7 @@ class OmniglotNShotDataset():
 
             #
             is_loaded_evaluation_file = False
-            if is_evaluation_only == True:
+            if is_evaluation_only == True and is_load_test_record == False:
             
                 if not os.path.exists(evaluation_input_file.replace('{i}', str(0)) + "_prepared.json"):
                     input = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) ) ) ) 
