@@ -151,10 +151,6 @@ class OmniglotNShotDataset():
                 self.x = [] # Free memory
 
                 if is_load_test_record:
-                    for classes in temp.keys():
-                        self.x.append(np.array(temp[ list(temp.keys())[classes]]))
-                    self.x = np.array(self.x)
-                    
                     print("loaded prepared base_classes_file")
                     self.x = array( json.load( open( base_classes_file ) ) ) 
                     print(self.x.shape)
