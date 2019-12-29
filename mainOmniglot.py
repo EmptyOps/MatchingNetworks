@@ -100,7 +100,9 @@ data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_
                                           is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]), 
                                           is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]), 
                                           is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
-                                          is_compare = False if int(sys.argv[40]) == 0 else True)
+                                          is_compare = False if int(sys.argv[40]) == 0 else True, 
+                                          is_load_test_record = False if int(sys.argv[41]) == 0 else True, 
+                                          test_record_class = int(sys.argv[42]), test_record_index = int(sys.argv[43]))
 
 obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
 obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
