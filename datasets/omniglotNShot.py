@@ -26,7 +26,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False):
 
         if is_evaluation_only == False:
             np.random.seed(2191)  # for reproducibility
@@ -323,7 +323,7 @@ class OmniglotNShotDataset():
                 sdfhsdhfkjhd
         """
         #TODO tmp. compare 
-        if is_evaluation_only == True:
+        if is_evaluation_only == True and is_compare == True:
             is_found = False
             for c in range(0, self.x.shape[0]):
                 for i in range(0, self.x.shape[1]):
