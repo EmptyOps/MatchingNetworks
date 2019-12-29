@@ -268,9 +268,10 @@ class OmniglotNShotDataset():
                 self.x_to_be_predicted[:,:,27,103,0] = 0
                 self.x_to_be_predicted[:,:,27,107,0] = 0
         else:
-            self.evaluation[:,:,27,99,0] = 0
-            self.evaluation[:,:,27,103,0] = 0
-            self.evaluation[:,:,27,107,0] = 0
+            if self.evaluation.shape[2] >= 28 and self.evaluation.shape[3] >= 108:
+                self.evaluation[:,:,27,99,0] = 0
+                self.evaluation[:,:,27,103,0] = 0
+                self.evaluation[:,:,27,107,0] = 0
         
         #TODO tmp. compare 
         """
