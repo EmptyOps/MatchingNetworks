@@ -15,7 +15,7 @@ import unittest
 
 
 class BidirectionalLSTM(nn.Module):
-    def __init__(self, layer_sizes, batch_size, vector_dim):
+    def __init__(self, layer_sizes, batch_size, vector_dim, num_layers=1, dropout=-1):
         super(BidirectionalLSTM, self).__init__()
         """
         Initializes a multi layer bidirectional LSTM
@@ -26,7 +26,7 @@ class BidirectionalLSTM(nn.Module):
         self.batch_size = batch_size
         self.hidden_size = layer_sizes[0]
         self.vector_dim = vector_dim
-        self.num_layers = len(layer_sizes*3)
+        self.num_layers = len(layer_sizes)*num_layers
         
         '''
         input_size: The number of expected features in the input x
@@ -37,10 +37,18 @@ class BidirectionalLSTM(nn.Module):
         dropout: If non-zero, introduces a dropout layer on the outputs of each RNN layer except the last layer
         bidirectional: If True, becomes a bidirectional RNN. Default: False
         '''
-        self.lstm = nn.LSTM(input_size=self.vector_dim,
-                            num_layers=self.num_layers,
-                            hidden_size=self.hidden_size,
-                            bidirectional=True)
+        if dropout == -1:
+            self.lstm = nn.LSTM(input_size=self.vector_dim,
+                                num_layers=self.num_layers,
+                                hidden_size=self.hidden_size,
+                                bidirectional=True)
+        else:
+            self.lstm = nn.LSTM(input_size=self.vector_dim,
+                                num_layers=self.num_layers,
+                                hidden_size=self.hidden_size,
+                                bidirectional=True,
+                                dropout=dropout)
+
         print( self.lstm )
                             
     def forward(self, inputs):
