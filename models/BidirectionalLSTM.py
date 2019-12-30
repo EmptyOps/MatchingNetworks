@@ -41,6 +41,7 @@ class BidirectionalLSTM(nn.Module):
                             num_layers=self.num_layers,
                             hidden_size=self.hidden_size,
                             bidirectional=True)
+        print( self.lstm )
                             
     def forward(self, inputs):
         """
