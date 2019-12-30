@@ -12,6 +12,8 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import unittest
+from torchsummary import summary
+
 
 class BidirectionalLSTM(nn.Module):
     def __init__(self, layer_sizes, batch_size, vector_dim):
@@ -41,6 +43,9 @@ class BidirectionalLSTM(nn.Module):
                             hidden_size=self.hidden_size,
                             bidirectional=True)
 
+        summary(self.lstm, (1, vector_dim))
+        sdfkjsdlfjlsdfj     
+                            
     def forward(self, inputs):
         """
         Runs the bidirectional LSTM, produces outputs and saves both forward and backward states as well as gradients.
