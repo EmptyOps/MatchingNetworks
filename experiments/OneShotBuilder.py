@@ -14,6 +14,7 @@ import tqdm
 from models.MatchingNetwork import MatchingNetwork
 from torch.autograd import Variable
 import os
+from torchsummary import summary
 
 class OneShotBuilder:
 
@@ -48,6 +49,9 @@ class OneShotBuilder:
                                              num_samples_per_class=samples_per_class,
                                              nClasses = 0, image_size = image_size, layer_size = layer_size, 
                                              is_use_lstm_layer=is_use_lstm_layer, vector_dim = vector_dim)
+                                             
+            summary(self.matchingNet.cuda(), (1, vector_dim))
+            sdfkjsdlfjlsdfj     
         else: 
             self.matchingNet = torch.load(self.model_path)
                                              

@@ -12,7 +12,6 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import unittest
-from torchsummary import summary
 
 
 class BidirectionalLSTM(nn.Module):
@@ -42,9 +41,6 @@ class BidirectionalLSTM(nn.Module):
                             num_layers=self.num_layers,
                             hidden_size=self.hidden_size,
                             bidirectional=True)
-
-        summary(self.lstm.cuda(), (1, vector_dim))
-        sdfkjsdlfjlsdfj     
                             
     def forward(self, inputs):
         """
