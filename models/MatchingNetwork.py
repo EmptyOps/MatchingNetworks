@@ -429,7 +429,7 @@ class MatchingNetwork(nn.Module):
                                     print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
                                     print( "accuracy found above limitttttttttttttttttttttttttttttttttttttttt " + str( torch.mean((indices.squeeze() == target_label[:,i]).float()) ) )
                                     
-                                    if indices.squeeze()[tatmpts] == target_label[tatmpts,i]:
+                                    if indices.squeeze()[tatmpts_diag] == target_label[tatmpts_diag,i]:
                                         open_match_cnt[tatmpts] += 1
                                         open_match_tot[tatmpts] += values[tatmpts]
                                         open_match_mpr[tatmpts] = open_match_tot[tatmpts] / open_match_cnt[tatmpts]
