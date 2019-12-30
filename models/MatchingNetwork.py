@@ -240,7 +240,7 @@ class MatchingNetwork(nn.Module):
                     
                 for tatmpts in range(0, target_image.shape[0]):
                         
-                    for jj in range( 0, int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
+                    for jj in range( 0, support_set_images.shape[1] ):   #int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
                     
                         ii_cntr = 0
                         tstcls = 0
@@ -255,7 +255,7 @@ class MatchingNetwork(nn.Module):
                             xhat_ind = 0
                             for j in range(0, support_set_labels_one_hot_org_shape[1]):
                             
-                                jinds = int( math.floor(ii_cntr/iilength) ) + (jj*support_set_labels_one_hot_org_shape[1])  #( j )+(jj*support_set_labels_one_hot_org_shape[1])  
+                                jinds = jj  #int( math.floor(ii_cntr/iilength) ) + (jj*support_set_labels_one_hot_org_shape[1])  #( j )+(jj*support_set_labels_one_hot_org_shape[1])  
                                 
                                 print( "tatmpts " + str(tatmpts) + " j " + str(j) + " jinds " + str(jinds) )
                                 
