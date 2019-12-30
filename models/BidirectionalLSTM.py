@@ -43,7 +43,7 @@ class BidirectionalLSTM(nn.Module):
                             hidden_size=self.hidden_size,
                             bidirectional=True)
 
-        summary(self.lstm, (1, vector_dim))
+        summary(self.lstm.cuda(), (1, vector_dim))
         sdfkjsdlfjlsdfj     
                             
     def forward(self, inputs):
