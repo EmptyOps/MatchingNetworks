@@ -26,7 +26,7 @@ class BidirectionalLSTM(nn.Module):
         self.batch_size = batch_size
         self.hidden_size = layer_sizes[0]
         self.vector_dim = vector_dim
-        self.num_layers = len(layer_sizes)
+        self.num_layers = len(layer_sizes*3)
         
         '''
         input_size: The number of expected features in the input x
