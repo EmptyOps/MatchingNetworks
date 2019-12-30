@@ -247,6 +247,23 @@ class MatchingNetwork(nn.Module):
                     
                 for tatmpts in range(0, target_image.shape[0]):
                         
+                    #diagonal 
+                    tatmpts_diag = -1
+                    if tatmpts == 0:
+                        tatmpts_diag = 0
+                    elif tatmpts == 1:
+                        tatmpts_diag = 4                        
+                    elif tatmpts == 2:
+                        tatmpts_diag = 1                        
+                    elif tatmpts == 3:
+                        tatmpts_diag = 5                        
+                    elif tatmpts == 4:
+                        tatmpts_diag = 2                        
+                    elif tatmpts == 5:
+                        tatmpts_diag = 6                        
+                    elif tatmpts == 6:
+                        tatmpts_diag = 3                        
+                        
                     if not tatmpts in tmp_test_cnt:
                         tmp_test_cnt[tatmpts] = []
                         
@@ -279,7 +296,7 @@ class MatchingNetwork(nn.Module):
                             
                                 jinds = pindsjj[jjcntr]  #int( math.floor(ii_cntr/iilength) ) + (jj*support_set_labels_one_hot_org_shape[1])  #( j )+(jj*support_set_labels_one_hot_org_shape[1])  
                                 jjcntr += 1 
-                                if tatmpts == xhat_ind:
+                                if tatmpts_diag == xhat_ind:
                                     tmp_test_cnt[tatmpts].append( jinds )
                                 
                                 #print( "tatmpts " + str(tatmpts) + " j " + str(j) + " jinds " + str(jinds) )
@@ -301,7 +318,7 @@ class MatchingNetwork(nn.Module):
                                 #prepare target
                                 n_test_samples = np.sum(j == xhat_pinds)
                                 for xhat_i in range(0, n_test_samples):
-                                    if not tatmpts == xhat_ind:
+                                    if not tatmpts_diag == xhat_ind:
                                         if nardr == 0:
                                             target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float().cuda()
                                         else:
@@ -480,7 +497,7 @@ class MatchingNetwork(nn.Module):
                 print( "open_match_cnt", open_match_cnt )
                 print( "open_match_mpr", open_match_mpr )
             
-                print("tot_ec " + str(tot_ec) + " tot_emc " + str(tot_emc) + " tot_emcll " + str(tot_emcll) + " tot_emclvl " + str(tot_emclvl) )
+                print( "tot_ec " + str(tot_ec) + " tot_emc " + str(tot_emc) + " tot_emcll " + str(tot_emcll) + " tot_emclvl " + str(tot_emclvl) )
                 print( "emcllcls ", emcllcls )
                 print( "emcllclsl ", emcllclsl )
                 print( "emclvlcls ", emclvlcls )
