@@ -192,6 +192,8 @@ class MatchingNetwork(nn.Module):
             emclvlclsl_n1 = []
             
             open_match_cnt = {}
+            open_match_tot = {}
+            open_match_mpr = {}
             
             #TODO tmp.
             tmp_test_cnt = {}
@@ -250,6 +252,8 @@ class MatchingNetwork(nn.Module):
                         
                     if not tatmpts in open_match_cnt:
                         open_match_cnt[tatmpts] = 0
+                        open_match_tot[tatmpts] = 0.0
+                        open_match_mpr[tatmpts] = 0.0
                         
                     pindsjj_tmp = np.random.permutation( support_set_images.shape[1] )
                     #repeat 5 times
@@ -267,7 +271,7 @@ class MatchingNetwork(nn.Module):
                         for ii in range( 0, iilength ): 
                             encoded_images = []
                             
-                            print( "gen_encode jj " + str(jj) + "  ii " + str(ii) )
+                            print( "tatmpts " + str(tatmpts) +" jj " + str(jj) + "  ii " + str(ii) )
                             xhat_pinds = np.concatenate( ( np.random.permutation( support_set_labels_one_hot_org_shape[1] ), np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] - support_set_labels_one_hot_org_shape[1] ) ), axis=0 ) #np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) #np.random.permutation( support_set_labels_one_hot_org_shape[1] )
                             print( xhat_pinds )
                             xhat_ind = 0
@@ -410,6 +414,8 @@ class MatchingNetwork(nn.Module):
                                     
                                     if indices.squeeze()[tatmpts] == target_label[tatmpts,i]:
                                         open_match_cnt[tatmpts] += 1
+                                        open_match_tot[tatmpts] += values[tatmpts]
+                                        open_match_mpr[tatmpts] = open_match_tot[tatmpts] / open_match_cnt[tatmpts]
                             
                                 if False and torch.mean((indices.squeeze() == target_label[:,i]).float()) >= 0.9:
                                     print( "accuracy found above limitttttttttttttttttttttttttttttttttttttttt " + str( torch.mean((indices.squeeze() == target_label[:,i]).float()) ) )
@@ -472,6 +478,7 @@ class MatchingNetwork(nn.Module):
             
                 print( "tmp_test_cnt", tmp_test_cnt )
                 print( "open_match_cnt", open_match_cnt )
+                print( "open_match_mpr", open_match_mpr )
             
                 print("tot_ec " + str(tot_ec) + " tot_emc " + str(tot_emc) + " tot_emcll " + str(tot_emcll) + " tot_emclvl " + str(tot_emclvl) )
                 print( "emcllcls ", emcllcls )
