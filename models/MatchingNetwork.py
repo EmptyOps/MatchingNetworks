@@ -191,6 +191,9 @@ class MatchingNetwork(nn.Module):
             emcllclsl_n1 = []
             emclvlclsl_n1 = []
             
+            #TODO tmp.
+            tmp_test_cnt = {}
+            
             #for i in np.arange(support_set_images.shape[1]):
             for nardr in range(0, 1):   # 2):
             
@@ -240,6 +243,16 @@ class MatchingNetwork(nn.Module):
                     
                 for tatmpts in range(0, target_image.shape[0]):
                         
+                    if not tatmpts in tmp_test_cnt:
+                        tmp_test_cnt[tatmpts] = []
+                        
+                    pindsjj_tmp = np.random.permutation( support_set_images.shape[1] )
+                    #repeat 5 times
+                    pindsjj = np.concatenate( ( pindsjj_tmp,  pindsjj_tmp ), axis=0 )
+                    for rpt in range(0, support_set_labels_one_hot_org_shape[1]-2):
+                        pindsjj = np.concatenate( ( pindsjj, pindsjj_tmp ), axis=0 )
+                        
+                    jjcntr = 0
                     for jj in range( 0, support_set_images.shape[1] ):   #int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
                     
                         ii_cntr = 0
@@ -255,7 +268,9 @@ class MatchingNetwork(nn.Module):
                             xhat_ind = 0
                             for j in range(0, support_set_labels_one_hot_org_shape[1]):
                             
-                                jinds = jj  #int( math.floor(ii_cntr/iilength) ) + (jj*support_set_labels_one_hot_org_shape[1])  #( j )+(jj*support_set_labels_one_hot_org_shape[1])  
+                                jinds = pindsjj[jjcntr]  #int( math.floor(ii_cntr/iilength) ) + (jj*support_set_labels_one_hot_org_shape[1])  #( j )+(jj*support_set_labels_one_hot_org_shape[1])  
+                                jjcntr += 1 
+                                tmp_test_cnt[tatmpts].append( jinds )
                                 
                                 print( "tatmpts " + str(tatmpts) + " j " + str(j) + " jinds " + str(jinds) )
                                 
@@ -443,6 +458,8 @@ class MatchingNetwork(nn.Module):
 
         #if is_debug:
         #    dfsdfsdfsdf
+            
+                print( "tmp_test_cnt", tmp_test_cnt )
             
                 print("tot_ec " + str(tot_ec) + " tot_emc " + str(tot_emc) + " tot_emcll " + str(tot_emcll) + " tot_emclvl " + str(tot_emclvl) )
                 print( "emcllcls ", emcllcls )
