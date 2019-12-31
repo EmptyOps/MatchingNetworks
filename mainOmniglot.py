@@ -340,6 +340,12 @@ else:
                     #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (1.0 - emcllclsl[li].item())
                     results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (emcllclsl[li].item())
 
+                print( "open_match_cnt ", open_match_cnt, " open_match_mpr ", open_match_mpr )
+                    
+                for key in open_match_cnt.keys():
+                    results[key]["ec"] = 2
+                    results[key]["pr"] = str( ( open_match_cnt[key] / 25 ) + open_match_mpr[key] )
+                    
                 print(results)
         
         else:
