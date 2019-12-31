@@ -657,7 +657,7 @@ class OmniglotNShotDataset():
         :param data_pack: Data pack to use (any one of train, val, test)
         :return: A list with [support_set_x, support_set_y, target_x, target_y] ready to be fed to our networks
         """
-        if is_debug:
+        if self.is_debug:
             print( "data_pack" )
             print( data_pack_type )        
             print( data_pack.shape )
