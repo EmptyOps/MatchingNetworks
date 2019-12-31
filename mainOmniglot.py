@@ -87,6 +87,7 @@ total_input_files = int(sys.argv[21]) if len(sys.argv) >= 22 else 0
 is_evaluation_only = False
 if os.path.exists(model_path):
     is_evaluation_only = True
+    is_debug = False
 
 is_load_test_record = False if int(sys.argv[41]) == 0 else True
 test_record_class = int(sys.argv[42])
@@ -165,9 +166,6 @@ if is_evaluation_only == False:
                 obj_oneShotBuilder.save_model(e)
 else: 
     is_do_plain_predict = True
-    
-    #TODO tmp.
-    is_debug = True
     
     if not is_evaluation_res_in_obj:
         results = []
@@ -313,7 +311,7 @@ else:
                 #keep debug off in predict mode 
                 is_debug = False
             
-                c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug)
+                c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug)
                 
                 #
                 for li in range(0, len(emclvlcls)):
