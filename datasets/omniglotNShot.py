@@ -26,7 +26,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1, is_debug = True):
 
         if is_evaluation_only == False:
             np.random.seed(2191)  # for reproducibility
@@ -79,11 +79,15 @@ class OmniglotNShotDataset():
                         
             #
             if is_evaluation_only == False or not os.path.exists( base_classes_file ) or is_load_test_record:
-                print( "(!) Merging inputs, should only be executed in training mode." )
+                if is_debug:
+                    print( "(!) Merging inputs, should only be executed in training mode." )
+                    
                 input = []
                 input_labels = []
-                print("total_input_files")
-                print(total_input_files)
+                if is_debug:
+                    print("total_input_files")
+                    print(total_input_files)
+                    
                 for i in range(0, total_input_files):
                     print("total_input_files i " + str(i))
                     if i == 0:
@@ -96,8 +100,9 @@ class OmniglotNShotDataset():
                 temp = dict()
                 temp_to_be_predicted = dict()
                 sizei = len(input)
-                print("sizei")
-                print(sizei)
+                if is_debug:
+                    print("sizei")
+                    print(sizei)
                 test_record_index_cnt = -1
                 for i in np.arange(sizei):
                     #if is_evaluation_only == True and input_labels[i] >= self.prediction_classes:
@@ -151,12 +156,14 @@ class OmniglotNShotDataset():
                 self.x = [] # Free memory
 
                 if is_load_test_record:
-                    print("loaded prepared base_classes_file")
+                    if is_debug:
+                        print("loaded prepared base_classes_file")
                     self.x = array( json.load( open( base_classes_file ) ) ) 
-                    print(self.x.shape)
+                    if is_debug:
+                        print(self.x.shape)
                     
-                    print( "loaded test record " )
-                    print( self.evaluation.shape )
+                        print( "loaded test record " )
+                        print( self.evaluation.shape )
                 else:
                     for classes in temp.keys():
                         self.x.append(np.array(temp[ list(temp.keys())[classes]]))
@@ -169,8 +176,10 @@ class OmniglotNShotDataset():
                 temp = [] # Free memory
                         
                 if self.is_run_time_predictions:
-                    print( "temp_to_be_predicted.keys()" )
-                    print( temp_to_be_predicted.keys() )
+                    if is_debug:
+                        print( "temp_to_be_predicted.keys()" )
+                        print( temp_to_be_predicted.keys() )
+                        
                     cls_index = 0
                     for classes in temp_to_be_predicted.keys():
                         self.x_to_be_predicted_cls_indexes[classes] = cls_index
@@ -184,12 +193,15 @@ class OmniglotNShotDataset():
                         json.dump(self.x_to_be_predicted.tolist(), outfile)                      
                     
             else:
-                print("loaded prepared base_classes_file")
+                if is_debug:
+                    print("loaded prepared base_classes_file")
                 self.x = array( json.load( open( base_classes_file ) ) ) 
-                print(self.x.shape)
+                if is_debug:
+                    print(self.x.shape)
                 
                 if is_evaluation_only == False:
-                    print("loaded prepared x_to_be_predicted file")
+                    if is_debug:
+                        print("loaded prepared x_to_be_predicted file")
                     self.x_to_be_predicted = array( json.load( open( base_classes_file+"_x_to_be_predicted.json" ) ) ) 
                     
 
