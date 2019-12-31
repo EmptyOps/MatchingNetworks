@@ -261,7 +261,7 @@ else:
                                                                   is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
                                                                   is_compare = False if int(sys.argv[40]) == 0 else True, 
                                                                   is_load_test_record = is_load_test_record, 
-                                                                  test_record_class = arangec[ci], test_record_index = arangec[ri])
+                                                                  test_record_class = arangec[ci], test_record_index = aranger[ri])
 
                         obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
                         obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
@@ -298,7 +298,7 @@ else:
                             #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (1.0 - emcllclsl[li].item())
                             results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (emcllclsl[li].item())
 
-                        print( "class ", arangec[ci], " record ", arangec[ci], " open_match_cnt ", open_match_cnt, " open_match_mpr ", open_match_mpr )
+                        print( "class ", arangec[ci], " record ", aranger[ri], " open_match_cnt ", open_match_cnt, " open_match_mpr ", open_match_mpr )
                             
                         print(results)
             else:
