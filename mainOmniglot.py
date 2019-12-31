@@ -247,63 +247,67 @@ else:
             
                 for ci in range(0, arangec.shape[0]):
                     for ri in range(0, aranger.shape[0]):
-                        is_debug = False
-                        
-                        data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
-                                                                  classes_per_set=classes_per_set,
-                                                                  samples_per_class=samples_per_class, 
-                                                                  is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
-                                                                  total_input_files = total_input_files, is_evaluation_only = is_evaluation_only, 
-                                                                  evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], 
-                                                                  evaluate_classes = int(sys.argv[25]), is_eval_with_train_data = int(sys.argv[26]), 
-                                                                  negative_test_offset = int(sys.argv[27]), is_apply_pca_first = int(sys.argv[29]), 
-                                                                  cache_samples_for_evaluation = int(sys.argv[30]), 
-                                                                  is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]), 
-                                                                  is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]), 
-                                                                  is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
-                                                                  is_compare = False if int(sys.argv[40]) == 0 else True, 
-                                                                  is_load_test_record = is_load_test_record, 
-                                                                  test_record_class = arangec[ci], test_record_index = aranger[ri], 
-                                                                  is_debug = is_debug)
-
-                        obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
-                        obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
-                                                            image_size = int(sys.argv[35]), layer_size = int(sys.argv[36]), 
-                                                            is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True, 
-                                                            vector_dim = int(sys.argv[38]), num_layers=int(sys.argv[44]), dropout=float(sys.argv[45]) )
-
-                        c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug)
-                        
-                        #
-                        for li in range(0, len(emclvlcls)):
-                            y_actual = emclvlcls[li]
-                            if not y_actual in results:
-                                results[y_actual] = {}
-                                results[y_actual]["ec"] = 1
-                                results[y_actual]["emc"] = 0
-                                results[y_actual]["pr"] = 0.0
-                            else:
-                                results[y_actual]["ec"] = results[y_actual]["ec"] + 1
-                                
-                            #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (1.0 - emclvlclsl[li].item()) )
-                            results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (emclvlclsl[li].item()) )
-                        
-                        for li in range(0, len(emcllcls)):
-                            y_actual = emcllcls[li]
-                            if not y_actual in results:
-                                results[y_actual] = {}
-                                results[y_actual]["ec"] = 1
-                                results[y_actual]["emc"] = 0
-                                results[y_actual]["pr"] = 0.0
-                            else:
-                                results[y_actual]["ec"] = results[y_actual]["ec"] + 1
-                                
-                            #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (1.0 - emcllclsl[li].item())
-                            results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (emcllclsl[li].item())
-
-                        print( "class ", arangec[ci], " record ", aranger[ri], " open_match_cnt ", open_match_cnt, " open_match_mpr ", open_match_mpr )
+                        try:
+                            is_debug = False
                             
-                        print(results)
+                            data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
+                                                                      classes_per_set=classes_per_set,
+                                                                      samples_per_class=samples_per_class, 
+                                                                      is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
+                                                                      total_input_files = total_input_files, is_evaluation_only = is_evaluation_only, 
+                                                                      evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], 
+                                                                      evaluate_classes = int(sys.argv[25]), is_eval_with_train_data = int(sys.argv[26]), 
+                                                                      negative_test_offset = int(sys.argv[27]), is_apply_pca_first = int(sys.argv[29]), 
+                                                                      cache_samples_for_evaluation = int(sys.argv[30]), 
+                                                                      is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]), 
+                                                                      is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]), 
+                                                                      is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
+                                                                      is_compare = False if int(sys.argv[40]) == 0 else True, 
+                                                                      is_load_test_record = is_load_test_record, 
+                                                                      test_record_class = arangec[ci], test_record_index = aranger[ri], 
+                                                                      is_debug = is_debug)
+
+                            obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
+                            obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
+                                                                image_size = int(sys.argv[35]), layer_size = int(sys.argv[36]), 
+                                                                is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True, 
+                                                                vector_dim = int(sys.argv[38]), num_layers=int(sys.argv[44]), dropout=float(sys.argv[45]) )
+
+                            c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug)
+                            
+                            #
+                            for li in range(0, len(emclvlcls)):
+                                y_actual = emclvlcls[li]
+                                if not y_actual in results:
+                                    results[y_actual] = {}
+                                    results[y_actual]["ec"] = 1
+                                    results[y_actual]["emc"] = 0
+                                    results[y_actual]["pr"] = 0.0
+                                else:
+                                    results[y_actual]["ec"] = results[y_actual]["ec"] + 1
+                                    
+                                #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (1.0 - emclvlclsl[li].item()) )
+                                results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (emclvlclsl[li].item()) )
+                            
+                            for li in range(0, len(emcllcls)):
+                                y_actual = emcllcls[li]
+                                if not y_actual in results:
+                                    results[y_actual] = {}
+                                    results[y_actual]["ec"] = 1
+                                    results[y_actual]["emc"] = 0
+                                    results[y_actual]["pr"] = 0.0
+                                else:
+                                    results[y_actual]["ec"] = results[y_actual]["ec"] + 1
+                                    
+                                #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (1.0 - emcllclsl[li].item())
+                                results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (emcllclsl[li].item())
+
+                            print( "class ", arangec[ci], " record ", aranger[ri], " open_match_cnt ", open_match_cnt, " open_match_mpr ", open_match_mpr )
+                                
+                            print(results)
+                        except Exception as e:
+                            print(e)
+
             else:
                 
                 #keep debug off in predict mode 
