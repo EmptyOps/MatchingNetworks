@@ -386,17 +386,17 @@ class OneShotBuilder:
             size = x_target.size()
             x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
             if self.isCudaAvailable:
-                acc, c_loss_value, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl = self.matchingNet.predict(x, y_support_set_one_hot.cuda(),
+                acc, c_loss_value, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = self.matchingNet.predict(x, y_support_set_one_hot.cuda(),
                                                      x_target, y_target.cuda(), is_debug = is_debug, is_evaluation_only = False, y_support_set_org = y_support_set, target_y_actuals = target_y_actuals )
             else:
-                acc, c_loss_value, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl = self.matchingNet.predict(x, y_support_set_one_hot,
+                acc, c_loss_value, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = self.matchingNet.predict(x, y_support_set_one_hot,
                                                      x_target, y_target, is_debug = is_debug, is_evaluation_only = False, y_support_set_org = y_support_set, target_y_actuals = target_y_actuals )
 
             if is_debug == True:
                 #iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])
                 print( "test_loss: {}, test_accuracy: {}".format(c_loss_value.data, acc.data) )
             
-            return c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl        
+            return c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr        
         
     def __adjust_learning_rate(self,optimizer):
         """Updates the learning rate given the learning rate decay.

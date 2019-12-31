@@ -213,27 +213,35 @@ class MatchingNetwork(nn.Module):
                         if support_set_images.shape[0] < target_image.shape[0]:
                             pindstmp = np.concatenate( ( np.random.permutation( support_set_images.shape[0] ), np.random.choice( support_set_images.shape[0], target_image.shape[0] - support_set_images.shape[0] ) ), axis=0 ) 
                             
-                            print( "pindstmp", pindstmp )
+                            if is_debug:
+                                print( "pindstmp", pindstmp )
+                                
                             #repeat 5 times
                             tmp_copy = np.copy( pindstmp )
-                            print( "tmp_copy 1 ", tmp_copy )
+                            if is_debug:
+                                print( "tmp_copy 1 ", tmp_copy )
                             np.random.shuffle( tmp_copy )
-                            print( "tmp_copy 1 ", tmp_copy )
+                            if is_debug:
+                                print( "tmp_copy 1 ", tmp_copy )
                             pinds = np.concatenate( ( pindstmp,  tmp_copy ), axis=0 )
                             for rpt in range(0, support_set_labels_one_hot_org_shape[1]-2):
                                 tmp_copy = np.copy( pindstmp )
-                                print( "tmp_copy ", rpt+2, tmp_copy )
+                                if is_debug:
+                                    print( "tmp_copy ", rpt+2, tmp_copy )
                                 np.random.shuffle( tmp_copy )
-                                print( "tmp_copy ", rpt+2, tmp_copy )
+                                if is_debug:
+                                    print( "tmp_copy ", rpt+2, tmp_copy )
                                 pinds = np.concatenate( ( pinds, tmp_copy ), axis=0 )
                         else:
                             pinds = np.arange( support_set_images.shape[0] ) 
                             
-                            print( "pindstmp", pinds )
+                            if is_debug:
+                                print( "pindstmp", pinds )
                             #repeat 5 times
                             for rpt in range(0, support_set_labels_one_hot_org_shape[1]-1):
                                 pindstmp = np.concatenate( ( np.arange( rpt+1, support_set_images.shape[0] ), np.arange( 0 , rpt+1 ) ), axis=0 )
-                                print( "rpt ", rpt, pindstmp )
+                                if is_debug:
+                                    print( "rpt ", rpt, pindstmp )
                                 pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                 else:
                     uniq_cls = np.array(uniq_cls)
@@ -288,7 +296,9 @@ class MatchingNetwork(nn.Module):
                         for ii in range( 0, iilength ): 
                             encoded_images = []
                             
-                            print( "tatmpts " + str(tatmpts) +" jj " + str(jj) + "  ii " + str(ii) )
+                            if is_debug:
+                                print( "tatmpts " + str(tatmpts) +" jj " + str(jj) + "  ii " + str(ii) )
+                                
                             xhat_pinds = np.concatenate( ( np.random.permutation( support_set_labels_one_hot_org_shape[1] ), np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] - support_set_labels_one_hot_org_shape[1] ) ), axis=0 ) #np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) #np.random.permutation( support_set_labels_one_hot_org_shape[1] )
                             print( xhat_pinds )
                             xhat_ind = 0
@@ -416,6 +426,10 @@ class MatchingNetwork(nn.Module):
                             values, indices = preds.max(1)
                             pred_indices.append( indices )
                             
+                            if indices.squeeze()[tatmpts_diag] == target_label[tatmpts_diag,i]:
+                                open_match_cnt[tatmpts] += 1
+                                open_match_tot[tatmpts] += values[tatmpts]
+                                open_match_mpr[tatmpts] = open_match_tot[tatmpts] / open_match_cnt[tatmpts]
                             
                             if is_debug:
                                 #print( "support set while in predictions debug mode" )
@@ -428,11 +442,6 @@ class MatchingNetwork(nn.Module):
                                     print( target_label[:,i] )
                                     print( ".................loss found below limitttttttttttttttttttttttttttttttttttttttt " + str(F.cross_entropy(preds, target_label[:,i].long())))
                                     print( "accuracy found above limitttttttttttttttttttttttttttttttttttttttt " + str( torch.mean((indices.squeeze() == target_label[:,i]).float()) ) )
-                                    
-                                    if indices.squeeze()[tatmpts_diag] == target_label[tatmpts_diag,i]:
-                                        open_match_cnt[tatmpts] += 1
-                                        open_match_tot[tatmpts] += values[tatmpts]
-                                        open_match_mpr[tatmpts] = open_match_tot[tatmpts] / open_match_cnt[tatmpts]
                             
                                 if False and torch.mean((indices.squeeze() == target_label[:,i]).float()) >= 0.9:
                                     print( "accuracy found above limitttttttttttttttttttttttttttttttttttttttt " + str( torch.mean((indices.squeeze() == target_label[:,i]).float()) ) )
@@ -493,22 +502,23 @@ class MatchingNetwork(nn.Module):
         #if is_debug:
         #    dfsdfsdfsdf
             
-                print( "tmp_test_cnt", tmp_test_cnt )
-                print( "open_match_cnt", open_match_cnt )
-                print( "open_match_mpr", open_match_mpr )
-            
-                print( "tot_ec " + str(tot_ec) + " tot_emc " + str(tot_emc) + " tot_emcll " + str(tot_emcll) + " tot_emclvl " + str(tot_emclvl) )
-                print( "emcllcls ", emcllcls )
-                print( "emcllclsl ", emcllclsl )
-                print( "emclvlcls ", emclvlcls )
-                print( "emclvlclsl ", emclvlclsl )
+                if is_debug:
+                    print( "tmp_test_cnt", tmp_test_cnt )
+                    print( "open_match_cnt", open_match_cnt )
+                    print( "open_match_mpr", open_match_mpr )
                 
-                print( "emcllcls_n1 ", emcllcls_n1 )
-                print( "emcllclsl_n1 ", emcllclsl_n1 )
-                print( "emclvlcls_n1 ", emclvlcls_n1 )
-                print( "emclvlclsl_n1 ", emclvlclsl_n1 )
+                    print( "tot_ec " + str(tot_ec) + " tot_emc " + str(tot_emc) + " tot_emcll " + str(tot_emcll) + " tot_emclvl " + str(tot_emclvl) )
+                    print( "emcllcls ", emcllcls )
+                    print( "emcllclsl ", emcllclsl )
+                    print( "emclvlcls ", emclvlcls )
+                    print( "emclvlclsl ", emclvlclsl )
+                    
+                    print( "emcllcls_n1 ", emcllcls_n1 )
+                    print( "emcllclsl_n1 ", emcllclsl_n1 )
+                    print( "emclvlcls_n1 ", emclvlcls_n1 )
+                    print( "emclvlclsl_n1 ", emclvlclsl_n1 )
             
-        return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl
+        return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr
         
 class MatchingNetworkTest(unittest.TestCase):
     def setUp(self):

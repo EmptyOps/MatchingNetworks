@@ -88,27 +88,32 @@ is_evaluation_only = False
 if os.path.exists(model_path):
     is_evaluation_only = True
 
-data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
-                                          classes_per_set=classes_per_set,
-                                          samples_per_class=samples_per_class, 
-                                          is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
-                                          total_input_files = total_input_files, is_evaluation_only = is_evaluation_only, 
-                                          evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], 
-                                          evaluate_classes = int(sys.argv[25]), is_eval_with_train_data = int(sys.argv[26]), 
-                                          negative_test_offset = int(sys.argv[27]), is_apply_pca_first = int(sys.argv[29]), 
-                                          cache_samples_for_evaluation = int(sys.argv[30]), 
-                                          is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]), 
-                                          is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]), 
-                                          is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
-                                          is_compare = False if int(sys.argv[40]) == 0 else True, 
-                                          is_load_test_record = False if int(sys.argv[41]) == 0 else True, 
-                                          test_record_class = int(sys.argv[42]), test_record_index = int(sys.argv[43]))
+is_load_test_record = False if int(sys.argv[41]) == 0 else True
+test_record_class = int(sys.argv[42])
+test_record_index = int(sys.argv[43])
 
-obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
-obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
-                                    image_size = int(sys.argv[35]), layer_size = int(sys.argv[36]), 
-                                    is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True, 
-                                    vector_dim = int(sys.argv[38]), num_layers=int(sys.argv[44]), dropout=float(sys.argv[45]) )
+if is_evaluation_only == False or not is_load_test_record or not test_record_class == -1:
+    data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
+                                              classes_per_set=classes_per_set,
+                                              samples_per_class=samples_per_class, 
+                                              is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
+                                              total_input_files = total_input_files, is_evaluation_only = is_evaluation_only, 
+                                              evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], 
+                                              evaluate_classes = int(sys.argv[25]), is_eval_with_train_data = int(sys.argv[26]), 
+                                              negative_test_offset = int(sys.argv[27]), is_apply_pca_first = int(sys.argv[29]), 
+                                              cache_samples_for_evaluation = int(sys.argv[30]), 
+                                              is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]), 
+                                              is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]), 
+                                              is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
+                                              is_compare = False if int(sys.argv[40]) == 0 else True, 
+                                              is_load_test_record = is_load_test_record, 
+                                              test_record_class = test_record_class, test_record_index = test_record_index)
+
+    obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
+    obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
+                                        image_size = int(sys.argv[35]), layer_size = int(sys.argv[36]), 
+                                        is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True, 
+                                        vector_dim = int(sys.argv[38]), num_layers=int(sys.argv[44]), dropout=float(sys.argv[45]) )
 
 if is_evaluation_only == False:
     if not 'EPOCH' in model_path:
@@ -230,36 +235,107 @@ else:
         tot_matches = 0
         matched_cnt = 0
         if is_do_plain_predict:
-            c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug)
-            
-            #
-            for li in range(0, len(emclvlcls)):
-                y_actual = emclvlcls[li]
-                if not y_actual in results:
-                    results[y_actual] = {}
-                    results[y_actual]["ec"] = 1
-                    results[y_actual]["emc"] = 0
-                    results[y_actual]["pr"] = 0.0
+            if is_load_test_record:
+                if test_record_class == -1:
+                    arangec = np.arange( int(sys.argv[33]) )
+                    aranger = np.arange( 25 )   #till available
                 else:
-                    results[y_actual]["ec"] = results[y_actual]["ec"] + 1
-                    
-                #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (1.0 - emclvlclsl[li].item()) )
-                results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (emclvlclsl[li].item()) )
+                    arangec = np.array( [ test_record_class ] )
+                    aranger = np.array( [ test_record_index ] )
             
-            for li in range(0, len(emcllcls)):
-                y_actual = emcllcls[li]
-                if not y_actual in results:
-                    results[y_actual] = {}
-                    results[y_actual]["ec"] = 1
-                    results[y_actual]["emc"] = 0
-                    results[y_actual]["pr"] = 0.0
-                else:
-                    results[y_actual]["ec"] = results[y_actual]["ec"] + 1
-                    
-                #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (1.0 - emcllclsl[li].item())
-                results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (emcllclsl[li].item())
+                for ci in range(0, arangec.shape[0]):
+                    for ri in range(0, aranger.shape[0]):
+                        is_debug = False
+                        
+                        data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
+                                                                  classes_per_set=classes_per_set,
+                                                                  samples_per_class=samples_per_class, 
+                                                                  is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
+                                                                  total_input_files = total_input_files, is_evaluation_only = is_evaluation_only, 
+                                                                  evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], 
+                                                                  evaluate_classes = int(sys.argv[25]), is_eval_with_train_data = int(sys.argv[26]), 
+                                                                  negative_test_offset = int(sys.argv[27]), is_apply_pca_first = int(sys.argv[29]), 
+                                                                  cache_samples_for_evaluation = int(sys.argv[30]), 
+                                                                  is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]), 
+                                                                  is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]), 
+                                                                  is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
+                                                                  is_compare = False if int(sys.argv[40]) == 0 else True, 
+                                                                  is_load_test_record = is_load_test_record, 
+                                                                  test_record_class = arangec[ci], test_record_index = arangec[ri])
 
-            print(results)
+                        obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
+                        obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
+                                                            image_size = int(sys.argv[35]), layer_size = int(sys.argv[36]), 
+                                                            is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True, 
+                                                            vector_dim = int(sys.argv[38]), num_layers=int(sys.argv[44]), dropout=float(sys.argv[45]) )
+
+                        c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug)
+                        
+                        #
+                        for li in range(0, len(emclvlcls)):
+                            y_actual = emclvlcls[li]
+                            if not y_actual in results:
+                                results[y_actual] = {}
+                                results[y_actual]["ec"] = 1
+                                results[y_actual]["emc"] = 0
+                                results[y_actual]["pr"] = 0.0
+                            else:
+                                results[y_actual]["ec"] = results[y_actual]["ec"] + 1
+                                
+                            #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (1.0 - emclvlclsl[li].item()) )
+                            results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (emclvlclsl[li].item()) )
+                        
+                        for li in range(0, len(emcllcls)):
+                            y_actual = emcllcls[li]
+                            if not y_actual in results:
+                                results[y_actual] = {}
+                                results[y_actual]["ec"] = 1
+                                results[y_actual]["emc"] = 0
+                                results[y_actual]["pr"] = 0.0
+                            else:
+                                results[y_actual]["ec"] = results[y_actual]["ec"] + 1
+                                
+                            #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (1.0 - emcllclsl[li].item())
+                            results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (emcllclsl[li].item())
+
+                        print( "class ", arangec[ci], " record ", arangec[ci], " open_match_cnt ", open_match_cnt, " open_match_mpr ", open_match_mpr )
+                            
+                        print(results)
+            else:
+                
+                #keep debug off in predict mode 
+                is_debug = False
+            
+                c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug)
+                
+                #
+                for li in range(0, len(emclvlcls)):
+                    y_actual = emclvlcls[li]
+                    if not y_actual in results:
+                        results[y_actual] = {}
+                        results[y_actual]["ec"] = 1
+                        results[y_actual]["emc"] = 0
+                        results[y_actual]["pr"] = 0.0
+                    else:
+                        results[y_actual]["ec"] = results[y_actual]["ec"] + 1
+                        
+                    #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (1.0 - emclvlclsl[li].item()) )
+                    results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + ( (emclvlclsl[li].item()) )
+                
+                for li in range(0, len(emcllcls)):
+                    y_actual = emcllcls[li]
+                    if not y_actual in results:
+                        results[y_actual] = {}
+                        results[y_actual]["ec"] = 1
+                        results[y_actual]["emc"] = 0
+                        results[y_actual]["pr"] = 0.0
+                    else:
+                        results[y_actual]["ec"] = results[y_actual]["ec"] + 1
+                        
+                    #results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (1.0 - emcllclsl[li].item())
+                    results[y_actual]["pr"] = 0 + results[y_actual]["pr"] + (emcllclsl[li].item())
+
+                print(results)
         
         else:
             sloop = int( int(sys.argv[30])/10 )
