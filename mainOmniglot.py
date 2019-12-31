@@ -91,6 +91,7 @@ if os.path.exists(model_path):
 is_load_test_record = False if int(sys.argv[41]) == 0 else True
 test_record_class = int(sys.argv[42])
 test_record_index = int(sys.argv[43])
+test_record_index_end = int(sys.argv[46])
 
 if is_evaluation_only == False or not is_load_test_record or not test_record_class == -1:
     data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
@@ -239,7 +240,7 @@ else:
             if is_load_test_record:
                 if test_record_class == -1:
                     arangec = np.arange( int(sys.argv[33]) )
-                    aranger = np.arange( 25 )   #till available
+                    aranger = np.arange( test_record_index, test_record_index_end )   #till available
                 else:
                     arangec = np.array( [ test_record_class ] )
                     aranger = np.array( [ test_record_index ] )
