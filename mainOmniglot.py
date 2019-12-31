@@ -107,7 +107,8 @@ if is_evaluation_only == False or not is_load_test_record or not test_record_cla
                                               is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
                                               is_compare = False if int(sys.argv[40]) == 0 else True, 
                                               is_load_test_record = is_load_test_record, 
-                                              test_record_class = test_record_class, test_record_index = test_record_index)
+                                              test_record_class = test_record_class, test_record_index = test_record_index, 
+                                              is_debug = is_debug)
 
     obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
     obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
@@ -261,7 +262,8 @@ else:
                                                                   is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
                                                                   is_compare = False if int(sys.argv[40]) == 0 else True, 
                                                                   is_load_test_record = is_load_test_record, 
-                                                                  test_record_class = arangec[ci], test_record_index = aranger[ri])
+                                                                  test_record_class = arangec[ci], test_record_index = aranger[ri], 
+                                                                  is_debug = is_debug)
 
                         obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
                         obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
