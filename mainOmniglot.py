@@ -347,7 +347,7 @@ else:
                         results[key] = {}
                 
                     results[key]["ec"] = 2
-                    results[key]["pr"] = str( ( open_match_cnt[key] / 25 ) + open_match_mpr[key] )
+                    results[key]["pr"] = str( ( 0 + open_match_cnt[key] / 25 ) + open_match_mpr[key].item() )
                     
                 print(results)
         
