@@ -28,6 +28,8 @@ np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 class OmniglotNShotDataset():
     def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1, is_debug = True):
 
+        self.is_debug = is_debug
+    
         if is_evaluation_only == False:
             np.random.seed(2191)  # for reproducibility
         else:
@@ -89,7 +91,9 @@ class OmniglotNShotDataset():
                     print(total_input_files)
                     
                 for i in range(0, total_input_files):
-                    print("total_input_files i " + str(i))
+                    if is_debug:
+                        print("total_input_files i " + str(i))
+                        
                     if i == 0:
                         input = array( json.load( open( input_file.replace('{i}', str(i)) ) ) ) 
                         input_labels = array( json.load( open( input_labels_file.replace('{i}', str(i)) ) ) ) 
@@ -653,9 +657,10 @@ class OmniglotNShotDataset():
         :param data_pack: Data pack to use (any one of train, val, test)
         :return: A list with [support_set_x, support_set_y, target_x, target_y] ready to be fed to our networks
         """
-        print( "data_pack" )
-        print( data_pack_type )        
-        print( data_pack.shape )
+        if is_debug:
+            print( "data_pack" )
+            print( data_pack_type )        
+            print( data_pack.shape )
         
         """
         print( data_pack.shape[0] )
