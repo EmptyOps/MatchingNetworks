@@ -343,6 +343,9 @@ else:
                 print( "open_match_cnt ", open_match_cnt, " open_match_mpr ", open_match_mpr )
                     
                 for key in open_match_cnt.keys():
+                    if not key in results:
+                        results[key] = {}
+                
                     results[key]["ec"] = 2
                     results[key]["pr"] = str( ( open_match_cnt[key] / 25 ) + open_match_mpr[key] )
                     
