@@ -18,11 +18,14 @@ from models.DistanceNetwork import DistanceNetwork
 from models.AttentionalClassify import AttentionalClassify
 import torch.nn.functional as F
 
+from torch.utils.tensorboard import SummaryWriter
+import os
+
 class MatchingNetwork(nn.Module):
     def __init__(self, keep_prob, \
                  batch_size=100, num_channels=1, learning_rate=0.001, fce=False, num_classes_per_set=5, \
                  num_samples_per_class=1, nClasses = 0, image_size = 28, layer_size = 64, is_use_lstm_layer=False, 
-                 vector_dim = None, num_layers=1, dropout=-1):
+                 vector_dim = None, num_layers=1, dropout=-1, model_path=model_path):
         super(MatchingNetwork, self).__init__()
 
         """
@@ -43,6 +46,11 @@ class MatchingNetwork(nn.Module):
         
         self.batch_size = batch_size
         self.fce = fce
+        
+        # default `log_dir` is "runs" - we'll be more specific here
+        self.is_do_train_logging = True
+        self.writer = SummaryWriter( os.path.join( os.path.dirname(model_path), 'train_log' ) )
+        
         if not self.is_use_lstm_layer:
             self.g = Classifier(layer_size = layer_size, num_channels=num_channels,
                                 nClasses= nClasses, image_size = image_size )
@@ -80,6 +88,18 @@ class MatchingNetwork(nn.Module):
                     
                 encoded_images.append(gen_encode)
 
+        if self.is_do_train_logging:
+            # get some random training images
+
+            # create grid of images
+            img_grid = torchvision.utils.make_grid(encoded_images)    #(images)
+
+            # show images
+            matplotlib_imshow(img_grid, one_channel=True)
+
+            # write to tensorboard
+            writer.add_image('support_set_images encoded ', img_grid)
+                
         pred_indices = []
         # produce embeddings for target images
         for i in np.arange(target_image.size(1)):
@@ -88,6 +108,18 @@ class MatchingNetwork(nn.Module):
             else:
                 gen_encode, _, _ = self.g(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ))
                 gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
+                
+            if self.is_do_train_logging:
+                # get some random training images
+
+                # create grid of images
+                img_grid = torchvision.utils.make_grid(gen_encode)    #(images)
+
+                # show images
+                matplotlib_imshow(img_grid, one_channel=True)
+
+                # write to tensorboard
+                writer.add_image('target_image encoded ', img_grid)
                 
             #print("gen_encode ", gen_encode.shape)
             encoded_images.append(gen_encode)
@@ -104,6 +136,20 @@ class MatchingNetwork(nn.Module):
                 similarities = self.dn(input_image=outputs[:])
             similarities = similarities.t()
 
+            if self.is_do_train_logging:
+                # get some random training images
+
+                # create grid of images
+                img_grid = torchvision.utils.make_grid(similarities)    #(images)
+
+                # show images
+                matplotlib_imshow(img_grid, one_channel=True)
+
+                # write to tensorboard
+                writer.add_image('similarities ', img_grid)
+                
+                dointervalbasedlogging
+            
             # produce predictions for target probabilities
             if is_evaluation_only == False:
                 preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)

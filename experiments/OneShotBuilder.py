@@ -49,7 +49,7 @@ class OneShotBuilder:
                                              num_samples_per_class=samples_per_class,
                                              nClasses = 0, image_size = image_size, layer_size = layer_size, 
                                              is_use_lstm_layer=is_use_lstm_layer, vector_dim = vector_dim, 
-                                             num_layers=num_layers, dropout=dropout)
+                                             num_layers=num_layers, dropout=dropout, model_path=model_path)
         else: 
             self.matchingNet = torch.load(self.model_path)
                                              
