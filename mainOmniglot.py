@@ -125,7 +125,7 @@ if is_evaluation_only == False:
     best_val = 0.
     with tqdm.tqdm(total=total_epochs) as pbar_e:
         for e in range(0, total_epochs):
-            total_c_loss, total_accuracy = obj_oneShotBuilder.run_training_epoch(total_train_batches=total_train_batches)
+            total_c_loss, total_accuracy = obj_oneShotBuilder.run_training_epoch(total_train_batches=total_train_batches, epoch=e)
             print("Epoch {}: train_loss: {}, train_accuracy: {}".format(e, total_c_loss, total_accuracy))
 
             logger.log_value('train_loss', total_c_loss)

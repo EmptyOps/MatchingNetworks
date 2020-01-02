@@ -51,7 +51,9 @@ class MatchingNetwork(nn.Module):
         
         # default `log_dir` is "runs" - we'll be more specific here
         self.is_do_train_logging = True
-        self.writer = SummaryWriter( os.path.join( os.path.dirname(model_path), 'train_log' ) )
+        if self.is_do_train_logging:
+            self.log_interval = 50
+            self.writer = SummaryWriter( os.path.join( os.path.dirname(model_path), 'train_log' ) )
         
         if not self.is_use_lstm_layer:
             self.g = Classifier(layer_size = layer_size, num_channels=num_channels,
@@ -69,7 +71,7 @@ class MatchingNetwork(nn.Module):
         self.num_samples_per_class = num_samples_per_class
         self.learning_rate = learning_rate
 
-    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None, target_y_actuals = None):
+    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None, target_y_actuals = None, epoch = -1, log_file = None):
         """
         Builds graph for Matching Networks, produces losses and summary statistics.
         :param support_set_images: A tensor containing the support set images [batch_size, sequence_size, n_channels, 28, 28]
@@ -90,17 +92,45 @@ class MatchingNetwork(nn.Module):
                     
                 encoded_images.append(gen_encode)
 
-        if self.is_do_train_logging:
-            # get some random training images
+        log_file_encoded = None
+        log_file_similarities = None
+        if self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
+            log_file = log_file + "_epoch-"+str(epoch)+".json"
+            log_file_encoded = log_file + "_encoded.json"
+            log_file_similarities = log_file + "_similarities.json"
 
-            # create grid of images
-            img_grid = torchvision.utils.make_grid(encoded_images)    #(images)
+            # load logged array and append and save
+            try:
+                logs = array( json.load( open( log_file ) ) ) 
+                logs = np.concatenate( ( logs, support_set_images ), axis=0 )
+            except Exception as e:
+                logs = support_set_images
+                
+            #save
+            with open( log_file, 'w') as outfile:
+                json.dump( logs.tolist(), outfile) 
+        
+            # load logged array and append and save
+            try:
+                logs = array( json.load( open( log_file_encoded ) ) ) 
+                logs = np.concatenate( ( logs, np.array( encoded_images ) ), axis=0 )
+            except Exception as e:
+                logs = np.array( encoded_images )
+                
+            #save
+            with open( log_file_encoded, 'w') as outfile:
+                json.dump( logs.tolist(), outfile) 
+        
+            ## get some random training images
 
-            # show images
+            ## create grid of images
+            #img_grid = torchvision.utils.make_grid(encoded_images)    #(images)
+
+            ## show images
             #matplotlib_imshow(img_grid, one_channel=True)
 
-            # write to tensorboard
-            self.writer.add_image('support_set_images encoded ', img_grid)
+            ## write to tensorboard
+            #self.writer.add_image('support_set_images encoded ', img_grid)
                 
         pred_indices = []
         # produce embeddings for target images
@@ -111,22 +141,33 @@ class MatchingNetwork(nn.Module):
                 gen_encode, _, _ = self.g(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ))
                 gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                 
-            if self.is_do_train_logging:
-                # get some random training images
+            if False and self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
+                # load logged array and append and save
+                try:
+                    logs = array( json.load( open( log_file ) ) ) 
+                    logs = np.concatenate( ( logs, support_set_images ), axis=0 )
+                except Exception as e:
+                    logs = support_set_images
+                    
+                #save
+                with open( log_file, 'w') as outfile:
+                    json.dump( logs.tolist(), outfile) 
 
-                # create grid of images
-                img_grid = torchvision.utils.make_grid(gen_encode)    #(images)
+                ## get some random training images
 
-                # show images
+                ## create grid of images
+                #img_grid = torchvision.utils.make_grid(gen_encode)    #(images)
+
+                ## show images
                 #matplotlib_imshow(img_grid, one_channel=True)
 
-                # write to tensorboard
-                self.writer.add_image('target_image encoded ', img_grid)
+                ## write to tensorboard
+                #self.writer.add_image('target_image encoded ', img_grid)
                 
-            #print("gen_encode ", gen_encode.shape)
-            encoded_images.append(gen_encode)
-            outputs = torch.stack(encoded_images)
-            #print("outputs ", outputs.shape)
+                ##print("gen_encode ", gen_encode.shape)
+                #encoded_images.append(gen_encode)
+                #outputs = torch.stack(encoded_images)
+                ##print("outputs ", outputs.shape)
 
             if self.fce:
                 outputs, hn, cn = self.lstm(outputs)
@@ -138,17 +179,28 @@ class MatchingNetwork(nn.Module):
                 similarities = self.dn(input_image=outputs[:])
             similarities = similarities.t()
 
-            if self.is_do_train_logging:
-                # get some random training images
+            if self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
+                # load logged array and append and save
+                try:
+                    logs = array( json.load( open( log_file_similarities ) ) ) 
+                    logs = np.concatenate( ( logs, np.array( similarities ) ), axis=0 )
+                except Exception as e:
+                    logs = np.array( similarities )
+                    
+                #save
+                with open( log_file_similarities, 'w') as outfile:
+                    json.dump( logs.tolist(), outfile) 
 
-                # create grid of images
-                img_grid = torchvision.utils.make_grid(similarities)    #(images)
+                ## get some random training images
 
-                # show images
+                ## create grid of images
+                #img_grid = torchvision.utils.make_grid(similarities)    #(images)
+
+                ## show images
                 #matplotlib_imshow(img_grid, one_channel=True)
 
-                # write to tensorboard
-                self.writer.add_image('similarities ', img_grid)
+                ## write to tensorboard
+                #self.writer.add_image('similarities ', img_grid)
                 
                 dointervalbasedlogging
             

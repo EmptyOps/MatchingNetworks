@@ -71,7 +71,7 @@ class OneShotBuilder:
     def save_model(self, epoch):
         torch.save(self.matchingNet, self.model_path.replace('EPOCH', str(epoch)))
             
-    def run_training_epoch(self, total_train_batches):
+    def run_training_epoch(self, total_train_batches, epoch=-1):
         """
         Runs one training epoch
         :param total_train_batches: Number of batches to train on
@@ -108,7 +108,7 @@ class OneShotBuilder:
                 x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
                 if self.isCudaAvailable:
                     acc, c_loss_value, _ = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
-                                                         x_target.cuda(), y_target.cuda())
+                                                         x_target.cuda(), y_target.cuda(), epoch = epoch)
                 else:
                     acc, c_loss_value, _ = self.matchingNet(x_support_set, y_support_set_one_hot,
                                                          x_target, y_target)
