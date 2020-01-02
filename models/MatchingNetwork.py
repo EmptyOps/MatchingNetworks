@@ -20,6 +20,8 @@ import torch.nn.functional as F
 
 from torch.utils.tensorboard import SummaryWriter
 import os
+import torchvision
+import torchvision.transforms as transforms
 
 class MatchingNetwork(nn.Module):
     def __init__(self, keep_prob, \
