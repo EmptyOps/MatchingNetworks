@@ -100,7 +100,7 @@ class MatchingNetwork(nn.Module):
             #matplotlib_imshow(img_grid, one_channel=True)
 
             # write to tensorboard
-            writer.add_image('support_set_images encoded ', img_grid)
+            self.writer.add_image('support_set_images encoded ', img_grid)
                 
         pred_indices = []
         # produce embeddings for target images
@@ -121,7 +121,7 @@ class MatchingNetwork(nn.Module):
                 #matplotlib_imshow(img_grid, one_channel=True)
 
                 # write to tensorboard
-                writer.add_image('target_image encoded ', img_grid)
+                self.writer.add_image('target_image encoded ', img_grid)
                 
             #print("gen_encode ", gen_encode.shape)
             encoded_images.append(gen_encode)
@@ -148,7 +148,7 @@ class MatchingNetwork(nn.Module):
                 #matplotlib_imshow(img_grid, one_channel=True)
 
                 # write to tensorboard
-                writer.add_image('similarities ', img_grid)
+                self.writer.add_image('similarities ', img_grid)
                 
                 dointervalbasedlogging
             
