@@ -97,7 +97,7 @@ class MatchingNetwork(nn.Module):
             img_grid = torchvision.utils.make_grid(encoded_images)    #(images)
 
             # show images
-            matplotlib_imshow(img_grid, one_channel=True)
+            #matplotlib_imshow(img_grid, one_channel=True)
 
             # write to tensorboard
             writer.add_image('support_set_images encoded ', img_grid)
@@ -118,7 +118,7 @@ class MatchingNetwork(nn.Module):
                 img_grid = torchvision.utils.make_grid(gen_encode)    #(images)
 
                 # show images
-                matplotlib_imshow(img_grid, one_channel=True)
+                #matplotlib_imshow(img_grid, one_channel=True)
 
                 # write to tensorboard
                 writer.add_image('target_image encoded ', img_grid)
@@ -145,7 +145,7 @@ class MatchingNetwork(nn.Module):
                 img_grid = torchvision.utils.make_grid(similarities)    #(images)
 
                 # show images
-                matplotlib_imshow(img_grid, one_channel=True)
+                #matplotlib_imshow(img_grid, one_channel=True)
 
                 # write to tensorboard
                 writer.add_image('similarities ', img_grid)
