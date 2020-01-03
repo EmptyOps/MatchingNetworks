@@ -175,10 +175,10 @@ class MatchingNetwork(nn.Module):
                 ## write to tensorboard
                 #self.writer.add_image('target_image encoded ', img_grid)
                 
-                ##print("gen_encode ", gen_encode.shape)
-                #encoded_images.append(gen_encode)
-                #outputs = torch.stack(encoded_images)
-                ##print("outputs ", outputs.shape)
+            #print("gen_encode ", gen_encode.shape)
+            encoded_images.append(gen_encode)
+            outputs = torch.stack(encoded_images)
+            #print("outputs ", outputs.shape)
 
             if self.fce:
                 outputs, hn, cn = self.lstm(outputs)
