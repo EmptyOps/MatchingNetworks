@@ -120,11 +120,12 @@ class MatchingNetwork(nn.Module):
                 for eimg in encoded_images:
                     logs = np.concatenate( ( logs, np.array( eimg.cpu().detach().numpy() ) ), axis=0 )
             except Exception as e:
-                logs = None
+                is_first = True
                 for eimg in encoded_images:
-                    if not logs == None:
+                    if not is_first:
                         logs = np.concatenate( ( logs, np.array( eimg.cpu().detach().numpy() ) ), axis=0 )
                     else:
+                        is_first = False
                         logs = np.array( eimg.cpu().detach().numpy() )
                 
             #save
