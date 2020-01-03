@@ -53,6 +53,7 @@ class MatchingNetwork(nn.Module):
         self.is_do_train_logging = True
         if self.is_do_train_logging:
             self.log_interval = 50
+            self.log_file = os.path.join( os.path.dirname(model_path), 'train_log', 'abslog.json' )
             self.writer = SummaryWriter( os.path.join( os.path.dirname(model_path), 'train_log' ) )
         
         if not self.is_use_lstm_layer:
@@ -71,7 +72,7 @@ class MatchingNetwork(nn.Module):
         self.num_samples_per_class = num_samples_per_class
         self.learning_rate = learning_rate
 
-    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None, target_y_actuals = None, epoch = -1, log_file = None):
+    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None, target_y_actuals = None, epoch = -1):
         """
         Builds graph for Matching Networks, produces losses and summary statistics.
         :param support_set_images: A tensor containing the support set images [batch_size, sequence_size, n_channels, 28, 28]
@@ -95,7 +96,7 @@ class MatchingNetwork(nn.Module):
         log_file_encoded = None
         log_file_similarities = None
         if self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
-            log_file = log_file + "_epoch-"+str(epoch)+".json"
+            log_file = self.log_file + "_epoch-"+str(epoch)+".json"
             log_file_encoded = log_file + "_encoded.json"
             log_file_similarities = log_file + "_similarities.json"
 
