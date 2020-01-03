@@ -118,14 +118,14 @@ class MatchingNetwork(nn.Module):
             try:
                 logs = array( json.load( open( log_file_encoded ) ) ) 
                 for eimg in encoded_images:
-                    logs = np.concatenate( ( logs, np.array( eimg.cuda().numpy() ) ), axis=0 )
+                    logs = np.concatenate( ( logs, np.array( eimg.cpu().numpy() ) ), axis=0 )
             except Exception as e:
                 logs = None
                 for eimg in encoded_images:
                     if not logs == None:
-                        logs = np.concatenate( ( logs, np.array( eimg.cuda().numpy() ) ), axis=0 )
+                        logs = np.concatenate( ( logs, np.array( eimg.cpu().numpy() ) ), axis=0 )
                     else:
-                        logs = np.array( eimg.cuda().numpy() )
+                        logs = np.array( eimg.cpu().numpy() )
                 
             #save
             with open( log_file_encoded, 'w') as outfile:
@@ -193,9 +193,9 @@ class MatchingNetwork(nn.Module):
                 # load logged array and append and save
                 try:
                     logs = array( json.load( open( log_file_similarities ) ) ) 
-                    logs = np.concatenate( ( logs, np.array( similarities.cuda().numpy() ) ), axis=0 )
+                    logs = np.concatenate( ( logs, np.array( similarities.cpu().numpy() ) ), axis=0 )
                 except Exception as e:
-                    logs = np.array( similarities.cuda().numpy() )
+                    logs = np.array( similarities.cpu().numpy() )
                     
                 #save
                 with open( log_file_similarities, 'w') as outfile:
