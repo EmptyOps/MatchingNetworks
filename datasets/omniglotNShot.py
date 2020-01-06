@@ -1008,12 +1008,27 @@ class OmniglotNShotDataset():
 					
         return x_support_set, y_support_set, x_target, y_target
 
+    def __get_batch_training(self, dataset_name):
+        """
+        Gets next batch from the dataset with name.
+        :param dataset_name: The name of the dataset (one of "train", "val", "test")
+        :return:
+        """
+        if self.indexes[dataset_name] >= len(self.datasets_cache[dataset_name]):
+            self.indexes[dataset_name] = 0
+            self.datasets_cache[dataset_name] = self.load_data_cache(self.datasets[dataset_name], dataset_name)
+        next_batch = self.datasets_cache[dataset_name][self.indexes[dataset_name]]
+        self.indexes[dataset_name] += 1
+        #x_support_set, y_support_set, x_target, y_target = next_batch
+        #return x_support_set, y_support_set, x_target, y_target
+        return next_batch
+
     def get_batch_training(self, str_type, rotate_flag = False):
         """
         Get next batch
         :return: Next batch
         """
-        x_support_set, y_support_set, x_target, y_target, support_set_y_actuals, target_y_actuals = self.__get_batch(str_type)
+        x_support_set, y_support_set, x_target, y_target, support_set_y_actuals, target_y_actuals = self.__get_batch_training(str_type)
         if self.is_rotate and rotate_flag:
             k = int(np.random.uniform(low=0, high=4))
             # Iterate over the sequence. Extract batches.

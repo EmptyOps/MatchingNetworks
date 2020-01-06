@@ -85,7 +85,7 @@ class OneShotBuilder:
         with tqdm.tqdm(total=total_train_batches) as pbar:
             for i in range(total_train_batches):  # train epoch
                 x_support_set, y_support_set, x_target, y_target, support_set_y_actuals, target_y_actuals = \
-                    self.data.get_batch(str_type = 'train',rotate_flag = True)
+                    self.data.get_batch_training(str_type = 'train',rotate_flag = True)
 
                 x_support_set = Variable(torch.from_numpy(x_support_set)).float()
                 y_support_set = Variable(torch.from_numpy(y_support_set),requires_grad=False).long()
