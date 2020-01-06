@@ -716,8 +716,8 @@ class OmniglotNShotDataset():
                     for eind in example_inds[:self.samples_per_class]:
                         support_set_x[i, pinds[ind], :, :, :] = data_pack[cur_class][eind]
                         support_set_y[i, pinds[ind]] = j
-                        ind = ind + 1
                         support_set_y_actuals[i, pinds[ind]] = (cur_class+1) * -1
+                        ind = ind + 1
                     # meta-test
                     for eind in example_inds[self.samples_per_class:]:
                         """
@@ -731,8 +731,8 @@ class OmniglotNShotDataset():
                         
                         target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
                         target_y[i, pinds_test[ind_test]] = j
-                        ind_test = ind_test + 1
                         target_y_actuals[i, pinds_test[ind_test]] = (cur_class+1) * -1
+                        ind_test = ind_test + 1
 
             data_cache.append([support_set_x, support_set_y, target_x, target_y, support_set_y_actuals, target_y_actuals])
             
