@@ -109,9 +109,10 @@ class MatchingNetwork(nn.Module):
                 logs = array( json.load( open( log_file ) ) ) 
                 logs = np.concatenate( ( logs, np.concatenate( ( support_set_images.cpu().detach().numpy(), target_image.cpu().detach().numpy() ), axis=1 ) ), axis=0 )
             except Exception as e:
-                logs = np.concatenate( ( support_set_images.cpu().detach().numpy(), target_image.cpu().detach().numpy() ), axis=0 )
+                print( "support_set_images ", support_set_images.shape, target_image.shape )
+                logs = np.concatenate( ( support_set_images.cpu().detach().numpy(), target_image.cpu().detach().numpy() ), axis=1 )
+                print( logs.shape )
                 
-            #save
             with open( log_file, 'w') as outfile:
                 json.dump( logs.tolist(), outfile) 
 
@@ -120,13 +121,15 @@ class MatchingNetwork(nn.Module):
                 logs = array( json.load( open( log_file_actuals ) ) ) 
                 logs = np.concatenate( ( logs, np.concatenate( ( support_set_y_actuals, target_y_actuals ), axis=1 ) ), axis=0 )
             except Exception as e:
-                logs = np.concatenate( ( support_set_y_actuals, target_y_actuals ), axis=0 )
+                print( "support_set_y ", support_set_y_actuals.shape, target_y_actuals.shape )
+                logs = np.concatenate( ( support_set_y_actuals, target_y_actuals ), axis=1 )
+                print( logs.shape )
                 
-            #save
             with open( log_file_actuals, 'w') as outfile:
                 json.dump( logs.tolist(), outfile) 
 
-                
+            sdfjkhsldkfhkjh
+            
             # load logged array and append and save
             try:
                 logs = array( json.load( open( log_file_encoded ) ) ) 
@@ -141,7 +144,6 @@ class MatchingNetwork(nn.Module):
                         is_first = False
                         logs = np.array( eimg.cpu().detach().numpy() )
                 
-            #save
             with open( log_file_encoded, 'w') as outfile:
                 json.dump( logs.tolist(), outfile) 
         
