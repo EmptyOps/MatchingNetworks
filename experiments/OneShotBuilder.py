@@ -84,7 +84,7 @@ class OneShotBuilder:
 
         with tqdm.tqdm(total=total_train_batches) as pbar:
             for i in range(total_train_batches):  # train epoch
-                x_support_set, y_support_set, x_target, y_target = \
+                x_support_set, y_support_set, x_target, y_target, support_set_y_actuals, target_y_actuals = \
                     self.data.get_batch(str_type = 'train',rotate_flag = True)
 
                 x_support_set = Variable(torch.from_numpy(x_support_set)).float()
@@ -108,7 +108,9 @@ class OneShotBuilder:
                 x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
                 if self.isCudaAvailable:
                     acc, c_loss_value, _ = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
-                                                         x_target.cuda(), y_target.cuda(), epoch = epoch)
+                                                         x_target.cuda(), y_target.cuda(), epoch = epoch, 
+                                                         target_y_actuals = target_y_actuals, 
+                                                         support_set_y_actuals = support_set_y_actuals )
                 else:
                     acc, c_loss_value, _ = self.matchingNet(x_support_set, y_support_set_one_hot,
                                                          x_target, y_target)

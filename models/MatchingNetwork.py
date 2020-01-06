@@ -75,7 +75,7 @@ class MatchingNetwork(nn.Module):
         self.num_samples_per_class = num_samples_per_class
         self.learning_rate = learning_rate
 
-    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None, target_y_actuals = None, epoch = -1):
+    def forward(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None, target_y_actuals = None, epoch = -1, support_set_y_actuals = None):
         """
         Builds graph for Matching Networks, produces losses and summary statistics.
         :param support_set_images: A tensor containing the support set images [batch_size, sequence_size, n_channels, 28, 28]
@@ -100,20 +100,33 @@ class MatchingNetwork(nn.Module):
         log_file_similarities = None
         if self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
             log_file = self.log_file + "_epoch-"+str(epoch)+".json"
+            log_file_actuals = log_file + "_actuals.json"
             log_file_encoded = log_file + "_encoded.json"
             log_file_similarities = log_file + "_similarities.json"
 
             # load logged array and append and save
             try:
                 logs = array( json.load( open( log_file ) ) ) 
-                logs = np.concatenate( ( logs, support_set_images ), axis=0 )
+                logs = np.concatenate( ( logs, np.concatenate( ( support_set_images, target_image ), axis=1 ) ), axis=0 )
             except Exception as e:
-                logs = support_set_images
+                logs = np.concatenate( ( support_set_images, target_image ), axis=0 )
                 
             #save
             with open( log_file, 'w') as outfile:
                 json.dump( logs.tolist(), outfile) 
-        
+
+            # load logged array and append and save
+            try:
+                logs = array( json.load( open( log_file_actuals ) ) ) 
+                logs = np.concatenate( ( logs, np.concatenate( ( support_set_y_actuals, target_y_actuals ), axis=1 ) ), axis=0 )
+            except Exception as e:
+                logs = np.concatenate( ( support_set_y_actuals, target_y_actuals ), axis=0 )
+                
+            #save
+            with open( log_file_actuals, 'w') as outfile:
+                json.dump( logs.tolist(), outfile) 
+
+                
             # load logged array and append and save
             try:
                 logs = array( json.load( open( log_file_encoded ) ) ) 
@@ -213,7 +226,6 @@ class MatchingNetwork(nn.Module):
                 ## write to tensorboard
                 #self.writer.add_image('similarities ', img_grid)
                 
-                dointervalbasedlogging
             
             # produce predictions for target probabilities
             if is_evaluation_only == False:

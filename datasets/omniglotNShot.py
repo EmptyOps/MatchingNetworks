@@ -689,6 +689,8 @@ class OmniglotNShotDataset():
             support_set_y = np.zeros((self.batch_size, n_samples))
             target_x = np.zeros((self.batch_size, self.samples_per_class, self.data_pack_shape_2, self.data_pack_shape_3, 1), dtype=np.int)
             target_y = np.zeros((self.batch_size, self.samples_per_class), dtype=np.int)
+            support_set_y_actuals = np.zeros((self.batch_size, n_samples), dtype=np.int)
+            target_y_actuals = np.zeros((self.batch_size, self.samples_per_class), dtype=np.int)
             for i in range(self.batch_size):
                 pinds = np.random.permutation(n_samples)
                 classes = np.random.choice(data_pack.shape[0], self.classes_per_set, False if not data_pack_type == "x_to_be_predicted" else False)  #False
@@ -715,6 +717,7 @@ class OmniglotNShotDataset():
                         support_set_x[i, pinds[ind], :, :, :] = data_pack[cur_class][eind]
                         support_set_y[i, pinds[ind]] = j
                         ind = ind + 1
+                        support_set_y_actuals[i, pinds[ind]] = (cur_class+1) * -1
                     # meta-test
                     for eind in example_inds[self.samples_per_class:]:
                         """
@@ -729,8 +732,9 @@ class OmniglotNShotDataset():
                         target_x[i, pinds_test[ind_test], :, :, :] = data_pack[cur_class][eind]
                         target_y[i, pinds_test[ind_test]] = j
                         ind_test = ind_test + 1
+                        target_y_actuals[i, pinds_test[ind_test]] = (cur_class+1) * -1
 
-            data_cache.append([support_set_x, support_set_y, target_x, target_y])
+            data_cache.append([support_set_x, support_set_y, target_x, target_y, support_set_y_actuals, target_y_actuals])
             
             """
             #TODO temp. profiling, comment it when not needed
@@ -939,7 +943,6 @@ class OmniglotNShotDataset():
         return x_support_set, y_support_set, x_target, y_target
 
     def get_batch(self,str_type, rotate_flag = False):
-
         """
         Get next batch
         :return: Next batch
@@ -1005,6 +1008,22 @@ class OmniglotNShotDataset():
 					
         return x_support_set, y_support_set, x_target, y_target
 
+    def get_batch_training(self, str_type, rotate_flag = False):
+        """
+        Get next batch
+        :return: Next batch
+        """
+        x_support_set, y_support_set, x_target, y_target, support_set_y_actuals, target_y_actuals = self.__get_batch(str_type)
+        if self.is_rotate and rotate_flag:
+            k = int(np.random.uniform(low=0, high=4))
+            # Iterate over the sequence. Extract batches.
+            for i in np.arange(x_support_set.shape[0]):
+                x_support_set[i,:,:,:,:] = self.__rotate_batch(x_support_set[i,:,:,:,:],k)
+            # Rotate all the batch of the target images
+            for i in np.arange(x_target.shape[0]):
+                x_target[i,:,:,:,:] = self.__rotate_batch(x_target[i,:,:,:,:], k)
+        return x_support_set, y_support_set, x_target, y_target, support_set_y_actuals, target_y_actuals
+        
     def __get_batch_evaluation(self, dataset_name):
         """
         Gets next batch from the dataset with name.
