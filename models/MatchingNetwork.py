@@ -107,9 +107,9 @@ class MatchingNetwork(nn.Module):
             # load logged array and append and save
             try:
                 logs = array( json.load( open( log_file ) ) ) 
-                logs = np.concatenate( ( logs, np.concatenate( ( support_set_images, target_image ), axis=1 ) ), axis=0 )
+                logs = np.concatenate( ( logs, np.concatenate( ( support_set_images.cpu().detach().numpy(), target_image.cpu().detach().numpy() ), axis=1 ) ), axis=0 )
             except Exception as e:
-                logs = np.concatenate( ( support_set_images, target_image ), axis=0 )
+                logs = np.concatenate( ( support_set_images.cpu().detach().numpy(), target_image.cpu().detach().numpy() ), axis=0 )
                 
             #save
             with open( log_file, 'w') as outfile:
