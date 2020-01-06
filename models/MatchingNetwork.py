@@ -127,8 +127,6 @@ class MatchingNetwork(nn.Module):
                 
             with open( log_file_actuals, 'w') as outfile:
                 json.dump( logs.tolist(), outfile) 
-
-            sdfjkhsldkfhkjh
             
             # load logged array and append and save
             try:
