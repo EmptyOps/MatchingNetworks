@@ -57,7 +57,7 @@ class MatchingNetwork(nn.Module):
         if self.is_do_train_logging:
             self.log_interval = 50
             self.log_file = os.path.join( os.path.dirname(model_path), 'train_log', 'abslog.json' )
-            self.writer = SummaryWriter( os.path.join( os.path.dirname(model_path), 'train_log' ) )
+            #self.writer = SummaryWriter( os.path.join( os.path.dirname(model_path), 'train_log' ) )
         
         if not self.is_use_lstm_layer:
             self.g = Classifier(layer_size = layer_size, num_channels=num_channels,
