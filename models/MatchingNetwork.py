@@ -160,7 +160,7 @@ class MatchingNetwork(nn.Module):
                         print( logs.shape )
                 except Exception as e:
                     is_first = True
-                    for eimg in encoded_images:
+                    for ei, eimg in encoded_images:
                         t1 = np.array( eimg.cpu().detach().numpy() )
                         t2 = np.array( gen_encode[ei].cpu().detach().numpy() )
                         print( "encoded_images ", t1.shape, t2.shape )
