@@ -171,7 +171,7 @@ class MatchingNetwork(nn.Module):
                             logs = np.concatenate( ( logs, np.concatenate( ( t1, t2 ), axis=0 ) ), axis=0 )
                         else:
                             is_first = False
-                            logs = np.concatenate( ( t1, t2 ), axis=1 )
+                            logs = np.concatenate( ( t1, t2 ), axis=0 )
                         print( logs.shape )
                     
                 with open( log_file_encoded, 'w') as outfile:
