@@ -57,6 +57,8 @@ class MatchingNetwork(nn.Module):
         self.is_do_train_logging = True
         if self.is_do_train_logging:
             self.log_interval = 50
+            self.last_epoch = -1
+            self.batch_index = -1
             self.log_file = os.path.join( os.path.dirname(model_path), 'train_log', 'abslog.json' )
             #self.writer = SummaryWriter( os.path.join( os.path.dirname(model_path), 'train_log' ) )
         
@@ -100,7 +102,13 @@ class MatchingNetwork(nn.Module):
         log_file_encoded = None
         log_file_similarities = None
         if self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
-            log_file = self.log_file + "_epoch-"+str(epoch)+".json"
+            if self.last_epoch == -1 or not self.last_epoch == epoch:
+                self.last_epoch = epoch
+                self.batch_index = -1
+        
+            self.batch_index += 1
+        
+            log_file = self.log_file + "_epoch-"+str(epoch)+"-"+str(self.batch_index)+".json"
             log_file_actuals = log_file + "_actuals.json"
             log_file_encoded = log_file + "_encoded.json"
             log_file_similarities = log_file + "_similarities.json"
@@ -108,6 +116,7 @@ class MatchingNetwork(nn.Module):
             # load logged array and append and save
             try:
                 logs = array( json.load( open( log_file ) ) ) 
+                print( "support_set_images ", support_set_images.shape, target_image.shape )
                 logs = np.concatenate( ( logs, np.concatenate( ( support_set_images.cpu().detach().numpy(), target_image.cpu().detach().numpy() ), axis=1 ) ), axis=0 )
             except Exception as e:
                 print( "support_set_images ", support_set_images.shape, target_image.shape )
@@ -120,6 +129,7 @@ class MatchingNetwork(nn.Module):
             # load logged array and append and save
             try:
                 logs = array( json.load( open( log_file_actuals ) ) ) 
+                print( "support_set_y ", support_set_y_actuals.shape, target_y_actuals.shape )
                 logs = np.concatenate( ( logs, np.concatenate( ( support_set_y_actuals, target_y_actuals ), axis=1 ) ), axis=0 )
             except Exception as e:
                 print( "support_set_y ", support_set_y_actuals.shape, target_y_actuals.shape )
