@@ -127,23 +127,6 @@ class MatchingNetwork(nn.Module):
                 
             with open( log_file_actuals, 'w') as outfile:
                 json.dump( logs.tolist(), outfile) 
-            
-            # load logged array and append and save
-            try:
-                logs = array( json.load( open( log_file_encoded ) ) ) 
-                for eimg in encoded_images:
-                    logs = np.concatenate( ( logs, np.array( eimg.cpu().detach().numpy() ) ), axis=0 )
-            except Exception as e:
-                is_first = True
-                for eimg in encoded_images:
-                    if not is_first:
-                        logs = np.concatenate( ( logs, np.array( eimg.cpu().detach().numpy() ) ), axis=0 )
-                    else:
-                        is_first = False
-                        logs = np.array( eimg.cpu().detach().numpy() )
-                
-            with open( log_file_encoded, 'w') as outfile:
-                json.dump( logs.tolist(), outfile) 
         
             ## get some random training images
 
@@ -165,17 +148,32 @@ class MatchingNetwork(nn.Module):
                 gen_encode, _, _ = self.g(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ))
                 gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                 
-            if False and self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
+            if self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
                 # load logged array and append and save
                 try:
-                    logs = array( json.load( open( log_file ) ) ) 
-                    logs = np.concatenate( ( logs, support_set_images ), axis=0 )
+                    logs = array( json.load( open( log_file_encoded ) ) ) 
+                    for ei, eimg in encoded_images:
+                        t1 = np.array( eimg.cpu().detach().numpy() )
+                        t2 = np.array( gen_encode[ei].cpu().detach().numpy() )
+                        print( "encoded_images ", t1.shape, t2.shape )
+                        logs = np.concatenate( ( logs, np.concatenate( ( t1, t2 ), axis=1 ) ), axis=0 )
+                        print( logs.shape )
                 except Exception as e:
-                    logs = support_set_images
+                    is_first = True
+                    for eimg in encoded_images:
+                        t1 = np.array( eimg.cpu().detach().numpy() )
+                        t2 = np.array( gen_encode[ei].cpu().detach().numpy() )
+                        print( "encoded_images ", t1.shape, t2.shape )
+                        if not is_first:
+                            logs = np.concatenate( ( logs, np.concatenate( ( t1, t2 ), axis=1 ) ), axis=0 )
+                        else:
+                            is_first = False
+                            logs = np.concatenate( ( t1, t2 ), axis=1 )
+                        print( logs.shape )
                     
-                #save
-                with open( log_file, 'w') as outfile:
+                with open( log_file_encoded, 'w') as outfile:
                     json.dump( logs.tolist(), outfile) 
+
 
                 ## get some random training images
 
