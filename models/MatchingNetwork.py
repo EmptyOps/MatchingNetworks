@@ -158,7 +158,7 @@ class MatchingNetwork(nn.Module):
                         t2 = np.array( gen_encode[ei].cpu().detach().numpy() )
                         t2 = t2.reshape( (1, t2.shape[0]) )
                         print( "encoded_images ", t1.shape, t2.shape )
-                        logs = np.concatenate( ( logs, np.concatenate( ( t1, t2 ), axis=1 ) ), axis=0 )
+                        logs = np.concatenate( ( logs, np.concatenate( ( t1, t2 ), axis=0 ) ), axis=0 )
                         print( logs.shape )
                 except Exception as e:
                     is_first = True
@@ -168,7 +168,7 @@ class MatchingNetwork(nn.Module):
                         t2 = t2.reshape( (1, t2.shape[0]) )
                         print( "encoded_images ", t1.shape, t2.shape )
                         if not is_first:
-                            logs = np.concatenate( ( logs, np.concatenate( ( t1, t2 ), axis=1 ) ), axis=0 )
+                            logs = np.concatenate( ( logs, np.concatenate( ( t1, t2 ), axis=0 ) ), axis=0 )
                         else:
                             is_first = False
                             logs = np.concatenate( ( t1, t2 ), axis=1 )
