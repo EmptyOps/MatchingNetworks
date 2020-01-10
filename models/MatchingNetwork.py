@@ -12,6 +12,7 @@ import torch
 import torch.nn as nn
 import unittest
 import numpy as np
+from numpy import array
 from models.BidirectionalLSTM import BidirectionalLSTM
 from models.Classifier import Classifier
 from models.DistanceNetwork import DistanceNetwork
@@ -152,16 +153,16 @@ class MatchingNetwork(nn.Module):
                 # load logged array and append and save
                 try:
                     logs = array( json.load( open( log_file_encoded ) ) ) 
-                    for ei, eimg in encoded_images:
-                        t1 = np.array( eimg.cpu().detach().numpy() )
+                    for ei in range(0, len(encoded_images)):
+                        t1 = np.array( encoded_images[ei].cpu().detach().numpy() )
                         t2 = np.array( gen_encode[ei].cpu().detach().numpy() )
                         print( "encoded_images ", t1.shape, t2.shape )
                         logs = np.concatenate( ( logs, np.concatenate( ( t1, t2 ), axis=1 ) ), axis=0 )
                         print( logs.shape )
                 except Exception as e:
                     is_first = True
-                    for ei, eimg in encoded_images:
-                        t1 = np.array( eimg.cpu().detach().numpy() )
+                    for ei in range(0, len(encoded_images)):
+                        t1 = np.array( encoded_images[ei].cpu().detach().numpy() )
                         t2 = np.array( gen_encode[ei].cpu().detach().numpy() )
                         print( "encoded_images ", t1.shape, t2.shape )
                         if not is_first:
