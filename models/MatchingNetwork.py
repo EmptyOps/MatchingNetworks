@@ -156,7 +156,7 @@ class MatchingNetwork(nn.Module):
                     for ei in range(0, len(encoded_images)):
                         t1 = np.array( encoded_images[ei].cpu().detach().numpy() )
                         t2 = np.array( gen_encode[ei].cpu().detach().numpy() )
-                        t2 = t2.rehspe( (1, t2.shape[0]) )
+                        t2 = t2.reshape( (1, t2.shape[0]) )
                         print( "encoded_images ", t1.shape, t2.shape )
                         logs = np.concatenate( ( logs, np.concatenate( ( t1, t2 ), axis=1 ) ), axis=0 )
                         print( logs.shape )
@@ -165,7 +165,7 @@ class MatchingNetwork(nn.Module):
                     for ei in range(0, len(encoded_images)):
                         t1 = np.array( encoded_images[ei].cpu().detach().numpy() )
                         t2 = np.array( gen_encode[ei].cpu().detach().numpy() )
-                        t2 = t2.rehspe( (1, t2.shape[0]) )
+                        t2 = t2.reshape( (1, t2.shape[0]) )
                         print( "encoded_images ", t1.shape, t2.shape )
                         if not is_first:
                             logs = np.concatenate( ( logs, np.concatenate( ( t1, t2 ), axis=1 ) ), axis=0 )
