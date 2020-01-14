@@ -41,6 +41,7 @@ class OneShotBuilder:
         self.classes_per_set = classes_per_set
         self.samples_per_class = samples_per_class
         self.keep_prob = torch.FloatTensor(1)
+        self.isCudaAvailable = torch.cuda.is_available()
         if not os.path.exists(self.model_path):
             self.matchingNet = MatchingNetwork(batch_size=batch_size,
                                              keep_prob=self.keep_prob, num_channels=channels,
@@ -62,7 +63,6 @@ class OneShotBuilder:
         self.lr_decay = 1e-6
         self.wd = 1e-4
         self.total_train_iter = 0
-        self.isCudaAvailable = torch.cuda.is_available()
         if self.isCudaAvailable:
             cudnn.benchmark = True
             torch.cuda.manual_seed_all(0)
