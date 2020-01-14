@@ -452,7 +452,10 @@ class MatchingNetwork(nn.Module):
                                     if not self.is_use_lstm_layer:
                                         gen_encode = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:]) )
                                     else: 
-                                        gen_encode, _, _ = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ) ).cuda() )
+                                        if torch.cuda.is_available():
+                                            gen_encode, _, _ = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ) ).cuda() )
+                                        else:
+                                            gen_encode, _, _ = self.g( torch.Tensor(support_set_images[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]],jinds,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ) ) )
                                         gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                                 else:
                                     gen_encode = self.g( torch.Tensor(support_set_images[uniq_cls[pinds[ii_cntr*target_image.shape[0]:(ii_cntr+1)*target_image.shape[0]]],jinds,:,:,:]) )
@@ -466,7 +469,10 @@ class MatchingNetwork(nn.Module):
                                 for xhat_i in range(0, n_test_samples):
                                     if not tatmpts_diag == xhat_ind:
                                         if nardr == 0:
-                                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float().cuda()
+                                            if torch.cuda.is_available():
+                                                target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float().cuda()
+                                            else:
+                                                target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
                                         else:
                                             target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[uniq_cls[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1]],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
                                         #target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]), volatile=True).float()
@@ -476,7 +482,10 @@ class MatchingNetwork(nn.Module):
                                         else:
                                             tstcls = uniq_cls[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1]]
                                             
-                                        target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(target_image_org[xhat_ind,0,:,:,:]), volatile=True).float().cuda()
+                                        if torch.cuda.is_available():
+                                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(target_image_org[xhat_ind,0,:,:,:]), volatile=True).float().cuda()
+                                        else:
+                                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(target_image_org[xhat_ind,0,:,:,:]), volatile=True).float()
                                     target_label[xhat_ind,0] = Variable( torch.from_numpy( np.array( [j] ) ), volatile=True).long()
                                     xhat_ind = xhat_ind + 1 
                                 
@@ -526,7 +535,10 @@ class MatchingNetwork(nn.Module):
                             if not self.is_use_lstm_layer:
                                 gen_encode = self.g(target_image[:,i,:,:,:])
                             else: 
-                                gen_encode, _, _ = self.g( torch.Tensor(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim )).cuda() )
+                                if torch.cuda.is_available():
+                                    gen_encode, _, _ = self.g( torch.Tensor(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim )).cuda() )
+                                else:
+                                    gen_encode, _, _ = self.g( torch.Tensor(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim )) )
                                 gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                             #print( gen_encode.shape )
                             
@@ -551,7 +563,10 @@ class MatchingNetwork(nn.Module):
 
                             # produce predictions for target probabilities
                             if is_evaluation_only == False:
-                                preds = self.classify(similarities,support_set_y=support_set_labels_one_hot.cuda())
+                                if torch.cuda.is_available():
+                                    preds = self.classify(similarities,support_set_y=support_set_labels_one_hot.cuda())
+                                else:
+                                    preds = self.classify(similarities,support_set_y=support_set_labels_one_hot)
                             else:
                                 preds = self.classify(similarities)
 
