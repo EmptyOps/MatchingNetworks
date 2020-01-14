@@ -51,7 +51,10 @@ class OneShotBuilder:
                                              is_use_lstm_layer=is_use_lstm_layer, vector_dim = vector_dim, 
                                              num_layers=num_layers, dropout=dropout, model_path=self.model_path)
         else: 
-            self.matchingNet = torch.load(self.model_path)
+            if self.isCudaAvailable:
+                self.matchingNet = torch.load(self.model_path)
+            else:
+                self.matchingNet = torch.load(self.model_path, map_location=torch.device('cpu'))
                                              
         self.optimizer = 'adam'
         self.lr = 1e-03
