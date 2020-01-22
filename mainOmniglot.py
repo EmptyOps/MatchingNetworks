@@ -117,7 +117,7 @@ if is_evaluation_only == False or not is_load_test_record or not test_record_cla
                                         image_size = int(sys.argv[35]), layer_size = int(sys.argv[36]), 
                                         is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True, 
                                         vector_dim = int(sys.argv[38]), num_layers=int(sys.argv[44]), dropout=float(sys.argv[45]),
-                                        is_use_second_lstm = int(sys.argv[47]) )
+                                        is_use_second_lstm =False if int(sys.argv[47]) == 0 else True )
 
 if is_evaluation_only == False:
     if not 'EPOCH' in model_path:
