@@ -15,7 +15,7 @@ import unittest
 
 
 class BidirectionalLSTM(nn.Module):
-    def __init__(self, layer_sizes, batch_size, vector_dim, num_layers=1, dropout=-1):
+    def __init__(self, layer_sizes, batch_size, vector_dim, num_layers=1, dropout=-1, layer_sizes_second_lstm=None, batch_size_second_lstm=None, vector_dim_second_lstm=None, num_layers_second_lstm=1, dropout_second_lstm=-1):
         super(BidirectionalLSTM, self).__init__()
         """
         Initializes a multi layer bidirectional LSTM
@@ -48,9 +48,24 @@ class BidirectionalLSTM(nn.Module):
                                 hidden_size=self.hidden_size,
                                 bidirectional=True,
                                 dropout=dropout)
-
         print( self.lstm )
                             
+        self.second_lstm = None
+        if layer_sizes_second_lstm is not None:
+            if dropout_second_lstm == -1:
+                self.second_lstm = nn.LSTM(input_size=vector_dim_second_lstm,
+                                    num_layers=len(layer_sizes_second_lstm)*num_layers_second_lstm,
+                                    hidden_size=layer_sizes_second_lstm[0],
+                                    bidirectional=True)
+            else:
+                self.second_lstm = nn.LSTM(input_size=vector_dim_second_lstm,
+                                    num_layers=len(layer_sizes_second_lstm)*num_layers_second_lstm,
+                                    hidden_size=layer_sizes_second_lstm[0],
+                                    bidirectional=True,
+                                    dropout=dropout)
+            print( self.second_lstm )
+
+        
     def forward(self, inputs):
         """
         Runs the bidirectional LSTM, produces outputs and saves both forward and backward states as well as gradients.
@@ -69,6 +84,21 @@ class BidirectionalLSTM(nn.Module):
             h0 = Variable(torch.rand(self.lstm.num_layers*2, 1, self.lstm.hidden_size),requires_grad=False)
         #print("c0 ", c0.shape, " h0 ", h0.shape)
         output, (hn, cn) = self.lstm(inputs, (h0, c0))
+        
+        if self.second_lstm is not None:
+            if torch.cuda.is_available():
+                #c0 = Variable(torch.rand(self.lstm.num_layers*2, self.batch_size, self.lstm.hidden_size),requires_grad=False).cuda()
+                c0 = Variable(torch.rand(self.second_lstm.num_layers*2, 1, self.second_lstm.hidden_size),requires_grad=False).cuda()
+                #h0 = Variable(torch.rand(self.lstm.num_layers*2, self.batch_size, self.lstm.hidden_size),requires_grad=False).cuda()
+                h0 = Variable(torch.rand(self.second_lstm.num_layers*2, 1, self.second_lstm.hidden_size),requires_grad=False).cuda()
+            else:
+                #c0 = Variable(torch.rand(self.lstm.num_layers*2, self.batch_size, self.lstm.hidden_size),requires_grad=False).cuda()
+                c0 = Variable(torch.rand(self.second_lstm.num_layers*2, 1, self.second_lstm.hidden_size),requires_grad=False)
+                #h0 = Variable(torch.rand(self.lstm.num_layers*2, self.batch_size, self.lstm.hidden_size),requires_grad=False).cuda()
+                h0 = Variable(torch.rand(self.second_lstm.num_layers*2, 1, self.second_lstm.hidden_size),requires_grad=False)
+            #print("c0 ", c0.shape, " h0 ", h0.shape)
+            output, (hn, cn) = self.second_lstm(output, (h0, c0))
+        
         return output, hn, cn
 
 

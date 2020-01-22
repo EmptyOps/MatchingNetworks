@@ -67,7 +67,9 @@ class MatchingNetwork(nn.Module):
                                 nClasses= nClasses, image_size = image_size )
         else:
             self.g = BidirectionalLSTM(layer_sizes=[layer_size], batch_size=self.batch_size, vector_dim = vector_dim, 
-                                        num_layers=num_layers, dropout=dropout)
+                                        num_layers=num_layers, dropout=dropout, layer_sizes_second_lstm=[int(layer_size/2)], 
+                                        batch_size_second_lstm=self.batch_size, vector_dim_second_lstm=layer_size, 
+                                        num_layers_second_lstm=num_layers, dropout_second_lstm=dropout)
                                 
         if fce:
             self.lstm = BidirectionalLSTM(layer_sizes=[32], batch_size=self.batch_size, vector_dim = self.g.outSize)
