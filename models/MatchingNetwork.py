@@ -31,7 +31,7 @@ class MatchingNetwork(nn.Module):
     def __init__(self, keep_prob, \
                  batch_size=100, num_channels=1, learning_rate=0.001, fce=False, num_classes_per_set=5, \
                  num_samples_per_class=1, nClasses = 0, image_size = 28, layer_size = 64, is_use_lstm_layer=False, 
-                 vector_dim = None, num_layers=1, dropout=-1, model_path=None):
+                 vector_dim = None, num_layers=1, dropout=-1, model_path=None, is_use_second_lstm=False):
         super(MatchingNetwork, self).__init__()
 
         """
@@ -66,10 +66,14 @@ class MatchingNetwork(nn.Module):
             self.g = Classifier(layer_size = layer_size, num_channels=num_channels,
                                 nClasses= nClasses, image_size = image_size )
         else:
-            self.g = BidirectionalLSTM(layer_sizes=[layer_size], batch_size=self.batch_size, vector_dim = vector_dim, 
-                                        num_layers=num_layers, dropout=dropout, layer_sizes_second_lstm=[int(layer_size/2)], 
-                                        batch_size_second_lstm=self.batch_size, vector_dim_second_lstm=layer_size*2, 
-                                        num_layers_second_lstm=num_layers, dropout_second_lstm=dropout)
+            if is_use_second_lstm:
+                self.g = BidirectionalLSTM(layer_sizes=[layer_size], batch_size=self.batch_size, vector_dim = vector_dim, 
+                                            num_layers=num_layers, dropout=dropout, layer_sizes_second_lstm=[int(layer_size/2)], 
+                                            batch_size_second_lstm=self.batch_size, vector_dim_second_lstm=layer_size*2, 
+                                            num_layers_second_lstm=num_layers, dropout_second_lstm=dropout)
+            else:
+                self.g = BidirectionalLSTM(layer_sizes=[layer_size], batch_size=self.batch_size, vector_dim = vector_dim, 
+                                num_layers=num_layers, dropout=dropout)
                                 
         if fce:
             self.lstm = BidirectionalLSTM(layer_sizes=[32], batch_size=self.batch_size, vector_dim = self.g.outSize)
