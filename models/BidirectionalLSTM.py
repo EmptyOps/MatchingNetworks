@@ -84,6 +84,7 @@ class BidirectionalLSTM(nn.Module):
             h0 = Variable(torch.rand(self.lstm.num_layers*2, 1, self.lstm.hidden_size),requires_grad=False)
         #print("c0 ", c0.shape, " h0 ", h0.shape)
         output, (hn, cn) = self.lstm(inputs, (h0, c0))
+        print( "inputs.shape ", inputs.shape, output.shape )
         
         if self.second_lstm is not None:
             if torch.cuda.is_available():
