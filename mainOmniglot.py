@@ -110,7 +110,7 @@ if is_evaluation_only == False or not is_load_test_record or not test_record_cla
                                               is_compare = False if int(sys.argv[40]) == 0 else True, 
                                               is_load_test_record = is_load_test_record, 
                                               test_record_class = test_record_class, test_record_index = test_record_index, 
-                                              is_debug = is_debug)
+                                              is_debug = is_debug, is_switch_dim = False if int(sys.argv[48]) == 0 else True)
 
     obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
     obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 

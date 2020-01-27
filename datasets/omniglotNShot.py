@@ -26,7 +26,7 @@ PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1, is_debug = True):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1, is_debug = True, is_switch_dim = False):
 
         self.is_debug = is_debug
     
@@ -272,6 +272,7 @@ class OmniglotNShotDataset():
                     self.evaluation = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) + "_prepared.json" ) ) ) 
                     
             
+        """
         #TODO temp
         if self.x.shape[2] >= 28 and self.x.shape[3] >= 108:
             self.x[:,:,27,99,0] = 0
@@ -288,6 +289,7 @@ class OmniglotNShotDataset():
                 self.evaluation[:,:,27,99,0] = 0
                 self.evaluation[:,:,27,103,0] = 0
                 self.evaluation[:,:,27,107,0] = 0
+        """
         
         #TODO tmp. compare 
         """
@@ -599,9 +601,16 @@ class OmniglotNShotDataset():
                     self.x_train, self.x_test, self.x_val  = self.x[:4], None, self.x[4:]  #, self.x[6:]
                 else:
                     self.x_train, self.x_test, self.x_val  = self.x[:], None, None  #, self.x[6:]
+                    
+                if is_switch_dim:
+                    self.x_train = self.x_train.reshape( ( self.x_train.shape[0], self.x_train.shape[1], self.x_train.shape[3], self.x_train.shape[2], self.x_train.shape[4] ) )
+                    self.x_test = self.x_test.reshape( ( self.x_test.shape[0], self.x_test.shape[1], self.x_test.shape[3], self.x_test.shape[2], self.x_train.shape[4] ) )
+                    self.x_val = self.x_val.reshape( ( self.x_val.shape[0], self.x_val.shape[1], self.x_val.shape[3], self.x_val.shape[2], self.x_train.shape[4] ) )
             else:
                 self.x_train  = self.x[:]
-         
+                if is_switch_dim:
+                    self.x_train = self.x_train.reshape( ( self.x_train.shape[0], self.x_train.shape[1], self.x_train.shape[3], self.x_train.shape[2], self.x_train.shape[4] ) )
+        
         #print( self.x_train[0][0] )
         self.normalization()
         #print( self.x_train[0][0] )
