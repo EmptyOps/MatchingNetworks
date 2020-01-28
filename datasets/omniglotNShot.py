@@ -604,8 +604,10 @@ class OmniglotNShotDataset():
                     
                 if is_switch_dim:
                     self.x_train = self.x_train.reshape( ( self.x_train.shape[0], self.x_train.shape[1], self.x_train.shape[3], self.x_train.shape[2], self.x_train.shape[4] ) )
-                    self.x_test = self.x_test.reshape( ( self.x_test.shape[0], self.x_test.shape[1], self.x_test.shape[3], self.x_test.shape[2], self.x_train.shape[4] ) )
-                    self.x_val = self.x_val.reshape( ( self.x_val.shape[0], self.x_val.shape[1], self.x_val.shape[3], self.x_val.shape[2], self.x_train.shape[4] ) )
+                    if self.x_test is not None:
+                        self.x_test = self.x_test.reshape( ( self.x_test.shape[0], self.x_test.shape[1], self.x_test.shape[3], self.x_test.shape[2], self.x_train.shape[4] ) )
+                    if self.x_val is not None:                        
+                        self.x_val = self.x_val.reshape( ( self.x_val.shape[0], self.x_val.shape[1], self.x_val.shape[3], self.x_val.shape[2], self.x_train.shape[4] ) )
             else:
                 self.x_train  = self.x[:]
                 if is_switch_dim:
