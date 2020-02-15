@@ -46,7 +46,7 @@ class BidirectionalLSTM(nn.Module):
             self.lstm = nn.LSTM(input_size=self.vector_dim,
                                 num_layers=self.num_layers,
                                 hidden_size=self.hidden_size,
-                                bidirectional=True,
+                                bidirectional=False,
                                 dropout=dropout)
         print( self.lstm )
                             
