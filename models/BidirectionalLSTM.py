@@ -28,6 +28,8 @@ class BidirectionalLSTM(nn.Module):
         self.vector_dim = vector_dim
         self.num_layers = len(layer_sizes)*num_layers
         
+        self.bidirectional = True
+        
         '''
         input_size: The number of expected features in the input x
         hidden_size: The number of features in the hidden state h
@@ -41,12 +43,13 @@ class BidirectionalLSTM(nn.Module):
             self.lstm = nn.LSTM(input_size=self.vector_dim,
                                 num_layers=self.num_layers,
                                 hidden_size=self.hidden_size,
-                                bidirectional=True)
+                                bidirectional=self.bidirectional)
         else:
+            self.bidirectional = False
             self.lstm = nn.LSTM(input_size=self.vector_dim,
                                 num_layers=self.num_layers,
                                 hidden_size=self.hidden_size,
-                                bidirectional=False,
+                                bidirectional=self.bidirectional,
                                 dropout=dropout)
         print( self.lstm )
                             
@@ -72,16 +75,20 @@ class BidirectionalLSTM(nn.Module):
         :param x: The inputs should be a list of shape [sequence_length, batch_size, 64]
         :return: Returns the LSTM outputs, as well as the forward and backward hidden states.
         """
+        layer_multiplier = 2
+        if self.bidirectional == False:
+            layer_multiplier = 1
+        
         if torch.cuda.is_available():
             #c0 = Variable(torch.rand(self.lstm.num_layers*2, self.batch_size, self.lstm.hidden_size),requires_grad=False).cuda()
-            c0 = Variable(torch.rand(self.lstm.num_layers*2, 1, self.lstm.hidden_size),requires_grad=False).cuda()
+            c0 = Variable(torch.rand(self.lstm.num_layers*layer_multiplier, 1, self.lstm.hidden_size),requires_grad=False).cuda()
             #h0 = Variable(torch.rand(self.lstm.num_layers*2, self.batch_size, self.lstm.hidden_size),requires_grad=False).cuda()
-            h0 = Variable(torch.rand(self.lstm.num_layers*2, 1, self.lstm.hidden_size),requires_grad=False).cuda()
+            h0 = Variable(torch.rand(self.lstm.num_layers*layer_multiplier, 1, self.lstm.hidden_size),requires_grad=False).cuda()
         else:
             #c0 = Variable(torch.rand(self.lstm.num_layers*2, self.batch_size, self.lstm.hidden_size),requires_grad=False).cuda()
-            c0 = Variable(torch.rand(self.lstm.num_layers*2, 1, self.lstm.hidden_size),requires_grad=False)
+            c0 = Variable(torch.rand(self.lstm.num_layers*layer_multiplier, 1, self.lstm.hidden_size),requires_grad=False)
             #h0 = Variable(torch.rand(self.lstm.num_layers*2, self.batch_size, self.lstm.hidden_size),requires_grad=False).cuda()
-            h0 = Variable(torch.rand(self.lstm.num_layers*2, 1, self.lstm.hidden_size),requires_grad=False)
+            h0 = Variable(torch.rand(self.lstm.num_layers*layer_multiplier, 1, self.lstm.hidden_size),requires_grad=False)
         #print("c0 ", c0.shape, " h0 ", h0.shape)
         output, (hn, cn) = self.lstm(inputs, (h0, c0))
         #print( "inputs.shape ", inputs.shape, output.shape )
