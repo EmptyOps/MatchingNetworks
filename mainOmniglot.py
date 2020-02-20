@@ -237,6 +237,11 @@ else:
         matched_cnt = 0
         if is_do_plain_predict:
             if is_load_test_record:
+                test_results = {}
+                test_results["mcnt"] = {}
+                test_results["mtotcnt"] = {}
+                test_results["micnt"] = {}
+                test_results["mitotcnt"] = {}
                 if test_record_class == -1:
                     arangec = np.arange( int(sys.argv[33]) )
                     aranger = np.arange( test_record_index, test_record_index_end )   #till available
@@ -304,9 +309,24 @@ else:
                             print( "class ", arangec[ci], " record ", aranger[ri], " open_match_cnt ", open_match_cnt, " open_match_mpr ", open_match_mpr )
                                 
                             print(results)
+                            
+                            #
+                            if arangec[ci] not in test_results["mcnt"]:
+                                test_results["mcnt"][arangec[ci]] = 0
+                                test_results["micnt"][arangec[ci]] = 0
+                                
+                            test_results["mcnt"][arangec[ci]] += open_match_cnt[arangec[ci]]
+                            test_results["micnt"][arangec[ci]] += 1 if open_match_mpr[arangec[ci]] > 0 else 0
+                            
                         except Exception as e:
                             print(e)
 
+                for ci in range(0, arangec.shape[0]):
+                    test_results["mcnt"][arangec[ci]] = ( test_results["mcnt"][arangec[ci]] / (aranger.shape[0]*data.tvt_records) ) * 100
+                    test_results["micnt"][arangec[ci]] = ( test_results["mcnt"][arangec[ci]] / (aranger.shape[0]) ) * 100
+                        
+                print(test_results)
+                            
             else:
                 
                 #keep debug off in predict mode 

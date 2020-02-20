@@ -147,13 +147,13 @@ class OmniglotNShotDataset():
                         else:
                             temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
 
-                
+                """
                 print( "temp.keys()" )
                 unique, counts = np.unique(input_labels, return_counts=True)
                 tmpdict = dict(zip(unique, counts))
                 print( tmpdict )
                 print( sorted(tmpdict.items(), key=lambda x: x[1], reverse=True) )
-                
+                """
                 
                 input = []  # Free memory
                 input_labels = []  # Free memory
