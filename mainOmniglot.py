@@ -239,9 +239,7 @@ else:
             if is_load_test_record:
                 test_results = {}
                 test_results["mcnt"] = {}
-                test_results["mtotcnt"] = {}
                 test_results["micnt"] = {}
-                test_results["mitotcnt"] = {}
                 if test_record_class == -1:
                     arangec = np.arange( int(sys.argv[33]) )
                     aranger = np.arange( test_record_index, test_record_index_end )   #till available
@@ -322,8 +320,8 @@ else:
                             print(e)
 
                 for ci in range(0, arangec.shape[0]):
-                    test_results["mcnt"][arangec[ci]] = ( test_results["mcnt"][arangec[ci]] / (aranger.shape[0]*data.tvt_records) ) * 100
-                    test_results["micnt"][arangec[ci]] = ( test_results["mcnt"][arangec[ci]] / (aranger.shape[0]) ) * 100
+                    test_results["mcnt"][arangec[ci]] = round( ( test_results["mcnt"][arangec[ci]] / (aranger.shape[0]*data.tvt_records) ) * 100, 2 )
+                    test_results["micnt"][arangec[ci]] = round( ( test_results["micnt"][arangec[ci]] / (aranger.shape[0]) ) * 100, 2 )
                         
                 print(test_results)
                             
