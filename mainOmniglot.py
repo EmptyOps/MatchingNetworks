@@ -314,7 +314,7 @@ else:
                                 test_results["micnt"][arangec[ci]] = 0
                                 
                             test_results["mcnt"][arangec[ci]] += open_match_cnt[arangec[ci]]
-                            test_results["micnt"][arangec[ci]] += 1 if open_match_mpr[arangec[ci]] > 0 else 0
+                            test_results["micnt"][arangec[ci]] += 1 if open_match_cnt[arangec[ci]] > 0 else 0
                             
                         except Exception as e:
                             print(e)
