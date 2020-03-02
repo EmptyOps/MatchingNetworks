@@ -324,11 +324,11 @@ else:
                             
                             #
                             if arangec[ci] not in test_results["mcnt"]:
-                                test_results["mcnt"][arangec[ci]] = 0
-                                test_results["micnt"][arangec[ci]] = 0
+                                test_results["mcnt"][str(arangec[ci])] = 0
+                                test_results["micnt"][str(arangec[ci])] = 0
                                 
-                            test_results["mcnt"][arangec[ci]] += open_match_cnt[arangec[ci]]
-                            test_results["micnt"][arangec[ci]] += 1 if open_match_cnt[arangec[ci]] > 0 else 0
+                            test_results["mcnt"][str(arangec[ci])] += open_match_cnt[arangec[ci]]
+                            test_results["micnt"][str(arangec[ci])] += 1 if open_match_cnt[arangec[ci]] > 0 else 0
                             
                             #write to file
                             test_results["ci_start_ind"] = ci
@@ -343,8 +343,8 @@ else:
                             print(exc_type, fname, exc_tb.tb_lineno)
 
                 for ci in range(0, arangec.shape[0]):
-                    test_results["mcnt"][arangec[ci]] = round( ( test_results["mcnt"][arangec[ci]] / (aranger.shape[0]*data.tvt_records) ) * 100, 2 )
-                    test_results["micnt"][arangec[ci]] = round( ( test_results["micnt"][arangec[ci]] / (aranger.shape[0]) ) * 100, 2 )
+                    test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records) ) * 100, 2 )
+                    test_results["micnt"][str(arangec[ci])] = round( ( test_results["micnt"][str(arangec[ci])] / (aranger.shape[0]) ) * 100, 2 )
                         
                 print(test_results)
                 if os.path.exists( test_file_path ):
