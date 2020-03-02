@@ -240,15 +240,29 @@ else:
                 test_results = {}
                 test_results["mcnt"] = {}
                 test_results["micnt"] = {}
+                test_results["ci_start_ind"] = 0
+                test_results["ri_start_ind"] = 0
+                
                 if test_record_class == -1:
                     arangec = np.arange( int(sys.argv[33]) )
                     aranger = np.arange( test_record_index, test_record_index_end )   #till available
                 else:
                     arangec = np.array( [ test_record_class ] )
                     aranger = np.array( [ test_record_index ] )
-            
-                for ci in range(0, arangec.shape[0]):
-                    for ri in range(0, aranger.shape[0]):
+
+                import os
+                import json
+                test_file_path = './__data/test_results_'+os.path.basename(model_path)+'.json'
+                if os.path.exists( test_file_path ):
+                    test_results = json.load( open( test_file_path ) ) 
+                    
+                    test_results["mcnt"][arangec[test_results["ci_start_ind"]]] = 0
+                    test_results["micnt"][arangec[test_results["ci_start_ind"]]] = 0
+                    test_results["ri_start_ind"] = 0
+                    
+                    
+                for ci in range(test_results["ci_start_ind"], arangec.shape[0]):
+                    for ri in range(test_results["ri_start_ind"], aranger.shape[0]):
                         try:
                             is_debug = False
                             
@@ -316,6 +330,12 @@ else:
                             test_results["mcnt"][arangec[ci]] += open_match_cnt[arangec[ci]]
                             test_results["micnt"][arangec[ci]] += 1 if open_match_cnt[arangec[ci]] > 0 else 0
                             
+                            #write to file
+                            test_results["ci_start_ind"] = ci
+                            test_results["ri_start_ind"] = ri
+                            with open(test_file_path, 'w') as f:
+                                json.dump(test_results, f)
+                            
                         except Exception as e:
                             print(e)
 
@@ -324,6 +344,8 @@ else:
                     test_results["micnt"][arangec[ci]] = round( ( test_results["micnt"][arangec[ci]] / (aranger.shape[0]) ) * 100, 2 )
                         
                 print(test_results)
+                if os.path.exists( test_file_path ):
+                    os.remove( test_file_path ) 
                             
             else:
                 
