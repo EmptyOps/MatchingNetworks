@@ -250,7 +250,7 @@ else:
                     arangec = np.array( [ test_record_class ] )
                     aranger = np.array( [ test_record_index ] )
 
-                import os
+                import os, sys
                 import json
                 test_file_path = './__data/test_results_'+os.path.basename(model_path)+'.json'
                 if os.path.exists( test_file_path ):
@@ -338,6 +338,9 @@ else:
                             
                         except Exception as e:
                             print(e)
+                            exc_type, exc_obj, exc_tb = sys.exc_info()
+                            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                            print(exc_type, fname, exc_tb.tb_lineno)
 
                 for ci in range(0, arangec.shape[0]):
                     test_results["mcnt"][arangec[ci]] = round( ( test_results["mcnt"][arangec[ci]] / (aranger.shape[0]*data.tvt_records) ) * 100, 2 )
