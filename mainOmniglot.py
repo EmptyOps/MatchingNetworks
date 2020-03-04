@@ -262,6 +262,7 @@ else:
                     
                     
                 for ci in range(test_results["ci_start_ind"], arangec.shape[0]):
+                    test_results["ri_start_ind"] = 0
                     for ri in range(test_results["ri_start_ind"], aranger.shape[0]):
                         try:
                             is_debug = False
