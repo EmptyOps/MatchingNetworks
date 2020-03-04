@@ -323,7 +323,7 @@ else:
                             print(results)
                             
                             #
-                            if arangec[ci] not in test_results["mcnt"]:
+                            if str(arangec[ci]) not in test_results["mcnt"]:
                                 test_results["mcnt"][str(arangec[ci])] = 0
                                 test_results["micnt"][str(arangec[ci])] = 0
                                 
