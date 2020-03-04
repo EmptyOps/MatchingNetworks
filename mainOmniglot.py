@@ -256,8 +256,8 @@ else:
                 if os.path.exists( test_file_path ):
                     test_results = json.load( open( test_file_path ) ) 
                     
-                    test_results["mcnt"][arangec[test_results["ci_start_ind"]]] = 0
-                    test_results["micnt"][arangec[test_results["ci_start_ind"]]] = 0
+                    test_results["mcnt"][str(arangec[test_results["ci_start_ind"]])] = 0
+                    test_results["micnt"][str(arangec[test_results["ci_start_ind"]])] = 0
                     test_results["ri_start_ind"] = 0
                     
                     
