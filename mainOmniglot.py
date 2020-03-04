@@ -333,6 +333,7 @@ else:
                             #write to file
                             test_results["ci_start_ind"] = ci
                             test_results["ri_start_ind"] = ri
+                            print( "test_results ", test_results )
                             with open(test_file_path, 'w') as f:
                                 json.dump(test_results, f)
                             
