@@ -69,6 +69,7 @@ class OmniglotNShotDataset():
             self.prediction_classes = 9
             self.total_base_classes = total_base_classes   #56
             self.tvt_records = 70   # 25   #11    #3 #19
+            self.tvt_records_fall_short_clss = {}
             self.re_records = 0     #2     #2 #10
             self.choice_replace = True #necessary when number of samples are small
             
@@ -170,7 +171,21 @@ class OmniglotNShotDataset():
                         print( self.evaluation.shape )
                 else:
                     for classes in temp.keys():
-                        self.x.append(np.array(temp[ list(temp.keys())[classes]]))
+                        if False:
+                            self.x.append(np.array(temp[ list(temp.keys())[classes]]))
+                            self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1])
+                        else:
+                            print( "list(temp.keys())[classes] ", list(temp.keys())[classes], classes )
+                            self.x.append(np.array(temp[ list(temp.keys())[classes]]))
+                            
+                            self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1])
+                            if len(self.x[len(self.x)-1]) < self.tvt_records:
+                                print( "len(self.x[len(self.x)-1]) ", len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
+                                self.x[len(self.x)-1] = self.x[len(self.x)-1].reshape( ( self.tvt_records, self.x[len(self.x)-1].shape[1], self.x[len(self.x)-1].shape[2], self.x[len(self.x)-1].shape[3], self.x[len(self.x)-1].shape[4] ) )
+                                #for xrecind in range(len(self.x[len(self.x)-1]), self.tvt_records):
+                                    
+                                print( "len(self.x[len(self.x)-1]) ", len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
+                        
                     self.x = np.array(self.x)
 
                     #np.save(os.path.join(dataroot,'data.npy'),self.x)
@@ -715,11 +730,13 @@ class OmniglotNShotDataset():
                     if cur_class in x_hat_class:
                         # Count number of times this class is inside the meta-test
                         n_test_samples = np.sum(cur_class == x_hat_class)
-                        example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + n_test_samples, self.choice_replace)
+                        #example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + n_test_samples, self.choice_replace)
+                        example_inds = np.random.choice(self.tvt_records_fall_short_clss[cur_class], self.samples_per_class + n_test_samples, self.choice_replace)
                         #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
                         #print( "example_inds here 2 " )
-                        example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
+                        #example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
+                        example_inds = np.random.choice(self.tvt_records_fall_short_clss[cur_class], self.samples_per_class, False)
 
                     #print( example_inds )
                         
@@ -856,19 +873,23 @@ class OmniglotNShotDataset():
                         n_test_samples = np.sum(cur_class == x_hat_class)
                         if is_eval_with_train_data == True or not cur_class == self.evaluate_classes:
                             if not cur_class == self.evaluate_classes:
-                                example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, self.choice_replace)
+                                #example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class+n_test_samples, self.choice_replace)
+                                example_inds = np.random.choice(self.tvt_records_fall_short_clss[cur_class], self.samples_per_class+n_test_samples, self.choice_replace)
                             else:
                                 #print( "example_inds_test here 1 in train mode" )
-                                example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), self.choice_replace)
+                                #example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), self.choice_replace)
+                                example_inds = np.random.choice(self.tvt_records_fall_short_clss[cur_class], self.samples_per_class + (n_test_samples - 1), self.choice_replace)
                                 example_inds_test = np.array( [0] ) #np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
                         else:
                             #print( "example_inds_test here 1 " )
-                            example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), self.choice_replace)
+                            #example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class + (n_test_samples - 1), self.choice_replace)
+                            example_inds = np.random.choice(self.tvt_records_fall_short_clss[cur_class], self.samples_per_class + (n_test_samples - 1), self.choice_replace)
                             example_inds_test = np.array( [0] ) #np.random.choice(self.evaluate_classes, self.evaluate_classes, False)
                             #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
                         #print( "example_inds here 2 " )
-                        example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
+                        #example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
+                        example_inds = np.random.choice(self.tvt_records_fall_short_clss[cur_class], self.samples_per_class, False)
 
                     #print( example_inds )
                          
