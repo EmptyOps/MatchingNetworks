@@ -180,11 +180,11 @@ class OmniglotNShotDataset():
                             
                             self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1]) - 20
                             if len(self.x[len(self.x)-1]) < self.tvt_records:
-                                print( "self.x.shape ", self.x.shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
+                                print( "self.x.shape ", self.x[len(self.x)-1].shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
                                 self.x[len(self.x)-1] = self.x[len(self.x)-1].reshape( ( self.tvt_records, self.x[len(self.x)-1].shape[1], self.x[len(self.x)-1].shape[2], self.x[len(self.x)-1].shape[3], self.x[len(self.x)-1].shape[4] ) )
                                 #for xrecind in range(len(self.x[len(self.x)-1]), self.tvt_records):
                                     
-                                print( "self.x.shape ", self.x.shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
+                                print( "self.x.shape ", self.x[len(self.x)-1].shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
                         
                     self.x = np.array(self.x)
 
