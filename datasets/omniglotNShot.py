@@ -68,7 +68,7 @@ class OmniglotNShotDataset():
             
             self.prediction_classes = 9
             self.total_base_classes = total_base_classes   #56
-            self.tvt_records = 70   # 25   #11    #3 #19
+            self.tvt_records = 10000 #70   # 25   #11    #3 #19
             self.tvt_records_fall_short_clss = {}
             self.re_records = 0     #2     #2 #10
             self.choice_replace = True #necessary when number of samples are small
@@ -178,7 +178,7 @@ class OmniglotNShotDataset():
                             print( "list(temp.keys())[classes] ", list(temp.keys())[classes], classes )
                             self.x.append(np.array(temp[ list(temp.keys())[classes]]))
                             
-                            self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1])
+                            self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1]) - 20
                             if len(self.x[len(self.x)-1]) < self.tvt_records:
                                 print( "len(self.x[len(self.x)-1]) ", len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
                                 self.x[len(self.x)-1] = self.x[len(self.x)-1].reshape( ( self.tvt_records, self.x[len(self.x)-1].shape[1], self.x[len(self.x)-1].shape[2], self.x[len(self.x)-1].shape[3], self.x[len(self.x)-1].shape[4] ) )
