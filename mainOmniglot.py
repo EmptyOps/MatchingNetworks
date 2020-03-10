@@ -256,7 +256,7 @@ else:
 
                 if is_dynamic_batch:
                     base_classes_file = sys.argv[2]+"_base_classes.json"
-                    bcfdata = base_classes_file_data( base_classes_file )
+                    bcfdata = omniglotNShot.base_classes_file_data( base_classes_file )
                     
                 import os, sys
                 import json
