@@ -25,6 +25,10 @@ filenameToPILImage = lambda x: Image.open(x).convert('L')
 PiLImageResize = lambda x: x.resize((28,28))
 np_reshape = lambda x: np.reshape(x, (28, 28, 1))
 
+
+def base_classes_file_data( base_classes_file ):
+    return array( json.load( open( base_classes_file ) ) ) 
+
 class OmniglotNShotDataset():
     def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1, is_debug = True, is_switch_dim = False):
 
@@ -676,9 +680,6 @@ class OmniglotNShotDataset():
         """
         
         print("after_normalization", "mean", self.mean, "max", self.max, "min", self.min, "std", self.std)
-
-    def base_classes_file_data( base_classes_file ):
-        return array( json.load( open( base_classes_file ) ) ) 
         
     def load_data_cache(self, data_pack, data_pack_type):
         """
