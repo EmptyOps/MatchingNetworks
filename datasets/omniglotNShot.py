@@ -677,6 +677,9 @@ class OmniglotNShotDataset():
         
         print("after_normalization", "mean", self.mean, "max", self.max, "min", self.min, "std", self.std)
 
+    def base_classes_file_data( base_classes_file ):
+        return array( json.load( open( base_classes_file ) ) ) 
+        
     def load_data_cache(self, data_pack, data_pack_type):
         """
         Collects 1000 batches data for N-shot learning

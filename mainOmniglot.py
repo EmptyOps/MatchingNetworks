@@ -237,6 +237,8 @@ else:
         matched_cnt = 0
         if is_do_plain_predict:
             if is_load_test_record:
+                is_dynamic_batch = False
+            
                 test_results = {}
                 test_results["mcnt"] = {}
                 test_results["micnt"] = {}
@@ -244,12 +246,18 @@ else:
                 test_results["ri_start_ind"] = 0
                 
                 if test_record_class == -1:
+                    is_dynamic_batch = True
+
                     arangec = np.arange( int(sys.argv[33]) )
                     aranger = np.arange( test_record_index, test_record_index_end )   #till available
                 else:
                     arangec = np.array( [ test_record_class ] )
                     aranger = np.array( [ test_record_index ] )
 
+                if is_dynamic_batch:
+                    base_classes_file = sys.argv[2]+"_base_classes.json"
+                    bcfdata = base_classes_file_data( base_classes_file )
+                    
                 import os, sys
                 import json
                 test_file_path = './__data/test_results_'+os.path.basename(model_path)+'.json'
@@ -263,6 +271,12 @@ else:
                     
                 for ci in range(test_results["ci_start_ind"], arangec.shape[0]):
                     test_results["ri_start_ind"] = 0
+                    if is_dynamic_batch:
+                        for bcfi in range(0, bcfdata.shape[1]):
+                            if bcfdata[arangec[ci]][bcfi].all() == 0:
+                                aranger = np.arange( bcfi, bcfi+test_record_index_end )
+                                break
+                    
                     for ri in range(test_results["ri_start_ind"], aranger.shape[0]):
                         try:
                             is_debug = False
