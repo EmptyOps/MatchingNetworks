@@ -272,6 +272,7 @@ else:
                 for ci in range(test_results["ci_start_ind"], arangec.shape[0]):
                     test_results["ri_start_ind"] = 0
                     if is_dynamic_batch:
+                        print( "bcfdata ", bcfdata.shape, bcfdata[arangec[ci]].shape, bcfdata[arangec[ci]] )
                         for bcfi in range(0, bcfdata.shape[1]):
                             if bcfdata[arangec[ci]][bcfi].all() == 0:
                                 aranger = np.arange( bcfi, bcfi+test_record_index_end )
