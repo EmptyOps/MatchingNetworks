@@ -274,7 +274,7 @@ else:
                     if is_dynamic_batch:
                         for bcfi in range(0, bcfdata.shape[1]):
                             if np.all( bcfdata[arangec[ci]][bcfi] == 0.0 ):
-                                aranger = np.arange( bcfi, bcfi+test_record_index_end )
+                                aranger = np.arange( bcfi-20, bcfi-20+test_record_index_end )
                                 print( "aranger ", aranger )
                                 break
                     
@@ -354,11 +354,6 @@ else:
                                 json.dump(test_results, f)
                             
                         except Exception as e:
-                            print( "caught exception ", e )
-                            exc_type, exc_obj, exc_tb = sys.exc_info()
-                            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                            print(exc_type, fname, exc_tb.tb_lineno)
-                            print( sys.exc_info() )
                             import traceback
                             print(traceback.format_exc())
 
