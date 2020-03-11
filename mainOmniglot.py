@@ -274,7 +274,7 @@ else:
                     if is_dynamic_batch:
                         print( "bcfdata ", bcfdata.shape, bcfdata[arangec[ci]].shape, bcfdata[arangec[ci]] )
                         for bcfi in range(0, bcfdata.shape[1]):
-                            if bcfdata[arangec[ci]][bcfi].all() == 0.0:
+                            if np.all( bcfdata[arangec[ci]][bcfi] == 0.0 ):
                                 aranger = np.arange( bcfi, bcfi+test_record_index_end )
                                 print( "aranger ", aranger )
                                 break
