@@ -275,9 +275,11 @@ else:
                         for bcfi in range(0, bcfdata.shape[1]):
                             if bcfdata[arangec[ci]][bcfi].all() == 0:
                                 aranger = np.arange( bcfi, bcfi+test_record_index_end )
+                                print( "aranger ", aranger )
                                 break
                     
                     for ri in range(test_results["ri_start_ind"], aranger.shape[0]):
+                        print( "ri ", ri )
                         try:
                             is_debug = False
                             
