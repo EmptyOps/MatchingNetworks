@@ -353,10 +353,11 @@ else:
                                 json.dump(test_results, f)
                             
                         except Exception as e:
-                            print(e)
-                            exc_type, exc_obj, exc_tb = sys.exc_info()
-                            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                            print(exc_type, fname, exc_tb.tb_lineno)
+                            print( "caught exception ", e )
+                            #exc_type, exc_obj, exc_tb = sys.exc_info()
+                            #fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                            #print(exc_type, fname, exc_tb.tb_lineno)
+                            print( sys.exc_info() )
 
                 for ci in range(0, arangec.shape[0]):
                     test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records) ) * 100, 2 )
