@@ -168,6 +168,10 @@ class OmniglotNShotDataset():
                     if is_debug:
                         print("loaded prepared base_classes_file")
                     self.x = array( json.load( open( base_classes_file ) ) ) 
+                    
+                    for cli in range(0, self.total_base_classes):
+                        self.tvt_records_fall_short_clss[cli] = test_record_index
+                        
                     if is_debug:
                         print(self.x.shape)
                     
