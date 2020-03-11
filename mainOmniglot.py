@@ -272,7 +272,6 @@ else:
                 for ci in range(test_results["ci_start_ind"], arangec.shape[0]):
                     test_results["ri_start_ind"] = 0
                     if is_dynamic_batch:
-                        print( "bcfdata ", bcfdata.shape, bcfdata[arangec[ci]].shape, bcfdata[arangec[ci]] )
                         for bcfi in range(0, bcfdata.shape[1]):
                             if np.all( bcfdata[arangec[ci]][bcfi] == 0.0 ):
                                 aranger = np.arange( bcfi, bcfi+test_record_index_end )
@@ -280,7 +279,6 @@ else:
                                 break
                     
                     for ri in range(test_results["ri_start_ind"], aranger.shape[0]):
-                        print( "ri ", ri )
                         try:
                             is_debug = False
                             
@@ -357,10 +355,12 @@ else:
                             
                         except Exception as e:
                             print( "caught exception ", e )
-                            #exc_type, exc_obj, exc_tb = sys.exc_info()
-                            #fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                            #print(exc_type, fname, exc_tb.tb_lineno)
+                            exc_type, exc_obj, exc_tb = sys.exc_info()
+                            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                            print(exc_type, fname, exc_tb.tb_lineno)
                             print( sys.exc_info() )
+                            import traceback
+                            print(traceback.format_exc())
 
                 for ci in range(0, arangec.shape[0]):
                     test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records) ) * 100, 2 )
