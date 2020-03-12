@@ -358,7 +358,8 @@ else:
                             print(traceback.format_exc())
 
                 for ci in range(0, arangec.shape[0]):
-                    test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records) ) * 100, 2 )
+                    #test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records) ) * 100, 2 )
+                    test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records_fall_short_clss[arangec[ci]]) ) * 100, 2 )
                     test_results["micnt"][str(arangec[ci])] = round( ( test_results["micnt"][str(arangec[ci])] / (aranger.shape[0]) ) * 100, 2 )
                         
                 print(test_results)

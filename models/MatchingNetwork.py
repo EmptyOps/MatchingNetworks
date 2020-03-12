@@ -304,6 +304,7 @@ class MatchingNetwork(nn.Module):
         #print( "encoded_images" )
         #print( type(support_set_labels_one_hot) )
         support_set_labels_one_hot_org_shape = support_set_labels_one_hot.shape
+        support_set_images_shape_1_ = support_set_images.shape[1]
         #print( support_set_labels_one_hot.shape )
         #print( target_image.shape )
         tmp_one_hot = np.zeros( (support_set_labels_one_hot_org_shape[0], support_set_labels_one_hot_org_shape[1], support_set_labels_one_hot_org_shape[1]) )
@@ -420,14 +421,15 @@ class MatchingNetwork(nn.Module):
                         open_match_tot[tatmpts] = 0.0
                         open_match_mpr[tatmpts] = 0.0
                         
-                    pindsjj_tmp = np.random.permutation( support_set_images.shape[1] )
+                    #pindsjj_tmp = np.random.permutation( support_set_images.shape[1] )
+                    pindsjj_tmp = np.random.permutation( support_set_images_shape_1_ )
                     #repeat 5 times
                     pindsjj = np.concatenate( ( pindsjj_tmp,  pindsjj_tmp ), axis=0 )
                     for rpt in range(0, support_set_labels_one_hot_org_shape[1]-2):
                         pindsjj = np.concatenate( ( pindsjj, pindsjj_tmp ), axis=0 )
                         
                     jjcntr = 0
-                    for jj in range( 0, support_set_images.shape[1] ):   #int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
+                    for jj in range( 0, support_set_images_shape_1_):   #support_set_images.shape[1] ):   #int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
                     
                         ii_cntr = 0
                         tstcls = 0
@@ -476,11 +478,14 @@ class MatchingNetwork(nn.Module):
                                     if not tatmpts_diag == xhat_ind:
                                         if nardr == 0:
                                             if torch.cuda.is_available():
-                                                target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float().cuda()
+                                                #target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float().cuda()
+                                                target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images_shape_1_-2),:,:,:]), volatile=True).float().cuda()
                                             else:
-                                                target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
+                                                #target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
+                                                target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],np.random.randint(0, support_set_images_shape_1_-2),:,:,:]), volatile=True).float()
                                         else:
-                                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[uniq_cls[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1]],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
+                                            #target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[uniq_cls[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1]],np.random.randint(0, support_set_images.shape[1]-2),:,:,:]), volatile=True).float()
+                                            target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[uniq_cls[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1]],np.random.randint(0, support_set_images_shape_1_-2),:,:,:]), volatile=True).float()
                                         #target_image[xhat_ind,0,:,:,:] = Variable(torch.from_numpy(support_set_images[pinds[(ii_cntr*target_image.shape[0])+xhat_ind:(ii_cntr*target_image.shape[0])+xhat_ind+1],j+(jj*support_set_labels_one_hot_org_shape[1]),:,:,:]), volatile=True).float()
                                     else:
                                         if nardr == 0:
