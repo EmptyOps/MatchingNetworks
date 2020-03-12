@@ -285,7 +285,7 @@ class MatchingNetwork(nn.Module):
             
         return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices
 
-    def predict(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None, target_y_actuals = None):
+    def predict(self, support_set_images, support_set_labels_one_hot, target_image, target_label, is_debug = False, is_evaluation_only = False, y_support_set_org = None, target_y_actuals = None, support_set_images_shape_1_ = -1):
         """
         Builds graph for Matching Networks, produces losses and summary statistics.
         :param support_set_images: A tensor containing the support set images [batch_size, sequence_size, n_channels, 28, 28]
@@ -304,7 +304,8 @@ class MatchingNetwork(nn.Module):
         #print( "encoded_images" )
         #print( type(support_set_labels_one_hot) )
         support_set_labels_one_hot_org_shape = support_set_labels_one_hot.shape
-        support_set_images_shape_1_ = support_set_images.shape[1]
+        if not support_set_images_shape_1_ == -1:
+            support_set_images_shape_1_ = support_set_images.shape[1]
         #print( support_set_labels_one_hot.shape )
         #print( target_image.shape )
         tmp_one_hot = np.zeros( (support_set_labels_one_hot_org_shape[0], support_set_labels_one_hot_org_shape[1], support_set_labels_one_hot_org_shape[1]) )

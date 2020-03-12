@@ -349,7 +349,7 @@ class OneShotBuilder:
             
             return c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices
             
-    def predict(self, total_test_batches, is_debug = False):
+    def predict(self, total_test_batches, is_debug = False, support_set_images_shape_1_ = -1):
         """
         Runs one testing epoch
         :param total_test_batches: Number of batches to train on
@@ -395,10 +395,10 @@ class OneShotBuilder:
             x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
             if self.isCudaAvailable:
                 acc, c_loss_value, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = self.matchingNet.predict(x, y_support_set_one_hot.cuda(),
-                                                     x_target, y_target.cuda(), is_debug = is_debug, is_evaluation_only = False, y_support_set_org = y_support_set, target_y_actuals = target_y_actuals )
+                                                     x_target, y_target.cuda(), is_debug = is_debug, is_evaluation_only = False, y_support_set_org = y_support_set, target_y_actuals = target_y_actuals, support_set_images_shape_1_ = support_set_images_shape_1_ )
             else:
                 acc, c_loss_value, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = self.matchingNet.predict(x, y_support_set_one_hot,
-                                                     x_target, y_target, is_debug = is_debug, is_evaluation_only = False, y_support_set_org = y_support_set, target_y_actuals = target_y_actuals )
+                                                     x_target, y_target, is_debug = is_debug, is_evaluation_only = False, y_support_set_org = y_support_set, target_y_actuals = target_y_actuals, support_set_images_shape_1_ = support_set_images_shape_1_ )
 
             if is_debug == True:
                 #iter_out = "test_loss: {}, test_accuracy: {}".format(c_loss_value.data[0], acc.data[0])

@@ -305,7 +305,7 @@ else:
                                                                 is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True, 
                                                                 vector_dim = int(sys.argv[38]), num_layers=int(sys.argv[44]), dropout=float(sys.argv[45]) )
 
-                            c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug)
+                            c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug, support_set_images_shape_1_ = data.tvt_records_fall_short_clss[arangec[ci]])
                             
                             #
                             for li in range(0, len(emclvlcls)):
