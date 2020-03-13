@@ -346,8 +346,8 @@ else:
                                 #test_results["micnt"][str(arangec[ci])] = 0
                                 for ciitmp in range(0, arangec.shape[0]):
                                     #if not ciitmp == ci:
-                                    test_results["mcnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] += 0
-                                    test_results["micnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] += 0
+                                    test_results["mcnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] = 0
+                                    test_results["micnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] = 0
                                 
                             #test_results["mcnt"][str(arangec[ci])] += open_match_cnt[arangec[ci]]
                             #test_results["micnt"][str(arangec[ci])] += 1 if open_match_cnt[arangec[ci]] > 0 else 0
