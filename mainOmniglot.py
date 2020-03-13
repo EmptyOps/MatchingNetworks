@@ -341,7 +341,7 @@ else:
                             print(results)
                             
                             #
-                            if str(arangec[ci]) not in test_results["mcnt"]:
+                            if str(arangec[ci])+"_"+str(arangec[ci]) not in test_results["mcnt"]:
                                 #test_results["mcnt"][str(arangec[ci])] = 0
                                 #test_results["micnt"][str(arangec[ci])] = 0
                                 for ciitmp in range(0, arangec.shape[0]):
