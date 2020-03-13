@@ -264,13 +264,15 @@ else:
                 if os.path.exists( test_file_path ):
                     test_results = json.load( open( test_file_path ) ) 
                     
-                    test_results["mcnt"][str(arangec[test_results["ci_start_ind"]])] = 0
-                    test_results["micnt"][str(arangec[test_results["ci_start_ind"]])] = 0
-                    test_results["ri_start_ind"] = 0
+                    #test_results["mcnt"][str(arangec[test_results["ci_start_ind"]])] = 0
+                    #test_results["micnt"][str(arangec[test_results["ci_start_ind"]])] = 0
+                    #test_results["ri_start_ind"] = 0
                     
                     
                 for ci in range(test_results["ci_start_ind"], arangec.shape[0]):
-                    test_results["ri_start_ind"] = 0
+                    #if test_results["ri_start_ind"] == aranger.shape[0]:
+                    #    test_results["ri_start_ind"] = 0
+                        
                     if is_dynamic_batch:
                         for bcfi in range(0, bcfdata.shape[1]):
                             if np.all( bcfdata[arangec[ci]][bcfi] == 0.0 ):
@@ -340,11 +342,19 @@ else:
                             
                             #
                             if str(arangec[ci]) not in test_results["mcnt"]:
-                                test_results["mcnt"][str(arangec[ci])] = 0
-                                test_results["micnt"][str(arangec[ci])] = 0
+                                #test_results["mcnt"][str(arangec[ci])] = 0
+                                #test_results["micnt"][str(arangec[ci])] = 0
+                                for ciitmp in range(0, arangec.shape[0]):
+                                    #if not ciitmp == ci:
+                                    test_results["mcnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] += 0
+                                    test_results["micnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] += 0
                                 
-                            test_results["mcnt"][str(arangec[ci])] += open_match_cnt[arangec[ci]]
-                            test_results["micnt"][str(arangec[ci])] += 1 if open_match_cnt[arangec[ci]] > 0 else 0
+                            #test_results["mcnt"][str(arangec[ci])] += open_match_cnt[arangec[ci]]
+                            #test_results["micnt"][str(arangec[ci])] += 1 if open_match_cnt[arangec[ci]] > 0 else 0
+                            for ciitmp in range(0, arangec.shape[0]):
+                                #if not ciitmp == ci:
+                                test_results["mcnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] += open_match_cnt[arangec[ciitmp]]
+                                test_results["micnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] += 1 if open_match_cnt[arangec[ciitmp]] > 0 else 0
                             
                             #write to file
                             test_results["ci_start_ind"] = ci
@@ -357,11 +367,19 @@ else:
                             import traceback
                             print(traceback.format_exc())
 
+                    test_results["ri_start_ind"] = 0
+                            
                 for ci in range(0, arangec.shape[0]):
-                    #test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records) ) * 100, 2 )
-                    test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records_fall_short_clss[arangec[ci]]) ) * 100, 2 )
-                    test_results["micnt"][str(arangec[ci])] = round( ( test_results["micnt"][str(arangec[ci])] / (aranger.shape[0]) ) * 100, 2 )
-                        
+                    ##test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records) ) * 100, 2 )
+                    #test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records_fall_short_clss[arangec[ci]]) ) * 100, 2 )
+                    #test_results["micnt"][str(arangec[ci])] = round( ( test_results["micnt"][str(arangec[ci])] / (aranger.shape[0]) ) * 100, 2 )
+                    for ciitmp in range(0, arangec.shape[0]):
+                        ##if not ciitmp == ci:
+                        #test_results["mcnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] += 0
+                        #test_results["micnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] += 0
+                        test_results["mcnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] / (aranger.shape[0]*data.tvt_records_fall_short_clss[arangec[ci]]) ) * 100, 2 )
+                        test_results["micnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] = round( ( test_results["micnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] / (aranger.shape[0]) ) * 100, 2 )
+                    
                 print(test_results)
                 if os.path.exists( test_file_path ):
                     os.remove( test_file_path ) 
