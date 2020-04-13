@@ -55,6 +55,7 @@ class MatchingNetwork(nn.Module):
         
         # default `log_dir` is "runs" - we'll be more specific here
         self.is_do_train_logging = True
+        self.is_do_train_logging_conditionally = True   #any value assignement doesn't matter here
         if self.is_do_train_logging:
             self.log_interval = 50
             self.last_epoch = -1
@@ -105,10 +106,16 @@ class MatchingNetwork(nn.Module):
                     
                 encoded_images.append(gen_encode)
 
+        if self.is_do_train_logging:
+            if epoch <= 300:
+                self.is_do_train_logging_conditionally = False
+            else:
+                self.is_do_train_logging_conditionally = True
+        
         log_file_encoded = None
         log_file_similarities = None
-        print("epoch ", epoch, self.is_do_train_logging, self.log_interval, self.last_epoch)
-        if self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
+        #print("epoch ", epoch, self.is_do_train_logging, self.log_interval, self.last_epoch)
+        if self.is_do_train_logging_conditionally and self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
             if self.last_epoch == -1 or not self.last_epoch == epoch:
                 self.last_epoch = epoch
                 self.batch_index = -1
@@ -166,7 +173,7 @@ class MatchingNetwork(nn.Module):
                 gen_encode, _, _ = self.g(target_image[:,i,:,:,:].reshape( target_image.shape[0], 1, self.vector_dim ))
                 gen_encode = gen_encode.reshape( gen_encode.shape[0], gen_encode.shape[2] )
                 
-            if self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
+            if self.is_do_train_logging_conditionally and self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
                 # load logged array and append and save
                 try:
                     logs = array( json.load( open( log_file_encoded ) ) ) 
@@ -221,7 +228,7 @@ class MatchingNetwork(nn.Module):
                 similarities = self.dn(input_image=outputs[:])
             similarities = similarities.t()
 
-            if self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
+            if self.is_do_train_logging_conditionally and self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
                 # load logged array and append and save
                 try:
                     logs = array( json.load( open( log_file_similarities ) ) ) 
