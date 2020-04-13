@@ -116,7 +116,7 @@ class OneShotBuilder:
                                                          target_y_actuals = target_y_actuals, 
                                                          support_set_y_actuals = support_set_y_actuals )
                 else:
-                    acc, c_loss_value, _ = self.matchingNet(x_support_set, y_support_set_one_hot,
+                    acc, c_loss_value, _ = self.matchingNet(x_support_set, y_support_set_one_hot, epoch = epoch,
                                                          x_target, y_target)
 
                 # Before the backward pass, use the optimizer object to zero all of the
