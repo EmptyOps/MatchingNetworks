@@ -117,7 +117,9 @@ class OneShotBuilder:
                                                          support_set_y_actuals = support_set_y_actuals )
                 else:
                     acc, c_loss_value, _ = self.matchingNet(x_support_set, y_support_set_one_hot,
-                                                         x_target, y_target, epoch = epoch)
+                                                         x_target, y_target, epoch = epoch, 
+                                                         target_y_actuals = target_y_actuals, 
+                                                         support_set_y_actuals = support_set_y_actuals)
 
                 # Before the backward pass, use the optimizer object to zero all of the
                 # gradients for the variables it will update (which are the learnable weights
