@@ -30,7 +30,7 @@ def base_classes_file_data( base_classes_file ):
     return array( json.load( open( base_classes_file ) ) ) 
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1, is_debug = True, is_switch_dim = False):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1, is_debug = True, is_switch_dim = False, is_batch_persistancy = False):
 
         self.is_debug = is_debug
     
@@ -76,6 +76,8 @@ class OmniglotNShotDataset():
             self.tvt_records_fall_short_clss = {}
             self.re_records = 0     #2     #2 #10
             self.choice_replace = True #necessary when number of samples are small
+            
+            self.is_batch_persistancy = is_batch_persistancy
             
             base_classes_file = input_file+"_base_classes.json"
             self.evaluate_classes = evaluate_classes
@@ -152,13 +154,14 @@ class OmniglotNShotDataset():
                         else:
                             temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
 
-                """
+                
                 print( "temp.keys()" )
                 unique, counts = np.unique(input_labels, return_counts=True)
                 tmpdict = dict(zip(unique, counts))
                 print( tmpdict )
                 print( sorted(tmpdict.items(), key=lambda x: x[1], reverse=True) )
-                """
+                print( temp[0][0] )
+                dsljkskhjfdjkshf
                 
                 input = []  # Free memory
                 input_labels = []  # Free memory
@@ -695,6 +698,12 @@ class OmniglotNShotDataset():
             print( "data_pack" )
             print( data_pack_type )        
             print( data_pack.shape )
+        
+        #here skip adding batch if batch persistancy is enabled for some specific requirements and cache is available then simply return the batch from cache
+        if self.is_batch_persistancy:
+            if todo_is_batch_cache_vailable:
+                todo = True
+                raise Exception("Not implemented yet")
         
         """
         print( data_pack.shape[0] )
