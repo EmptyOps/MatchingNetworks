@@ -161,7 +161,6 @@ class OmniglotNShotDataset():
                 print( tmpdict )
                 print( sorted(tmpdict.items(), key=lambda x: x[1], reverse=True) )
                 print( temp[0][0] )
-                dsljkskhjfdjkshf
                 
                 input = []  # Free memory
                 input_labels = []  # Free memory
