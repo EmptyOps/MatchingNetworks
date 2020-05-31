@@ -85,6 +85,8 @@ class OmniglotNShotDataset():
             self.negative_test_offset = negative_test_offset
             self.is_run_time_predictions = is_run_time_predictions
             self.is_evaluation_res_in_obj = is_evaluation_res_in_obj
+            
+            is_disable_heavy_functions_temporarily = True
                         
             #
             if is_evaluation_only == False or not os.path.exists( base_classes_file ) or is_load_test_record:
@@ -199,8 +201,9 @@ class OmniglotNShotDataset():
                     self.x = np.array(self.x)
 
                     #np.save(os.path.join(dataroot,'data.npy'),self.x)
-                    with open( base_classes_file, 'w') as outfile:
-                        json.dump(self.x.tolist(), outfile)                      
+                    if not is_disable_heavy_functions_temporarily:
+                        with open( base_classes_file, 'w') as outfile:
+                            json.dump(self.x.tolist(), outfile)                      
 
                 temp = [] # Free memory
                         
