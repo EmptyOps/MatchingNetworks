@@ -84,10 +84,14 @@ model_path = sys.argv[18] if len(sys.argv) >= 19 else 0
 outfile_path_prob = sys.argv[19] if len(sys.argv) >= 20 else 0
 total_input_files = int(sys.argv[21]) if len(sys.argv) >= 22 else 0
 
+resume_from_epoch = int(sys.argv[49]) if len(sys.argv) >= 50 else -1
 is_evaluation_only = False
-if os.path.exists(model_path):
+if os.path.exists(model_path) and resume_from_epoch == -1:
     is_evaluation_only = True
     is_debug = False
+elif not resume_from_epoch == -1:
+    if not os.path.exists(model_path):
+        raise Exception("To resume training the model path is required.")
 
 is_load_test_record = False if int(sys.argv[41]) == 0 else True
 test_record_class = int(sys.argv[42])
@@ -125,7 +129,7 @@ if is_evaluation_only == False:
         
     best_val = 0.
     with tqdm.tqdm(total=total_epochs) as pbar_e:
-        for e in range(0, total_epochs):
+        for e in range(0 if resume_from_epoch == -1 else resume_from_epoch, total_epochs):
             total_c_loss, total_accuracy = obj_oneShotBuilder.run_training_epoch(total_train_batches=total_train_batches, epoch=e)
             print("Epoch {}: train_loss: {}, train_accuracy: {}".format(e, total_c_loss, total_accuracy))
 
