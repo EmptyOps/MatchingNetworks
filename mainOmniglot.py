@@ -90,7 +90,7 @@ if os.path.exists(model_path) and resume_from_epoch == -1:
     is_evaluation_only = True
     is_debug = False
 elif not resume_from_epoch == -1:
-    if not os.path.exists(model_path):
+    if not os.path.exists(model_path.replace('EPOCH',str(resume_from_epoch))):
         raise Exception("To resume training the model path is required.")
 
 is_load_test_record = False if int(sys.argv[41]) == 0 else True
