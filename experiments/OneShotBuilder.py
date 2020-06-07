@@ -17,7 +17,7 @@ import os
 
 class OneShotBuilder:
 
-    def __init__(self, data, model_path=""):
+    def __init__(self, data, model_path="", model_save_path=""):
         """
         Initializes an OneShotBuilder object. The OneShotBuilder object takes care of setting up our experiment
         and provides helper functions such as run_training_epoch and run_validation_epoch to simplify out training
@@ -26,6 +26,7 @@ class OneShotBuilder:
         """
         self.data = data
         self.model_path = model_path
+        self.model_save_path = model_save_path
 
     def build_experiment(self, batch_size, classes_per_set, samples_per_class, channels, fce, image_size = 28, layer_size = 1600, 
                             is_use_lstm_layer=False, vector_dim = None, num_layers=1, dropout=-1, is_use_second_lstm = False):
@@ -73,7 +74,7 @@ class OneShotBuilder:
         self.matchingNet = torch.load(self.model_path)
             
     def save_model(self, epoch):
-        torch.save(self.matchingNet, self.model_path.replace('EPOCH', str(epoch)))
+        torch.save(self.matchingNet, self.model_save_path.replace('EPOCH', str(epoch)))
             
     def run_training_epoch(self, total_train_batches, epoch=-1):
         """

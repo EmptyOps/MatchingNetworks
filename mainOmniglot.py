@@ -116,7 +116,7 @@ if is_evaluation_only == False or not is_load_test_record or not test_record_cla
                                               test_record_class = test_record_class, test_record_index = test_record_index, 
                                               is_debug = is_debug, is_switch_dim = False if int(sys.argv[48]) == 0 else True)
 
-    obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path if resume_from_epoch == -1 else model_path.replace('EPOCH',str(resume_from_epoch)))
+    obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path if resume_from_epoch == -1 else model_path.replace('EPOCH',str(resume_from_epoch)),model_save_path=model_path)
     obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
                                         image_size = int(sys.argv[35]), layer_size = int(sys.argv[36]), 
                                         is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True, 

@@ -168,6 +168,8 @@ class OmniglotNShotDataset():
                 input_labels = []  # Free memory
                 self.x = [] # Free memory
 
+                
+                
                 if is_load_test_record:
                     if is_debug:
                         print("loaded prepared base_classes_file")
