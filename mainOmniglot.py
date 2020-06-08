@@ -260,7 +260,28 @@ else:
 
                 if is_dynamic_batch:
                     base_classes_file = sys.argv[2]+"_base_classes.json"
-                    bcfdata = omniglotNShot.base_classes_file_data( base_classes_file )
+                    #hiren added on 08-06-2020, for when large files are not saved intentionally
+                    if not os.path.exists(base_classes_file):
+                        data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
+                                                                  classes_per_set=classes_per_set,
+                                                                  samples_per_class=samples_per_class, 
+                                                                  is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
+                                                                  total_input_files = total_input_files, is_evaluation_only = is_evaluation_only, 
+                                                                  evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], 
+                                                                  evaluate_classes = int(sys.argv[25]), is_eval_with_train_data = int(sys.argv[26]), 
+                                                                  negative_test_offset = int(sys.argv[27]), is_apply_pca_first = int(sys.argv[29]), 
+                                                                  cache_samples_for_evaluation = int(sys.argv[30]), 
+                                                                  is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]), 
+                                                                  is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]), 
+                                                                  is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
+                                                                  is_compare = False if int(sys.argv[40]) == 0 else True, 
+                                                                  is_load_test_record = is_load_test_record, 
+                                                                  test_record_class = 0, test_record_index = 0, 
+                                                                  is_debug = is_debug)
+                    
+                        bcfdata = data.x    #omniglotNShot.base_classes_file_data( base_classes_file )
+                    else:
+                        bcfdata = omniglotNShot.base_classes_file_data( base_classes_file )
                     
                 import os, sys
                 import json
