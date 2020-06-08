@@ -88,6 +88,10 @@ class OmniglotNShotDataset():
             
             is_disable_heavy_functions_temporarily = True
                         
+            main_lsize = 1
+            if not os.path.exists( base_classes_file ) and is_load_test_record:
+                main_lsize = 2
+                        
             #
             if is_evaluation_only == False or not os.path.exists( base_classes_file ) or is_load_test_record:
                 if is_debug:
@@ -117,44 +121,46 @@ class OmniglotNShotDataset():
                     print("sizei")
                     print(sizei)
                 test_record_index_cnt = -1
-                for i in np.arange(sizei):
-                    #if is_evaluation_only == True and input_labels[i] >= self.prediction_classes:
-                    #    continue
+                
+                for li in range(0, main_lsize):    
+                    for i in np.arange(sizei):
+                        #if is_evaluation_only == True and input_labels[i] >= self.prediction_classes:
+                        #    continue
 
-                    if input_labels[i] >= self.total_base_classes:
-                        continue
-                    
-                    if is_load_test_record:
-                        if input_labels[i] == test_record_class:
-                            test_record_index_cnt = test_record_index_cnt + 1
-                            
-                            if test_record_index_cnt == test_record_index:
-                                self.evaluation = np.zeros( ( self.total_base_classes, self.tvt_records, input[i].shape[0], input[i].shape[1], 1 ) )
-                                self.evaluation[:,:,:,:,:] = input[i][:,:,np.newaxis]
-                                break
-                    else:
-                        if input_labels[i] in temp:
-                            if len( temp[input_labels[i]] ) >= self.tvt_records:  #only 20 samples per class
-                                if self.re_records > 0 and is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
-                                    lbl_val = input_labels[i]
-                                    if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
-                                        lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
-                                    if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
-                                        lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
-                                        
-                                    if lbl_val in temp_to_be_predicted:
-                                        if len( temp_to_be_predicted[lbl_val] ) >= self.re_records:  #only 20 samples per class
-                                            continue
-                                        
-                                        temp_to_be_predicted[lbl_val].append( input[i][:,:,np.newaxis] )
-                                    else:     
-                                        temp_to_be_predicted[lbl_val]=[input[i][:,:,np.newaxis]]
-                            
-                                continue
-                            
-                            temp[input_labels[i]].append( input[i][:,:,np.newaxis] )
+                        if input_labels[i] >= self.total_base_classes:
+                            continue
+                        
+                        if is_load_test_record and (main_lsize == 1 or li == 1):
+                            if input_labels[i] == test_record_class:
+                                test_record_index_cnt = test_record_index_cnt + 1
+                                
+                                if test_record_index_cnt == test_record_index:
+                                    self.evaluation = np.zeros( ( self.total_base_classes, self.tvt_records, input[i].shape[0], input[i].shape[1], 1 ) )
+                                    self.evaluation[:,:,:,:,:] = input[i][:,:,np.newaxis]
+                                    break
                         else:
-                            temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
+                            if input_labels[i] in temp:
+                                if len( temp[input_labels[i]] ) >= self.tvt_records:  #only 20 samples per class
+                                    if self.re_records > 0 and is_evaluation_only == False and (input_labels[i] < self.total_base_classes or np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0 or np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0):            #True or False and (True or input_labels[i] == 6):
+                                        lbl_val = input_labels[i]
+                                        if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - self.total_base_classes, 30 ) == 0:
+                                            lbl_val = self.total_base_classes + int( (input_labels[i] - self.total_base_classes) / 30 )
+                                        if input_labels[i] >= self.total_base_classes and np.mod( input_labels[i] - (self.total_base_classes+1), 30 ) == 0:
+                                            lbl_val = (self.total_base_classes*2) + int( (input_labels[i] - (self.total_base_classes+1)) / 30 )								
+                                            
+                                        if lbl_val in temp_to_be_predicted:
+                                            if len( temp_to_be_predicted[lbl_val] ) >= self.re_records:  #only 20 samples per class
+                                                continue
+                                            
+                                            temp_to_be_predicted[lbl_val].append( input[i][:,:,np.newaxis] )
+                                        else:     
+                                            temp_to_be_predicted[lbl_val]=[input[i][:,:,np.newaxis]]
+                                
+                                    continue
+                                
+                                temp[input_labels[i]].append( input[i][:,:,np.newaxis] )
+                            else:
+                                temp[input_labels[i]]=[input[i][:,:,np.newaxis]]
 
                 
                 print( "temp.keys()" )
@@ -168,22 +174,7 @@ class OmniglotNShotDataset():
                 input_labels = []  # Free memory
                 self.x = [] # Free memory
 
-                
-                
-                if is_load_test_record:
-                    if is_debug:
-                        print("loaded prepared base_classes_file")
-                    self.x = array( json.load( open( base_classes_file ) ) ) 
-                    
-                    for cli in range(0, self.total_base_classes):
-                        self.tvt_records_fall_short_clss[cli] = test_record_index
-                        
-                    if is_debug:
-                        print(self.x.shape)
-                    
-                        print( "loaded test record " )
-                        print( self.evaluation.shape )
-                else:
+                if not is_load_test_record or main_lsize == 2:
                     for classes in temp.keys():
                         if False:
                             self.x.append(np.array(temp[ list(temp.keys())[classes]]))
@@ -205,7 +196,25 @@ class OmniglotNShotDataset():
                     #np.save(os.path.join(dataroot,'data.npy'),self.x)
                     if not is_disable_heavy_functions_temporarily:
                         with open( base_classes_file, 'w') as outfile:
-                            json.dump(self.x.tolist(), outfile)                      
+                            json.dump(self.x.tolist(), outfile)  
+                
+                if is_load_test_record:
+                    if main_lsize == 1:
+                        if is_debug:
+                            print("loaded prepared base_classes_file")
+                        self.x = array( json.load( open( base_classes_file ) ) ) 
+                    else:
+                        if is_debug:
+                            print("Not loaded prepared base_classes_file")
+                        
+                    for cli in range(0, self.total_base_classes):
+                        self.tvt_records_fall_short_clss[cli] = test_record_index
+                        
+                    if is_debug:
+                        print(self.x.shape)
+                    
+                        print( "loaded test record " )
+                        print( self.evaluation.shape )
 
                 temp = [] # Free memory
                         
