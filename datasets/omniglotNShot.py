@@ -135,6 +135,7 @@ class OmniglotNShotDataset():
                                 test_record_index_cnt = test_record_index_cnt + 1
                                 
                                 if test_record_index_cnt == test_record_index:
+                                    detectsdkjfhdf
                                     self.evaluation = np.zeros( ( self.total_base_classes, self.tvt_records, input[i].shape[0], input[i].shape[1], 1 ) )
                                     self.evaluation[:,:,:,:,:] = input[i][:,:,np.newaxis]
                                     break
