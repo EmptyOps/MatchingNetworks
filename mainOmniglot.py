@@ -277,7 +277,7 @@ else:
                                                                   is_compare = False if int(sys.argv[40]) == 0 else True, 
                                                                   is_load_test_record = is_load_test_record, 
                                                                   test_record_class = 0, test_record_index = 0, 
-                                                                  is_debug = is_debug)
+                                                                  is_debug = is_debug, is_load_file_data_only = True)
                     
                         bcfdata = data.x    #omniglotNShot.base_classes_file_data( base_classes_file )
                     else:

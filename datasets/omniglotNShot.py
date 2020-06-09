@@ -30,7 +30,7 @@ def base_classes_file_data( base_classes_file ):
     return array( json.load( open( base_classes_file ) ) ) 
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1, is_debug = True, is_switch_dim = False, is_batch_persistancy = False):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1, is_debug = True, is_switch_dim = False, is_batch_persistancy = False, is_load_file_data_only=False):
 
         self.is_debug = is_debug
     
@@ -135,7 +135,6 @@ class OmniglotNShotDataset():
                                 test_record_index_cnt = test_record_index_cnt + 1
                                 
                                 if test_record_index_cnt == test_record_index:
-                                    detectsdkjfhdf
                                     self.evaluation = np.zeros( ( self.total_base_classes, self.tvt_records, input[i].shape[0], input[i].shape[1], 1 ) )
                                     self.evaluation[:,:,:,:,:] = input[i][:,:,np.newaxis]
                                     break
@@ -662,17 +661,18 @@ class OmniglotNShotDataset():
         self.classes_per_set = classes_per_set
         self.samples_per_class = samples_per_class
 
-        if is_evaluation_only == False:
-            self.indexes = {"train": 0, "val": 0, "test": 0, "x_to_be_predicted": 0}
-            self.datasets = {"train": self.x_train, "val": self.x_val, "test": self.x_test, "x_to_be_predicted": self.x_to_be_predicted} #original data cached
-            self.datasets_cache = {"train": self.load_data_cache(self.datasets["train"], ""),  #current epoch data cached
-                                   "val": None if self.x_val == None else self.load_data_cache(self.datasets["val"], ""),
-                                   "test": None if self.x_test == None else self.load_data_cache(self.datasets["test"], ""),
-                                   "x_to_be_predicted": None if not self.is_run_time_predictions else self.load_data_cache(self.datasets["x_to_be_predicted"], "x_to_be_predicted")}
-        else:
-            self.indexes = {"evaluation": 0}
-            self.datasets = {"evaluation": self.x_train} #original data cached
-            self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation", self.evaluation, True)}
+        if not is_load_file_data_only:
+            if is_evaluation_only == False:
+                self.indexes = {"train": 0, "val": 0, "test": 0, "x_to_be_predicted": 0}
+                self.datasets = {"train": self.x_train, "val": self.x_val, "test": self.x_test, "x_to_be_predicted": self.x_to_be_predicted} #original data cached
+                self.datasets_cache = {"train": self.load_data_cache(self.datasets["train"], ""),  #current epoch data cached
+                                       "val": None if self.x_val == None else self.load_data_cache(self.datasets["val"], ""),
+                                       "test": None if self.x_test == None else self.load_data_cache(self.datasets["test"], ""),
+                                       "x_to_be_predicted": None if not self.is_run_time_predictions else self.load_data_cache(self.datasets["x_to_be_predicted"], "x_to_be_predicted")}
+            else:
+                self.indexes = {"evaluation": 0}
+                self.datasets = {"evaluation": self.x_train} #original data cached
+                self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation", self.evaluation, True)}
                                    
     def normalization(self):
         """
