@@ -262,7 +262,7 @@ else:
                     base_classes_file = sys.argv[2]+"_base_classes.json"
                     #hiren added on 08-06-2020, for when large files are not saved intentionally
                     if not os.path.exists(base_classes_file):
-                        data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
+                        bcfdata = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
                                                                   classes_per_set=classes_per_set,
                                                                   samples_per_class=samples_per_class, 
                                                                   is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
@@ -277,9 +277,9 @@ else:
                                                                   is_compare = False if int(sys.argv[40]) == 0 else True, 
                                                                   is_load_test_record = is_load_test_record, 
                                                                   test_record_class = 0, test_record_index = 0, 
-                                                                  is_debug = is_debug, is_load_file_data_only = True)
+                                                                  is_debug = is_debug, is_load_file_data_only = True).get_data_x()
                     
-                        bcfdata = data.x    #omniglotNShot.base_classes_file_data( base_classes_file )
+                        #bcfdata = data.x    #omniglotNShot.base_classes_file_data( base_classes_file )
                     else:
                         bcfdata = omniglotNShot.base_classes_file_data( base_classes_file )
                     

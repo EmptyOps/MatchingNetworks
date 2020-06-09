@@ -673,7 +673,10 @@ class OmniglotNShotDataset():
                 self.indexes = {"evaluation": 0}
                 self.datasets = {"evaluation": self.x_train} #original data cached
                 self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation", self.evaluation, True)}
-                                   
+    
+    def get_data_x(self):
+        return self.x
+    
     def normalization(self):
         """
         Normalizes our data, to have a mean of 0 and sdt of 1
