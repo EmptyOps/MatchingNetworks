@@ -307,7 +307,7 @@ else:
                     
                     for ri in range(test_results["ri_start_ind"], aranger.shape[0]):
                         try:
-                            is_debug = False
+                            is_debug = True
                             
                             data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
                                                                       classes_per_set=classes_per_set,
