@@ -94,11 +94,11 @@ elif not resume_from_epoch == -1:
         raise Exception("To resume training the model path is required.")
         
 is_do_train_logging = True
-if len(sys.argv) >= 51 and int(sys.argv[50]) == 0 
+if len(sys.argv) >= 51 and int(sys.argv[50]) == 0: 
     is_do_train_logging = False
     
 is_do_train_logging_conditionally = True
-if len(sys.argv) >= 52 and int(sys.argv[51]) == 0 
+if len(sys.argv) >= 52 and int(sys.argv[51]) == 0: 
     is_do_train_logging_conditionally = False
 
 is_load_test_record = False if int(sys.argv[41]) == 0 else True
