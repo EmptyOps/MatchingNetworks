@@ -92,6 +92,14 @@ if os.path.exists(model_path) and resume_from_epoch == -1:
 elif not resume_from_epoch == -1:
     if not os.path.exists(model_path.replace('EPOCH',str(resume_from_epoch))):
         raise Exception("To resume training the model path is required.")
+        
+is_do_train_logging = True
+if len(sys.argv) >= 51 and int(sys.argv[50]) == 0 
+    is_do_train_logging = False
+    
+is_do_train_logging_conditionally = True
+if len(sys.argv) >= 52 and int(sys.argv[51]) == 0 
+    is_do_train_logging_conditionally = False
 
 is_load_test_record = False if int(sys.argv[41]) == 0 else True
 test_record_class = int(sys.argv[42])
@@ -121,7 +129,7 @@ if is_evaluation_only == False or not is_load_test_record or not test_record_cla
                                         image_size = int(sys.argv[35]), layer_size = int(sys.argv[36]), 
                                         is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True, 
                                         vector_dim = int(sys.argv[38]), num_layers=int(sys.argv[44]), dropout=float(sys.argv[45]),
-                                        is_use_second_lstm =False if int(sys.argv[47]) == 0 else True )
+                                        is_use_second_lstm =False if int(sys.argv[47]) == 0 else True, is_do_train_logging=is_do_train_logging, is_do_train_logging_conditionally=is_do_train_logging_conditionally )
 
 if is_evaluation_only == False:
     if not 'EPOCH' in model_path:

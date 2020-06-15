@@ -29,7 +29,7 @@ class OneShotBuilder:
         self.model_save_path = model_save_path
 
     def build_experiment(self, batch_size, classes_per_set, samples_per_class, channels, fce, image_size = 28, layer_size = 1600, 
-                            is_use_lstm_layer=False, vector_dim = None, num_layers=1, dropout=-1, is_use_second_lstm = False):
+                            is_use_lstm_layer=False, vector_dim = None, num_layers=1, dropout=-1, is_use_second_lstm = False, is_do_train_logging=True, is_do_train_logging_conditionally=True):
 
         """
         :param batch_size: The experiment batch size
@@ -52,7 +52,7 @@ class OneShotBuilder:
                                              nClasses = 0, image_size = image_size, layer_size = layer_size, 
                                              is_use_lstm_layer=is_use_lstm_layer, vector_dim = vector_dim, 
                                              num_layers=num_layers, dropout=dropout, model_path=self.model_path, 
-                                             is_use_second_lstm=is_use_second_lstm)
+                                             is_use_second_lstm=is_use_second_lstm, is_do_train_logging=is_do_train_logging, is_do_train_logging_conditionally=is_do_train_logging_conditionally)
         else: 
             if self.isCudaAvailable:
                 self.matchingNet = torch.load(self.model_path)

@@ -31,7 +31,7 @@ class MatchingNetwork(nn.Module):
     def __init__(self, keep_prob, \
                  batch_size=100, num_channels=1, learning_rate=0.001, fce=False, num_classes_per_set=5, \
                  num_samples_per_class=1, nClasses = 0, image_size = 28, layer_size = 64, is_use_lstm_layer=False, 
-                 vector_dim = None, num_layers=1, dropout=-1, model_path=None, is_use_second_lstm=False):
+                 vector_dim = None, num_layers=1, dropout=-1, model_path=None, is_use_second_lstm=False, is_do_train_logging=True, is_do_train_logging_conditionally=True):
         super(MatchingNetwork, self).__init__()
 
         """
@@ -54,8 +54,8 @@ class MatchingNetwork(nn.Module):
         self.fce = fce
         
         # default `log_dir` is "runs" - we'll be more specific here
-        self.is_do_train_logging = True
-        self.is_do_train_logging_conditionally = True   #any value assignement doesn't matter here
+        self.is_do_train_logging = is_do_train_logging
+        self.is_do_train_logging_conditionally = is_do_train_logging_conditionally   #any value assignement doesn't matter here
         if self.is_do_train_logging:
             self.log_interval = 50
             self.last_epoch = -1
