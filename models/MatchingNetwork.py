@@ -56,8 +56,6 @@ class MatchingNetwork(nn.Module):
         # default `log_dir` is "runs" - we'll be more specific here
         self.is_do_train_logging = is_do_train_logging
         self.is_do_train_logging_conditionally = is_do_train_logging_conditionally   #any value assignement doesn't matter here
-        print(self.is_do_train_logging,is_do_train_logging,self.is_do_train_logging_conditionally,is_do_train_logging_conditionally)
-        sdfkljsdlfjkdlfkj
         if self.is_do_train_logging:
             self.log_interval = 50
             self.last_epoch = -1
