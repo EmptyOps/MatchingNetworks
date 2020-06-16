@@ -768,7 +768,7 @@ class OmniglotNShotDataset():
                         example_inds = np.random.choice(self.tvt_records_fall_short_clss[cur_class], self.samples_per_class + n_test_samples, self.choice_replace)
                         #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
-                        print( "example_inds here 2 ", self.tvt_records_fall_short_clss[cur_class], self.samples_per_class )
+                        print( "example_inds here 2 ", cur_class, self.tvt_records_fall_short_clss[cur_class], self.samples_per_class )
                         #example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
                         example_inds = np.random.choice(self.tvt_records_fall_short_clss[cur_class], self.samples_per_class, False)
 
