@@ -58,6 +58,9 @@ class OneShotBuilder:
                 self.matchingNet = torch.load(self.model_path)
             else:
                 self.matchingNet = torch.load(self.model_path, map_location=torch.device('cpu'))
+                
+            self.matchingNet.is_do_train_logging = is_do_train_logging
+            self.matchingNet.is_do_train_logging_conditionally = is_do_train_logging_conditionally     
                                              
         self.optimizer = 'adam'
         self.lr = 1e-03
