@@ -100,6 +100,10 @@ if len(sys.argv) >= 51 and int(sys.argv[50]) == 0:
 is_do_train_logging_conditionally = True
 if len(sys.argv) >= 52 and int(sys.argv[51]) == 0: 
     is_do_train_logging_conditionally = False
+    
+test_batch_records = 20
+if len(sys.argv) >= 53: 
+    test_batch_records = int(sys.argv[52])
 
 is_load_test_record = False if int(sys.argv[41]) == 0 else True
 test_record_class = int(sys.argv[42])
@@ -122,7 +126,7 @@ if is_evaluation_only == False or not is_load_test_record or not test_record_cla
                                               is_compare = False if int(sys.argv[40]) == 0 else True, 
                                               is_load_test_record = is_load_test_record, 
                                               test_record_class = test_record_class, test_record_index = test_record_index, 
-                                              is_debug = is_debug, is_switch_dim = False if int(sys.argv[48]) == 0 else True)
+                                              is_debug = is_debug, is_switch_dim = False if int(sys.argv[48]) == 0 else True, test_batch_records=test_batch_records)
 
     obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path if resume_from_epoch == -1 else model_path.replace('EPOCH',str(resume_from_epoch)),model_save_path=model_path)
     obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
@@ -309,7 +313,7 @@ else:
                     if is_dynamic_batch:
                         for bcfi in range(0, bcfdata.shape[1]):
                             if np.all( bcfdata[arangec[ci]][bcfi] == 0.0 ):
-                                aranger = np.arange( bcfi-20, bcfi-20+test_record_index_end )
+                                aranger = np.arange( bcfi-test_batch_records, bcfi-test_batch_records+test_record_index_end )
                                 print( "aranger ", aranger )
                                 break
                     

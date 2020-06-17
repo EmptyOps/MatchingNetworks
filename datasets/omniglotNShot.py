@@ -30,7 +30,7 @@ def base_classes_file_data( base_classes_file ):
     return array( json.load( open( base_classes_file ) ) ) 
 
 class OmniglotNShotDataset():
-    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1, is_debug = True, is_switch_dim = False, is_batch_persistancy = False, is_load_file_data_only=False):
+    def __init__(self, dataroot, batch_size = 100, classes_per_set=10, samples_per_class=1, is_use_sample_data = True, input_file="", input_labels_file="", total_input_files=-1, is_evaluation_only = False, evaluation_input_file = "", evaluation_labels_file = "", evaluate_classes = 1, is_eval_with_train_data = 0, negative_test_offset = 0, is_apply_pca_first = 0, cache_samples_for_evaluation = 100, is_run_time_predictions = False, pca_components = 900, is_evaluation_res_in_obj = False, total_base_classes = 0, is_visualize_data = False, is_run_validation_batch = True, is_compare = False, is_load_test_record = False, test_record_class = -1, test_record_index = -1, is_debug = True, is_switch_dim = False, is_batch_persistancy = False, is_load_file_data_only=False, test_batch_records=test_batch_records):
 
         self.is_debug = is_debug
     
@@ -85,6 +85,7 @@ class OmniglotNShotDataset():
             self.negative_test_offset = negative_test_offset
             self.is_run_time_predictions = is_run_time_predictions
             self.is_evaluation_res_in_obj = is_evaluation_res_in_obj
+            self.test_batch_records = test_batch_records
             
             is_disable_heavy_functions_temporarily = True
                         
@@ -183,7 +184,7 @@ class OmniglotNShotDataset():
                             print( "list(temp.keys())[classes] ", list(temp.keys())[classes], classes )
                             self.x.append(np.array(temp[ list(temp.keys())[classes]]))
                             
-                            self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1]) - 20
+                            self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1]) - self.test_batch_records    #20
                             if len(self.x[len(self.x)-1]) < self.tvt_records:
                                 print( "self.x.shape ", self.x[len(self.x)-1].shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
                                 self.x[len(self.x)-1] = np.concatenate( ( self.x[len(self.x)-1], np.zeros( [ self.tvt_records - len(self.x[len(self.x)-1]), self.x[len(self.x)-1].shape[1], self.x[len(self.x)-1].shape[2], self.x[len(self.x)-1].shape[3] ] ) ), axis=0 )
