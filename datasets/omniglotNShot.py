@@ -138,6 +138,7 @@ class OmniglotNShotDataset():
                                 if test_record_index_cnt == test_record_index:
                                     self.evaluation = np.zeros( ( self.total_base_classes, self.tvt_records, input[i].shape[0], input[i].shape[1], 1 ) )
                                     self.evaluation[:,:,:,:,:] = input[i][:,:,np.newaxis]
+                                    fgkjdfkjg
                                     break
                         else:
                             if input_labels[i] in temp:
