@@ -85,6 +85,8 @@ outfile_path_prob = sys.argv[19] if len(sys.argv) >= 20 else 0
 total_input_files = int(sys.argv[21]) if len(sys.argv) >= 22 else 0
 
 resume_from_epoch = int(sys.argv[49]) if len(sys.argv) >= 50 else -1
+print("resume_from_epoch ", resume_from_epoch)
+sdfjkdskfj
 is_evaluation_only = False
 if os.path.exists(model_path) and resume_from_epoch == -1:
     is_evaluation_only = True
