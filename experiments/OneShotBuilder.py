@@ -43,11 +43,6 @@ class OneShotBuilder:
         self.samples_per_class = samples_per_class
         self.keep_prob = torch.FloatTensor(1)
         self.isCudaAvailable = torch.cuda.is_available()
-        if self.isCudaAvailable: 
-            cuda_used
-        else:
-            cuda_not_used
-        
         if not os.path.exists(self.model_path):
             self.matchingNet = MatchingNetwork(batch_size=batch_size,
                                              keep_prob=self.keep_prob, num_channels=channels,

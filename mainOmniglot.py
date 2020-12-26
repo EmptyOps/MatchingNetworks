@@ -80,6 +80,14 @@ LOG_DIR = log_dir + '/1_run-batchSize_{}-fce_{}-classes_per_set{}-samples_per_cl
 # create logger
 logger = Logger(LOG_DIR)
 
+import torch
+self.isCudaAvailable = torch.cuda.is_available()
+if self.isCudaAvailable: 
+    cuda_used
+else:
+    cuda_not_used
+
+
 model_path = sys.argv[18] if len(sys.argv) >= 19 else 0
 outfile_path_prob = sys.argv[19] if len(sys.argv) >= 20 else 0
 total_input_files = int(sys.argv[21]) if len(sys.argv) >= 22 else 0
