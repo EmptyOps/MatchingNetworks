@@ -344,7 +344,7 @@ class OneShotBuilder:
             x_target = x_target.view(size[0],size[1],size[4],size[2],size[3])
             if self.isCudaAvailable:
                 acc, c_loss_value, pred_indices = self.matchingNet(x_support_set.cuda(), y_support_set_one_hot.cuda(),
-                                                     x_target.cuda(), y_target.cuda(), is_debug = False )
+                                                     x_target.cuda(), y_target.cuda(), is_debug = False, is_evaluation_only = False, y_support_set_org = y_support_set, target_y_actuals = target_y_actuals )
             else:
                 acc, c_loss_value, pred_indices = self.matchingNet(x_support_set, y_support_set_one_hot,
                                                      x_target, y_target, is_debug = is_debug, is_evaluation_only = False, y_support_set_org = y_support_set, target_y_actuals = target_y_actuals )
