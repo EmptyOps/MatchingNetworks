@@ -675,6 +675,11 @@ class OmniglotNShotDataset():
                 self.datasets = {"evaluation": self.x_train} #original data cached
                 self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation", self.evaluation, True)}
     
+    def list_dim(a):
+        if not type(a) == list:
+            return []
+        return [len(a)] + self.list_dim(a[0])
+    
     def get_data_x(self):
     
         #TODO tmp 
@@ -690,7 +695,7 @@ class OmniglotNShotDataset():
                     if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
             """
                     
-            print( size( self.x ) )
+            print( self.list_dim( self.x ) )
             print( " count... " + (self.x[:,:,:,54,:] > 0.0).sum() )
         
         sddgdfhzxcjhstuiv
