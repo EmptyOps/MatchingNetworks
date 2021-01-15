@@ -678,7 +678,7 @@ class OmniglotNShotDataset():
     def get_data_x(self):
     
         #TODO tmp 
-        if is_evaluation_only == True:
+        if True or is_evaluation_only == True:
             """
             is_found = False
             for c in range(0, self.x.shape[0]):
