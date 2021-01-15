@@ -691,7 +691,7 @@ class OmniglotNShotDataset():
             """
                     
             print( np.array( self.x ).shape )
-            print( " count... ", (self.x[:,:,:,54,:] > 0.0).sum() )
+            print( " count... ", (self.x[:,:,57,54,:] > 0.0).sum() )
         
         sddgdfhzxcjhstuiv
     
