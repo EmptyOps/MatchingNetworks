@@ -675,7 +675,7 @@ class OmniglotNShotDataset():
                 self.datasets = {"evaluation": self.x_train} #original data cached
                 self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation", self.evaluation, True)}
     
-    def list_dim(a):
+    def list_dim(self, a):
         if not type(a) == list:
             return []
         return [len(a)] + self.list_dim(a[0])
