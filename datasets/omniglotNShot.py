@@ -399,24 +399,6 @@ class OmniglotNShotDataset():
             if is_found == False:
                 sdfhsdhfkjhd
         """
-        #TODO tmp 
-        if is_evaluation_only == True:
-            """
-            is_found = False
-            for c in range(0, self.x.shape[0]):
-                for i in range(0, self.x.shape[1]):
-                    xt = np.copy(self.x[c,i,:,:,:])
-                    et = np.copy(self.evaluation[self.evaluate_classes,0,:,:,:])
-
-                    result = np.subtract( xt, et)
-                    if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
-            """
-                    
-            print( self.x_to_be_predicted.shape )
-            print( " count... " + (self.x_to_be_predicted[:,:,:,54,:] > 0.0).sum() )
-        
-        sddgdfhzxcjhstuiv
-        
         #TODO tmp. compare 
         if is_evaluation_only == True and is_compare == True:
             is_found = False
@@ -694,6 +676,25 @@ class OmniglotNShotDataset():
                 self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation", self.evaluation, True)}
     
     def get_data_x(self):
+    
+        #TODO tmp 
+        if is_evaluation_only == True:
+            """
+            is_found = False
+            for c in range(0, self.x.shape[0]):
+                for i in range(0, self.x.shape[1]):
+                    xt = np.copy(self.x[c,i,:,:,:])
+                    et = np.copy(self.evaluation[self.evaluate_classes,0,:,:,:])
+
+                    result = np.subtract( xt, et)
+                    if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
+            """
+                    
+            print( size( self.x ) )
+            print( " count... " + (self.x[:,:,:,54,:] > 0.0).sum() )
+        
+        sddgdfhzxcjhstuiv
+    
         return self.x
     
     def normalization(self):
