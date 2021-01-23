@@ -677,8 +677,8 @@ class OmniglotNShotDataset():
     
     def get_data_x(self):
     
-        #TODO tmp 
-        if True or is_evaluation_only == True:
+        ##TODO tmp 
+        #if True or is_evaluation_only == True:
             """
             is_found = False
             for c in range(0, self.x.shape[0]):
@@ -690,10 +690,10 @@ class OmniglotNShotDataset():
                     if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
             """
                     
-            print( np.array( self.x ).shape )
-            print( " count... ", (self.x[:,:,57,54,:] > 0.0).sum() )
+        #    print( np.array( self.x ).shape )
+        #    print( " count... ", (self.x[:,:,57,54,:] > 0.0).sum() )
         
-        sddgdfhzxcjhstuiv
+        #sddgdfhzxcjhstuiv
     
         return self.x
     
