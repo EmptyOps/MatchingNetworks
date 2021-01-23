@@ -311,12 +311,7 @@ class OmniglotNShotDataset():
                     is_loaded_evaluation_file = True
                     self.evaluation = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) + "_prepared.json" ) ) ) 
 
-
-        print("evaluation shape ", self.evaluation.shape)
-        self.evaluation = self.evaluation.reshape( ( self.evaluation.shape[1], self.evaluation.shape[0], self.evaluation.shape[2] ) )
-        print("evaluation shape ", self.evaluation.shape)
-        dfkdhkfdjhfk
-        
+            
         """
         #TODO temp
         if self.x.shape[2] >= 28 and self.x.shape[3] >= 108:
@@ -657,6 +652,9 @@ class OmniglotNShotDataset():
                 self.x_train  = self.x[:]
                 if is_switch_dim:
                     self.x_train = self.x_train.reshape( ( self.x_train.shape[0], self.x_train.shape[1], self.x_train.shape[3], self.x_train.shape[2], self.x_train.shape[4] ) )
+                    
+                    self.evaluation = self.evaluation.reshape( ( self.evaluation.shape[0], self.evaluation.shape[1], self.evaluation.shape[3], self.evaluation.shape[2], self.evaluation.shape[4] ) )
+
         
         #print( self.x_train[0][0] )
         self.normalization()
