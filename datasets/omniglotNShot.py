@@ -310,10 +310,6 @@ class OmniglotNShotDataset():
                     print("loaded prepared evaluation_input_file")
                     is_loaded_evaluation_file = True
                     self.evaluation = array( json.load( open( evaluation_input_file.replace('{i}', str(0)) + "_prepared.json" ) ) ) 
-
-                    print("evaluation shape ", evaluation.shape)
-                    self.evaluation = self.evaluation.reshape( ( self.evaluation.shape[1], self.evaluation.shape[0], self.evaluation.shape[2] ) )
-                    print("evaluation shape ", evaluation.shape)
                     
             
         """
