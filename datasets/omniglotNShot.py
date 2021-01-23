@@ -676,25 +676,6 @@ class OmniglotNShotDataset():
                 self.datasets_cache = {"evaluation": self.load_data_cache_for_evaluation(self.datasets["evaluation"], "evaluation", self.evaluation, True)}
     
     def get_data_x(self):
-    
-        ##TODO tmp 
-        #if True or is_evaluation_only == True:
-            """
-            is_found = False
-            for c in range(0, self.x.shape[0]):
-                for i in range(0, self.x.shape[1]):
-                    xt = np.copy(self.x[c,i,:,:,:])
-                    et = np.copy(self.evaluation[self.evaluate_classes,0,:,:,:])
-
-                    result = np.subtract( xt, et)
-                    if (result > 1.0).sum() >= 1 or (result < -1.0).sum() >= 1:
-            """
-                    
-        #    print( np.array( self.x ).shape )
-        #    print( " count... ", (self.x[:,:,57,54,:] > 0.0).sum() )
-        
-        #sddgdfhzxcjhstuiv
-        
         return self.x
     
     def normalization(self):
