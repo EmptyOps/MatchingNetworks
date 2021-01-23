@@ -694,7 +694,7 @@ class OmniglotNShotDataset():
         #    print( " count... ", (self.x[:,:,57,54,:] > 0.0).sum() )
         
         #sddgdfhzxcjhstuiv
-    
+        
         return self.x
     
     def normalization(self):
