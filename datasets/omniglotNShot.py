@@ -196,7 +196,7 @@ class OmniglotNShotDataset():
                                     ara[ari, :, :, :] = self.x[len(self.x)-1][ari, :, :, :]
 
                                 print( "self.x shape ", self.x[len(self.x)-1].shape, ara.shape )
-                                self.x[len(self.x)-1] = np.concatenate( self.x[len(self.x)-1], ara, axis=0 )
+                                self.x[len(self.x)-1] = np.concatenate( ( self.x[len(self.x)-1], ara ), axis=0 )
                             print( "classes ", classes, len(self.x[len(self.x)-1]), self.test_batch_records)
                             
                             self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1]) - self.test_batch_records    #20
