@@ -208,7 +208,6 @@ class OmniglotNShotDataset():
                                 #print( "self.x.shape ", self.x[len(self.x)-1].shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
                     
                     print( self.tvt_records_fall_short_clss )
-                    sdfsdjfsdfjksdffh
                     
                     self.x = np.array(self.x)
 
