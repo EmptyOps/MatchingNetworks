@@ -176,6 +176,8 @@ class OmniglotNShotDataset():
                 self.x = [] # Free memory
 
                 if not is_load_test_record or main_lsize == 2:
+                    
+                    print( self.tvt_records_fall_short_clss )
                     for classes in temp.keys():
                         if False:
                             self.x.append(np.array(temp[ list(temp.keys())[classes]]))
@@ -191,7 +193,10 @@ class OmniglotNShotDataset():
                                 #for xrecind in range(len(self.x[len(self.x)-1]), self.tvt_records):
                                     
                                 print( "self.x.shape ", self.x[len(self.x)-1].shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
-                        
+                    
+                    print( self.tvt_records_fall_short_clss )
+                    sdfsdjfsdfjksdffh
+                    
                     self.x = np.array(self.x)
 
                     #np.save(os.path.join(dataroot,'data.npy'),self.x)
@@ -926,7 +931,7 @@ class OmniglotNShotDataset():
                             #print( "example_inds here 1 " + str(n_test_samples) )
                     else:
                         print( "example_inds here 2 cur_class ", cur_class, " tvt_records_fall_short_clss ", self.tvt_records_fall_short_clss[cur_class], " samples_per_class ", self.samples_per_class )
-                        print( self.tvt_records_fall_short_clss )
+                        #print( self.tvt_records_fall_short_clss )
                         #example_inds = np.random.choice(data_pack.shape[1], self.samples_per_class, False)
                         example_inds = np.random.choice(self.tvt_records_fall_short_clss[cur_class], self.samples_per_class, False)
 
