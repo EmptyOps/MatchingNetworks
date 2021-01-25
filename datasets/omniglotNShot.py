@@ -190,11 +190,11 @@ class OmniglotNShotDataset():
                             print( "classes ", classes, len(self.x[len(self.x)-1]), self.test_batch_records)
                             self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1]) - self.test_batch_records    #20
                             if len(self.x[len(self.x)-1]) < self.tvt_records:
-                                print( "self.x.shape ", self.x[len(self.x)-1].shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
+                                #print( "self.x.shape ", self.x[len(self.x)-1].shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
                                 self.x[len(self.x)-1] = np.concatenate( ( self.x[len(self.x)-1], np.zeros( [ self.tvt_records - len(self.x[len(self.x)-1]), self.x[len(self.x)-1].shape[1], self.x[len(self.x)-1].shape[2], self.x[len(self.x)-1].shape[3] ] ) ), axis=0 )
                                 #for xrecind in range(len(self.x[len(self.x)-1]), self.tvt_records):
                                     
-                                print( "self.x.shape ", self.x[len(self.x)-1].shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
+                                #print( "self.x.shape ", self.x[len(self.x)-1].shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
                     
                     print( self.tvt_records_fall_short_clss )
                     sdfsdjfsdfjksdffh
