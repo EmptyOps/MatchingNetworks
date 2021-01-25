@@ -195,6 +195,7 @@ class OmniglotNShotDataset():
                                 for ari in range(0, ((len(self.x[len(self.x)-1]) - self.test_batch_records) * -1) + 10):
                                     ara[ari, :, :, :] = self.x[len(self.x)-1][ari, :, :, :]
 
+                                print( "self.x shape ", self.x[len(self.x)-1].shape, ara.shape )
                                 self.x[len(self.x)-1] = np.concatenate( self.x[len(self.x)-1], ara )
                             print( "classes ", classes, len(self.x[len(self.x)-1]), self.test_batch_records)
                             
