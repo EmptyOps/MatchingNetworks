@@ -188,6 +188,16 @@ class OmniglotNShotDataset():
                             self.x.append(np.array(temp[ list(temp.keys())[classes]]))
                             
                             print( "classes ", classes, len(self.x[len(self.x)-1]), self.test_batch_records)
+                            #TODO temp. below is temporary adaption to fix problem of less data for test, shouldn't be used permanantly and must train model again with less test batch record size
+                            if len(self.x[len(self.x)-1]) - self.test_batch_records <= 0:
+                                print( "self.x shape ", self.x[len(self.x)-1].shape )
+                                for ari in range(0, ((len(self.x[len(self.x)-1]) - self.test_batch_records) * -1) + 10):
+                                    sajahdkhaskdhd
+                                    
+                                ssdjkfslfjsdfl
+                            
+                            print( "classes ", classes, len(self.x[len(self.x)-1]), self.test_batch_records)
+                            
                             self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1]) - self.test_batch_records    #20
                             if len(self.x[len(self.x)-1]) < self.tvt_records:
                                 #print( "self.x.shape ", self.x[len(self.x)-1].shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
