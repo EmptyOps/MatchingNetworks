@@ -177,15 +177,17 @@ class OmniglotNShotDataset():
 
                 if not is_load_test_record or main_lsize == 2:
                     
-                    print( self.tvt_records_fall_short_clss )
+                    print( " tvt_records_fall_short_clss 1 ", self.tvt_records_fall_short_clss, " 1 " )
+                    print( "temp.keys ", temp.keys() )
                     for classes in temp.keys():
                         if False:
                             self.x.append(np.array(temp[ list(temp.keys())[classes]]))
                             self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1])
                         else:
-                            print( "list(temp.keys())[classes] ", list(temp.keys())[classes], classes )
+                            #print( "list(temp.keys())[classes] ", list(temp.keys())[classes], classes )
                             self.x.append(np.array(temp[ list(temp.keys())[classes]]))
                             
+                            print( "classes ", classes, len(self.x[len(self.x)-1]), self.test_batch_records)
                             self.tvt_records_fall_short_clss[classes] = len(self.x[len(self.x)-1]) - self.test_batch_records    #20
                             if len(self.x[len(self.x)-1]) < self.tvt_records:
                                 print( "self.x.shape ", self.x[len(self.x)-1].shape, len(self.x[len(self.x)-1]), self.x[len(self.x)-1] )
