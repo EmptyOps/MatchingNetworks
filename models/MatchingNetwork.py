@@ -689,6 +689,7 @@ class MatchingNetwork(nn.Module):
                     print( "emclvlcls_n1 ", emclvlcls_n1 )
                     print( "emclvlclsl_n1 ", emclvlclsl_n1 )
             
+        print( "is_evaluation_only ", is_evaluation_only )
         return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr
         
 class MatchingNetworkTest(unittest.TestCase):
