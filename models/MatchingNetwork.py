@@ -445,7 +445,7 @@ class MatchingNetwork(nn.Module):
                         pindsjj = np.concatenate( ( pindsjj, pindsjj_tmp ), axis=0 )
 
                     
-                    print( "predict here 10 " )
+                    print( "predict here 10 support_set_images_shape_1_ ", support_set_images_shape_1_ )
                     sdfdkjflsfj
                         
                     jjcntr = 0
