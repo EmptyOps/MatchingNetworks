@@ -404,6 +404,7 @@ class MatchingNetwork(nn.Module):
                     pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                     pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                     
+                print( "predict here 5 " )    
                     
                 for tatmpts in range(0, target_image.shape[0]):
                         
@@ -423,7 +424,9 @@ class MatchingNetwork(nn.Module):
                         tatmpts_diag = 6                        
                     elif tatmpts == 6:
                         tatmpts_diag = 3                        
-                        
+                    
+                    print( "predict here 6 " )
+                
                     if not tatmpts in tmp_test_cnt:
                         tmp_test_cnt[tatmpts] = []
                         
@@ -431,19 +434,22 @@ class MatchingNetwork(nn.Module):
                         open_match_cnt[tatmpts] = 0
                         open_match_tot[tatmpts] = 0.0
                         open_match_mpr[tatmpts] = 0.0
-                        
+                    
+                    print( "predict here 7 " )
+                    
                     #pindsjj_tmp = np.random.permutation( support_set_images.shape[1] )
                     pindsjj_tmp = np.random.permutation( support_set_images_shape_1_ )
                     #repeat 5 times
                     pindsjj = np.concatenate( ( pindsjj_tmp,  pindsjj_tmp ), axis=0 )
                     for rpt in range(0, support_set_labels_one_hot_org_shape[1]-2):
                         pindsjj = np.concatenate( ( pindsjj, pindsjj_tmp ), axis=0 )
+
+                    
+                    print( "predict here 10 " )
+                    sdfdkjflsfj
                         
                     jjcntr = 0
                     for jj in range( 0, support_set_images_shape_1_):   #support_set_images.shape[1] ):   #int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
-                    
-                        print( "target_image.shape ", target_image.shape )
-                        sdfdkjflsfj
 
                     
                         ii_cntr = 0
