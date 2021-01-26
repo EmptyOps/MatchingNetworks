@@ -116,6 +116,8 @@ class MatchingNetwork(nn.Module):
         log_file_similarities = None
         #print("epoch ", epoch, self.is_do_train_logging, self.log_interval, self.last_epoch)
         if self.is_do_train_logging_conditionally and self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
+            sdfkjldskjldskfjsflkj
+            
             if self.last_epoch == -1 or not self.last_epoch == epoch:
                 self.last_epoch = epoch
                 self.batch_index = -1
@@ -689,7 +691,6 @@ class MatchingNetwork(nn.Module):
                     print( "emclvlcls_n1 ", emclvlcls_n1 )
                     print( "emclvlclsl_n1 ", emclvlclsl_n1 )
             
-        print( "is_evaluation_only ", is_evaluation_only )
         return accuracy/target_image.size(1), crossentropy_loss/target_image.size(1), pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr
         
 class MatchingNetworkTest(unittest.TestCase):
