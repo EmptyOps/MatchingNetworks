@@ -442,6 +442,10 @@ class MatchingNetwork(nn.Module):
                     jjcntr = 0
                     for jj in range( 0, support_set_images_shape_1_):   #support_set_images.shape[1] ):   #int( math.floor(support_set_images.shape[1] / support_set_labels_one_hot_org_shape[1]) ) ): 
                     
+                        print( "target_image.shape ", target_image.shape )
+                        sdfdkjflsfj
+
+                    
                         ii_cntr = 0
                         tstcls = 0
                         iilength = int( math.floor( support_set_images.shape[0] / target_image.shape[0] ) ) if nardr == 0 else int( math.floor( len(uniq_cls) / target_image.shape[0] ) )
