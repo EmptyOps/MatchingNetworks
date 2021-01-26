@@ -701,6 +701,7 @@ class OmniglotNShotDataset():
     def normalization(self):
         """
         Normalizes our data, to have a mean of 0 and sdt of 1
+        Normalizes our data, to have a mean of 0 and sdt of 1
         """
         return 
         

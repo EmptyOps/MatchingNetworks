@@ -187,6 +187,8 @@ if is_evaluation_only == False:
 else: 
     is_do_plain_predict = True
     
+    print( "is_do_plain_predict ", is_do_plain_predict, " is_evaluation_res_in_obj ", is_evaluation_res_in_obj, " is_load_test_record ", is_load_test_record )
+    
     if not is_evaluation_res_in_obj:
         results = []
         resdict = {}
