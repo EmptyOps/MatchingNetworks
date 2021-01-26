@@ -114,6 +114,9 @@ class MatchingNetwork(nn.Module):
         
         log_file_encoded = None
         log_file_similarities = None
+        
+        asdksdjhaksdhd
+        
         #print("epoch ", epoch, self.is_do_train_logging, self.log_interval, self.last_epoch)
         if self.is_do_train_logging_conditionally and self.is_do_train_logging and np.mod(epoch, self.log_interval) == 0:
             sdfkjldskjldskfjsflkj
