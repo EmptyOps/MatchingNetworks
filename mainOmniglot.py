@@ -93,6 +93,9 @@ elif not resume_from_epoch == -1:
     if not os.path.exists(model_path.replace('EPOCH',str(resume_from_epoch))):
         raise Exception("To resume training the model path is required.")
         
+#TODO temp
+is_debug = True        
+        
 is_do_train_logging = True
 if len(sys.argv) >= 51 and int(sys.argv[50]) == 0: 
     is_do_train_logging = False

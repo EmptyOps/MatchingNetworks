@@ -404,8 +404,6 @@ class MatchingNetwork(nn.Module):
                     pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                     pinds = np.concatenate( ( pinds, pindstmp ), axis=0 )
                     
-                print( "target_image.shape ", target_image.shape )
-                sdfdkjflsfj
                     
                 for tatmpts in range(0, target_image.shape[0]):
                         
