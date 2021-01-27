@@ -428,7 +428,7 @@ else:
                 #keep debug off in predict mode 
                 is_debug = False
             
-                c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug, support_set_images_shape_1_ = -1)
+                c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug, support_set_images_shape_1_ = 1)
                 
                 #
                 for li in range(0, len(emclvlcls)):
