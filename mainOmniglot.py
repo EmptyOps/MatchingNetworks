@@ -93,9 +93,6 @@ elif not resume_from_epoch == -1:
     if not os.path.exists(model_path.replace('EPOCH',str(resume_from_epoch))):
         raise Exception("To resume training the model path is required.")
         
-#TODO temp
-is_debug = True        
-        
 is_do_train_logging = True
 if len(sys.argv) >= 51 and int(sys.argv[50]) == 0: 
     is_do_train_logging = False
@@ -431,7 +428,7 @@ else:
                 #keep debug off in predict mode 
                 is_debug = False
             
-                c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug, support_set_images_shape_1_ = data.tvt_records_fall_short_clss[arangec[ci]])
+                c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug, support_set_images_shape_1_ = -1)
                 
                 #
                 for li in range(0, len(emclvlcls)):
