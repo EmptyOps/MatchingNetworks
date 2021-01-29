@@ -304,6 +304,8 @@ class MatchingNetwork(nn.Module):
         :return: 
         """
         
+        print_log = False
+        
         target_image_org = np.copy(target_image)
         #target_image = target_image.cuda()
         
@@ -609,7 +611,7 @@ class MatchingNetwork(nn.Module):
                                 open_match_tot[tatmpts] += values[tatmpts]
                                 open_match_mpr[tatmpts] = open_match_tot[tatmpts] / open_match_cnt[tatmpts]
                             
-                            if is_debug:
+                            if is_debug and print_log:
                                 #print( "support set while in predictions debug mode" )
                                 ##print( y_support_set_org )
                                 #print( target_y_actuals[:,i] )
@@ -680,7 +682,7 @@ class MatchingNetwork(nn.Module):
         #if is_debug:
         #    dfsdfsdfsdf
             
-                if is_debug:
+                if is_debug and print_log:
                     print( "tmp_test_cnt", tmp_test_cnt )
                     print( "open_match_cnt", open_match_cnt )
                     print( "open_match_mpr", open_match_mpr )
