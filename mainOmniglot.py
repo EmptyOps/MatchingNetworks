@@ -355,7 +355,7 @@ else:
 
                             support_set_images_shape_1_Lcl = 1
                             if is_load_test_record: 
-                                support_set_images_shape_1_Lcl = = data.tvt_records_fall_short_clss[arangec[ci]]
+                                support_set_images_shape_1_Lcl = data.tvt_records_fall_short_clss[arangec[ci]]
                                                                     
                             c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug, support_set_images_shape_1_ = support_set_images_shape_1_Lcl)
                             
