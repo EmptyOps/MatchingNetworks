@@ -460,7 +460,7 @@ class MatchingNetwork(nn.Module):
                                 print( "tatmpts " + str(tatmpts) +" jj " + str(jj) + "  ii " + str(ii) )
                                 
                             xhat_pinds = np.concatenate( ( np.random.permutation( support_set_labels_one_hot_org_shape[1] ), np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] - support_set_labels_one_hot_org_shape[1] ) ), axis=0 ) #np.random.choice( support_set_labels_one_hot_org_shape[1], target_image.shape[0] ) #np.random.permutation( support_set_labels_one_hot_org_shape[1] )
-                            if is_debug:
+                            if is_debug and print_log:
                                 print( xhat_pinds )
                                 
                             xhat_ind = 0
