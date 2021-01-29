@@ -409,15 +409,20 @@ else:
                                 #if not ciitmp == ci:
                                 test_results["mcnt"][str(arangecLcl[ciitmp])+"_"+str(arangecLcl[ci])] += open_match_cnt[arangecLcl[ciitmp]]
                                 test_results["micnt"][str(arangecLcl[ciitmp])+"_"+str(arangecLcl[ci])] += 1 if open_match_cnt[arangecLcl[ciitmp]] > 0 else 0
+                                
+                                results[arangecLcl[ciitmp]] = {}
+                                results[arangecLcl[ciitmp]]["ec"] = 2   #set 2 based on older logic in else block below, so not sure if it is still good, but it is not used mostly
+                                results[arangecLcl[ciitmp]]["emc"] = 0
+                                results[arangecLcl[ciitmp]]["pr"] = ( open_match_cnt[arangecLcl[ciitmp]] / 100 )
+                            
+                            if not is_load_test_record: 
+                                print(results)
+                                exit()
                             
                             #write to file
                             test_results["ci_start_ind"] = ci
                             test_results["ri_start_ind"] = ri
                             print( "test_results ", test_results )
-                            
-                            if not is_load_test_record: 
-                                exit()
-                            
                             with open(test_file_path, 'w') as f:
                                 json.dump(test_results, f)
                             
