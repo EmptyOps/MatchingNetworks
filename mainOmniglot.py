@@ -254,7 +254,7 @@ else:
         tot_matches = 0
         matched_cnt = 0
         if is_do_plain_predict:
-            if is_load_test_record:
+            if True or is_load_test_record:
                 is_dynamic_batch = False
             
                 test_results = {}
@@ -263,67 +263,25 @@ else:
                 test_results["ci_start_ind"] = 0
                 test_results["ri_start_ind"] = 0
                 
-                if test_record_class == -1:
-                    is_dynamic_batch = True
+                if is_load_test_record: 
+                    if test_record_class == -1:
+                        is_dynamic_batch = True
 
-                    arangec = np.arange( int(sys.argv[33]) )
-                    aranger = np.arange( test_record_index, test_record_index_end )   #till available
-                else:
-                    arangec = np.array( [ test_record_class ] )
-                    aranger = np.array( [ test_record_index ] )
-
-                if is_dynamic_batch:
-                    base_classes_file = sys.argv[2]+"_base_classes.json"
-                    #hiren added on 08-06-2020, for when large files are not saved intentionally
-                    if not os.path.exists(base_classes_file):
-                        bcfdata = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
-                                                                  classes_per_set=classes_per_set,
-                                                                  samples_per_class=samples_per_class, 
-                                                                  is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
-                                                                  total_input_files = total_input_files, is_evaluation_only = is_evaluation_only, 
-                                                                  evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], 
-                                                                  evaluate_classes = int(sys.argv[25]), is_eval_with_train_data = int(sys.argv[26]), 
-                                                                  negative_test_offset = int(sys.argv[27]), is_apply_pca_first = int(sys.argv[29]), 
-                                                                  cache_samples_for_evaluation = int(sys.argv[30]), 
-                                                                  is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]), 
-                                                                  is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]), 
-                                                                  is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
-                                                                  is_compare = False if int(sys.argv[40]) == 0 else True, 
-                                                                  is_load_test_record = is_load_test_record, 
-                                                                  test_record_class = 0, test_record_index = 0, 
-                                                                  is_debug = is_debug, is_load_file_data_only = True).get_data_x()
-                    
-                        #bcfdata = data.x    #omniglotNShot.base_classes_file_data( base_classes_file )
+                        arangec = np.arange( int(sys.argv[33]) )
+                        aranger = np.arange( test_record_index, test_record_index_end )   #till available
                     else:
-                        bcfdata = omniglotNShot.base_classes_file_data( base_classes_file )
-                    
-                import os, sys
-                import json
-                test_file_path = './__data/test_results_'+os.path.basename(model_path)+'.json'
-                if os.path.exists( test_file_path ):
-                    test_results = json.load( open( test_file_path ) ) 
-                    
-                    #test_results["mcnt"][str(arangec[test_results["ci_start_ind"]])] = 0
-                    #test_results["micnt"][str(arangec[test_results["ci_start_ind"]])] = 0
-                    #test_results["ri_start_ind"] = 0
-                    
-                    
-                for ci in range(test_results["ci_start_ind"], arangec.shape[0]):
-                    #if test_results["ri_start_ind"] == aranger.shape[0]:
-                    #    test_results["ri_start_ind"] = 0
-                        
+                        arangec = np.array( [ test_record_class ] )
+                        aranger = np.array( [ test_record_index ] )
+                else: 
+                        arangec = np.array( [ 0 ] )
+                        aranger = np.array( [ 0 ] )
+                
+                if is_load_test_record: 
                     if is_dynamic_batch:
-                        for bcfi in range(0, bcfdata.shape[1]):
-                            if np.all( bcfdata[arangec[ci]][bcfi] == 0.0 ):
-                                aranger = np.arange( bcfi-test_batch_records, bcfi-test_batch_records+test_record_index_end )
-                                print( "aranger ", aranger )
-                                break
-                    
-                    for ri in range(test_results["ri_start_ind"], aranger.shape[0]):
-                        try:
-                            is_debug = True
-                            
-                            data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
+                        base_classes_file = sys.argv[2]+"_base_classes.json"
+                        #hiren added on 08-06-2020, for when large files are not saved intentionally
+                        if not os.path.exists(base_classes_file):
+                            bcfdata = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
                                                                       classes_per_set=classes_per_set,
                                                                       samples_per_class=samples_per_class, 
                                                                       is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
@@ -337,16 +295,69 @@ else:
                                                                       is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
                                                                       is_compare = False if int(sys.argv[40]) == 0 else True, 
                                                                       is_load_test_record = is_load_test_record, 
-                                                                      test_record_class = arangec[ci], test_record_index = aranger[ri], 
-                                                                      is_debug = is_debug)
+                                                                      test_record_class = 0, test_record_index = 0, 
+                                                                      is_debug = is_debug, is_load_file_data_only = True).get_data_x()
+                        
+                            #bcfdata = data.x    #omniglotNShot.base_classes_file_data( base_classes_file )
+                        else:
+                            bcfdata = omniglotNShot.base_classes_file_data( base_classes_file )
+                        
+                    import os, sys
+                    import json
+                    test_file_path = './__data/test_results_'+os.path.basename(model_path)+'.json'
+                    if os.path.exists( test_file_path ):
+                        test_results = json.load( open( test_file_path ) ) 
+                        
+                        #test_results["mcnt"][str(arangec[test_results["ci_start_ind"]])] = 0
+                        #test_results["micnt"][str(arangec[test_results["ci_start_ind"]])] = 0
+                        #test_results["ri_start_ind"] = 0
+                        
+                    
+                for ci in range(test_results["ci_start_ind"], arangec.shape[0]):
+                    #if test_results["ri_start_ind"] == aranger.shape[0]:
+                    #    test_results["ri_start_ind"] = 0
+                    
+                    if is_load_test_record:                     
+                        if is_dynamic_batch:
+                            for bcfi in range(0, bcfdata.shape[1]):
+                                if np.all( bcfdata[arangec[ci]][bcfi] == 0.0 ):
+                                    aranger = np.arange( bcfi-test_batch_records, bcfi-test_batch_records+test_record_index_end )
+                                    print( "aranger ", aranger )
+                                    break
+                    
+                    for ri in range(test_results["ri_start_ind"], aranger.shape[0]):
+                        try:
+                            is_debug = True
+                            
+                            if is_load_test_record: 
+                                data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
+                                                                          classes_per_set=classes_per_set,
+                                                                          samples_per_class=samples_per_class, 
+                                                                          is_use_sample_data=is_use_sample_data, input_file=sys.argv[2], input_labels_file=sys.argv[3], 
+                                                                          total_input_files = total_input_files, is_evaluation_only = is_evaluation_only, 
+                                                                          evaluation_input_file = sys.argv[8], evaluation_labels_file = sys.argv[14], 
+                                                                          evaluate_classes = int(sys.argv[25]), is_eval_with_train_data = int(sys.argv[26]), 
+                                                                          negative_test_offset = int(sys.argv[27]), is_apply_pca_first = int(sys.argv[29]), 
+                                                                          cache_samples_for_evaluation = int(sys.argv[30]), 
+                                                                          is_run_time_predictions = is_run_time_predictions, pca_components = int(sys.argv[31]), 
+                                                                          is_evaluation_res_in_obj = is_evaluation_res_in_obj, total_base_classes =int(sys.argv[33]), 
+                                                                          is_visualize_data = is_visualize_data, is_run_validation_batch = is_run_validation_batch, 
+                                                                          is_compare = False if int(sys.argv[40]) == 0 else True, 
+                                                                          is_load_test_record = is_load_test_record, 
+                                                                          test_record_class = arangec[ci], test_record_index = aranger[ri], 
+                                                                          is_debug = is_debug)
 
-                            obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
-                            obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
-                                                                image_size = int(sys.argv[35]), layer_size = int(sys.argv[36]), 
-                                                                is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True, 
-                                                                vector_dim = int(sys.argv[38]), num_layers=int(sys.argv[44]), dropout=float(sys.argv[45]) )
+                                obj_oneShotBuilder = OneShotBuilder(data,model_path=model_path)
+                                obj_oneShotBuilder.build_experiment(batch_size, classes_per_set, samples_per_class, channels, fce, 
+                                                                    image_size = int(sys.argv[35]), layer_size = int(sys.argv[36]), 
+                                                                    is_use_lstm_layer=False if int(sys.argv[37]) == 0 else True, 
+                                                                    vector_dim = int(sys.argv[38]), num_layers=int(sys.argv[44]), dropout=float(sys.argv[45]) )
 
-                            c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug, support_set_images_shape_1_ = data.tvt_records_fall_short_clss[arangec[ci]])
+                            support_set_images_shape_1_Lcl = 1
+                            if is_load_test_record: 
+                                support_set_images_shape_1_Lcl = = data.tvt_records_fall_short_clss[arangec[ci]]
+                                                                    
+                            c_loss_value, acc, x_support_set, y_support_set_one_hot, x_target, y_target, target_y_actuals, pred_indices, emcllcls, emcllclsl, emclvlcls, emclvlclsl, open_match_cnt, open_match_mpr = obj_oneShotBuilder.predict(total_test_batches=1, is_debug = is_debug, support_set_images_shape_1_ = support_set_images_shape_1_Lcl)
                             
                             #
                             for li in range(0, len(emclvlcls)):
@@ -399,6 +410,10 @@ else:
                             test_results["ci_start_ind"] = ci
                             test_results["ri_start_ind"] = ri
                             print( "test_results ", test_results )
+                            
+                            if not is_load_test_record: 
+                                return
+                            
                             with open(test_file_path, 'w') as f:
                                 json.dump(test_results, f)
                             
