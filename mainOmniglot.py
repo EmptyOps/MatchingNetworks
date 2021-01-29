@@ -390,21 +390,25 @@ else:
                                 
                             print(results)
                             
+                            arangecLcl = arangec 
+                            if not is_load_test_record: 
+                                arangecLcl = np.arange( int(sys.argv[33]) )
+                            
                             #
-                            if str(arangec[ci])+"_"+str(arangec[ci]) not in test_results["mcnt"]:
+                            if str(arangecLcl[ci])+"_"+str(arangecLcl[ci]) not in test_results["mcnt"]:
                                 #test_results["mcnt"][str(arangec[ci])] = 0
                                 #test_results["micnt"][str(arangec[ci])] = 0
-                                for ciitmp in range(0, arangec.shape[0]):
+                                for ciitmp in range(0, arangecLcl.shape[0]):
                                     #if not ciitmp == ci:
-                                    test_results["mcnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] = 0
-                                    test_results["micnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] = 0
+                                    test_results["mcnt"][str(arangecLcl[ciitmp])+"_"+str(arangecLcl[ci])] = 0
+                                    test_results["micnt"][str(arangecLcl[ciitmp])+"_"+str(arangecLcl[ci])] = 0
                                 
                             #test_results["mcnt"][str(arangec[ci])] += open_match_cnt[arangec[ci]]
                             #test_results["micnt"][str(arangec[ci])] += 1 if open_match_cnt[arangec[ci]] > 0 else 0
-                            for ciitmp in range(0, arangec.shape[0]):
+                            for ciitmp in range(0, arangecLcl.shape[0]):
                                 #if not ciitmp == ci:
-                                test_results["mcnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] += open_match_cnt[arangec[ciitmp]]
-                                test_results["micnt"][str(arangec[ciitmp])+"_"+str(arangec[ci])] += 1 if open_match_cnt[arangec[ciitmp]] > 0 else 0
+                                test_results["mcnt"][str(arangecLcl[ciitmp])+"_"+str(arangecLcl[ci])] += open_match_cnt[arangecLcl[ciitmp]]
+                                test_results["micnt"][str(arangecLcl[ciitmp])+"_"+str(arangecLcl[ci])] += 1 if open_match_cnt[arangecLcl[ciitmp]] > 0 else 0
                             
                             #write to file
                             test_results["ci_start_ind"] = ci
