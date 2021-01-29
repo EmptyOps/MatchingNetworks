@@ -412,7 +412,7 @@ else:
                             print( "test_results ", test_results )
                             
                             if not is_load_test_record: 
-                                return
+                                exit()
                             
                             with open(test_file_path, 'w') as f:
                                 json.dump(test_results, f)
