@@ -418,7 +418,7 @@ else:
                             if not is_load_test_record: 
                                 print(results)
                             
-                            if not is_load_test_record: 
+                            if is_load_test_record: 
                                 #write to file
                                 test_results["ci_start_ind"] = ci
                                 test_results["ri_start_ind"] = ri
@@ -430,10 +430,10 @@ else:
                             import traceback
                             print(traceback.format_exc())
 
-                    if not is_load_test_record:                             
+                    if is_load_test_record:                             
                         test_results["ri_start_ind"] = 0
 
-                if not is_load_test_record:                         
+                if is_load_test_record:                         
                     for ci in range(0, arangec.shape[0]):
                         ##test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records) ) * 100, 2 )
                         #test_results["mcnt"][str(arangec[ci])] = round( ( test_results["mcnt"][str(arangec[ci])] / (aranger.shape[0]*data.tvt_records_fall_short_clss[arangec[ci]]) ) * 100, 2 )
