@@ -304,7 +304,7 @@ class MatchingNetwork(nn.Module):
         :return: 
         """
         
-        print_log = False
+        print_log = True
         
         target_image_org = np.copy(target_image)
         #target_image = target_image.cuda()
