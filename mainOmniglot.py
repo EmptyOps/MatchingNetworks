@@ -110,6 +110,8 @@ test_record_class = int(sys.argv[42])
 test_record_index = int(sys.argv[43])
 test_record_index_end = int(sys.argv[46])
 
+print( "here 1" )
+
 if is_evaluation_only == False or not is_load_test_record or not test_record_class == -1:
     data = omniglotNShot.OmniglotNShotDataset(dataroot=dataroot, batch_size = batch_size,
                                               classes_per_set=classes_per_set,
